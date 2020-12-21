@@ -21,7 +21,7 @@ const char* personal_ssid = "Easyino Cosimo";
 const char* personal_password = "12345678"; 
 
 //SSID and PSWD of external wifi network  
-String ext_ssid = "federico-Inspiron-5567";
+String ext_ssid = "federixo-Inspiron-5567";
 String ext_password = "pasword"; 
 IPAddress local_ip(10, 10, 10, 1);
 IPAddress gateway(10, 10, 10, 1);

@@ -7,16 +7,15 @@
 
 void setup() {
 Serial.begin(115200);
-EEPROM.begin(512);
+EEPROM.begin(4096);
   Serial.println("sketch di prova etc etc");
 
 if(!tryConnect())createNetwork();
-//writeString(addrExtSSID,"ciaoooooooooooooooooooo");
-//writeString(addrExtSSID,"ciaoooooooooooooooooooo");
 
 }
 
 void loop() {
+  
   if(netStat){
   server.handleClient();
   }
