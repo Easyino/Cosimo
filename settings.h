@@ -1,5 +1,7 @@
-
-
+//Commands memorisation
+byte memory_map[4096];
+unsigned int checkpoint_memory[20];
+int i = 0, a = 0, c = 0, r = 0;
 
 //variables declaration
 struct section{

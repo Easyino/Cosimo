@@ -1,66 +1,15 @@
-
-/*
-void writeString(char add,String data){
-  int _size = data.length();
-  int i;
-  for(i=0;i<_size;i++)
-  {
-    EEPROM.write(add+i,data[i]);
-  }
-  EEPROM.write(add+_size,'\0');   
-  EEPROM.commit();
-}
-*/
-
-String read_String(char add){
-  int i;
-  char data[100]; //Max 100 Bytes
-  int len=0;
-  unsigned char k;
-  k=EEPROM.read(add);
-  while(k != '\0' && len<500)   //Read until null character
-  {    
-    k=EEPROM.read(add+len);
-    data[len]=k;
-    len++;
-  }
-  data[len]='\0';
-  return String(data);
-}
-
-void loadNetData(){
-
-   ext_ssid = newReadString(addrExtSSID);
- Serial.println("prendo SSID");
- ext_password = newReadString(addrExtPassword); 
+void loadNetData() {
+  ext_ssid = newReadString(addrExtSSID);
+  Serial.println("prendo SSID");
+  ext_password = newReadString(addrExtPassword);
   Serial.println("prendo password");
 }
-
-
-
-void newWriteString(int add, String data) {
-  int _size = data.length();
-  int sec = 0, pos = 0;
-  for (int sec = 0; sec < add; sec++) {
-    pos = pos + EEPROM.read(pos);
+void writeString (int address, String data){
+  lenght = strlen(data);
+  memory_map[address] = lenght;
+  for (i = address + 1, a = 0; i < address + lenght + 1; i++, a++){
+    memory_map[i] = data[a];
   }
-  EEPROM.write(pos, _size + 1);
-  Serial.print("scrivo: ");
-  Serial.print( _size + 1);
-  Serial.println(" in posizione: ");
-  Serial.println(pos);
-
-  pos++;
-  for (int i = 0; i < _size; i++) {
-    EEPROM.write(pos + i, data[i]);
-
-    Serial.print("scrivo: ");
-    Serial.print( data[i]);
-    Serial.println(" in posizione: ");
-    Serial.println(pos + i);
-  }
-
-  EEPROM.commit();
 }
 
 String newReadString(int add) {
