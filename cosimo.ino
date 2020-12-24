@@ -5,17 +5,22 @@
 #include<EEPROM.h>
 
 void setup() {
-Serial.begin(115200);
-EEPROM.begin(4096);
+  Serial.begin(115200);
+  EEPROM.begin(4096);
   Serial.println("sketch di prova etc etc");
+
 loadNetData();
 if(netMode)tryConnect();
 else createNetwork();
 
+
 }
 
 void loop() {
-  
-  server.handleClient();
-  
+
+
+  if (netStat) {
+    server.handleClient();
+  }
+
 }

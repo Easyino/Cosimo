@@ -1,4 +1,5 @@
 
+
 /*
 void writeString(char add,String data){
   int _size = data.length();
@@ -61,9 +62,20 @@ void newWriteString(int add, String data) {
     Serial.print( data[i]);
     Serial.println(" in posizione: ");
     Serial.println(pos + i);
-  }
 
-  EEPROM.commit();
+void loadNetData() {
+  ext_ssid = newReadString(addrExtSSID);
+  Serial.println("prendo SSID");
+  ext_password = newReadString(addrExtPassword);
+  Serial.println("prendo password");
+}
+void writeString (int address, String data){
+  lenght = strlen(data);
+  memory_map[address] = lenght;
+  for (i = address + 1, a = 0; i < address + lenght + 1; i++, a++){
+    memory_map[i] = data[a];
+
+  }
 }
 
 String newReadString(int add) {

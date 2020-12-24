@@ -1,5 +1,7 @@
-
-
+//Commands memorisation
+byte memory_map[4096];
+unsigned int checkpoint_memory[20];
+int i = 0, a = 0, c = 0, r = 0;
 
 //variables declaration
 struct section{
@@ -30,6 +32,7 @@ ESP8266WebServer server(80);
 
 
 //EEPROM
+
 #define addrNetMode 0 //0 for creating a webpage; 1 for connecting to an existing one
 #define addrExtSSID 1
 #define addrExtPassword 2
