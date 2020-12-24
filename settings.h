@@ -15,7 +15,7 @@ struct section section[10];
 
 //Network
 bool netStat=0;//status of the network
-
+bool netMode=0;
 //SSID and PSWD of Cosimo's Network
 const char* personal_ssid = "Easyino Cosimo";
 const char* personal_password = "12345678"; 
@@ -30,5 +30,6 @@ ESP8266WebServer server(80);
 
 
 //EEPROM
-#define addrExtSSID 0
-#define addrExtPassword 1
+#define addrNetMode 0 //0 for creating a webpage; 1 for connecting to an existing one
+#define addrExtSSID 1
+#define addrExtPassword 2

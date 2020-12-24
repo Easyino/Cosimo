@@ -28,19 +28,22 @@ String read_String(char add){
   return String(data);
 }
 
-void loadNetData(){
-
+void loadNetData(){ 
+if(EEPROM.read(1)!=0){
+netMode=1;
    ext_ssid = newReadString(addrExtSSID);
  Serial.println("prendo SSID");
  ext_password = newReadString(addrExtPassword); 
   Serial.println("prendo password");
+}
+netMode=0;
 }
 
 
 
 void newWriteString(int add, String data) {
   int _size = data.length();
-  int sec = 0, pos = 0;
+  int pos = 0;
   for (int sec = 0; sec < add; sec++) {
     pos = pos + EEPROM.read(pos);
   }
@@ -65,7 +68,7 @@ void newWriteString(int add, String data) {
 
 String newReadString(int add) {
   char data[100];
-  int sec = 0, pos = 0, length;
+  int pos = 0, length;
   unsigned char l;
   for (int sec = 0; sec < add; sec++) {
     pos = pos + EEPROM.read(pos);

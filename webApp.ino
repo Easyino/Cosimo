@@ -14,7 +14,6 @@ void handle_conf() {
 
   server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
 }
-
 void handle_form() {
 
   server.send(200, "text/html", pgForm());
@@ -29,8 +28,9 @@ void handle_getNetInfo() {
 void handle_confNetInfo() {
   Serial.println("Qualcuno mi ha fatto una richiesta.../n");
   newWriteString(addrExtSSID,server.arg("SSID"));
-   newWriteString(addrExtSSID, server.arg("Password"));
-
+   newWriteString(addrExtPassword, server.arg("Password"));
+EEPROM.write(1,1);//set netmode to "connect to an external wifi"
+EEPROM.commit();
   Serial.print("SSID:");
   Serial.print(newReadString(addrExtSSID));
 
@@ -38,6 +38,7 @@ void handle_confNetInfo() {
   Serial.print(newReadString(addrExtPassword));
 
   server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
+  ESP.restart();
 }
 
 
@@ -51,11 +52,15 @@ void createNetwork() {
   server.begin();
   netStat = 1;
     Serial.print("Fatto");
+    
 }
 
 bool tryConnect() {
   loadNetData();
-  Serial.println("cerco di connettermi");
+  Serial.print("trying connecting to: ");
+  Serial.print(ext_ssid);
+    Serial.print("  with this password:");
+  Serial.println(ext_ssid);
   int ret = 0;
   WiFi.mode(WIFI_STA);
   WiFi.begin(ext_ssid, ext_password);
@@ -68,6 +73,9 @@ bool tryConnect() {
     ret++;
     if (ret > 10){
       Serial.println("fallito!");
+  EEPROM.write(1,0);//set netmode to "create a wifi"
+EEPROM.commit();
+ESP.restart();
       return false;
     }
   }
