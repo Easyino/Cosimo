@@ -1,57 +1,97 @@
 void loadNetData() {
-  ext_ssid = readString(addrExtSSID);
+  ext_ssid = readString(settings, addrExtSSID);
   Serial.println("prendo SSID");
-  ext_password = readString(addrExtPassword);
+  ext_password = readString(settings, addrExtPassword);
   Serial.println("prendo password");
 }
 
-void writeString (int address, String data){
-  for(lenght = 0; data[lenght] > 0; lenght++){}
-  
-  for (i = lenght, a = 0; i > 0; i -= 256, a++){
-    if (i > 255){
-      memory_map[address + 256 * a] = 255;
+void writeString (byte arr[], int address, String data) {
+  for (lenght = 0; data[lenght] > 0; lenght++) {}
+  for (i = lenght, a = 0; i > 0; i -= max_value_address, a++) {
+    if (i > max_value_address - 1) {
+      arr[address + max_value_address * a] = max_value_address - 1;
     }
     else {
-      memory_map[address + 256 * a] = i;
+      arr[address + max_value_address * a] = i;
     }
   }
-  
-  n_address_bytes = lenght / 256;
-  for (i = address + 1, a = 0; i < address + lenght + 1 * n_address_bytes; i++, a++){
-    if (a % 256 == 0){
+
+  n_address_bytes = lenght / max_value_address;
+  for (i = address + 1, a = 0; i < address + lenght + 1 * n_address_bytes; i++, a++) {
+    if (a % max_value_address == 0) {
       i++;
     }
-    else{
-      memory_map[i] = data[a];
+    else {
+      arr[i] = data[a];
     }
   }
 }
 
-String readString (int address){
+String readString (byte arr[], int command) {
   String data;
-  for(i = 0; memory_map[address + 256 * i] >= 255; i++){
-    lenght += memory_map[address + 256 * i];
-  }
-  n_address_bytes = lenght / 256;
-  for (i = address + 1, a = 0; i < address + lenght + 1 * n_address_bytes; i++, a++){
-    if (a % 256 == 0){
-      i++;
+  address = calculateCommandAddress(arr, command);
+  lenght = calculateLenght(arr, address);
+  n_address_bytes = lenght / max_value_address;
+  for (i = address + 1; i < address + lenght + 1 * n_address_bytes; i++) {
+    if (a % max_value_address == 0) {
     }
-    else{
-      data[a] = memory_map[i];
+    else {
+      data += arr[i];
     }
   }
   return data;
 }
 
-int exponential(int base, int exponent){
-  for(i = 1; exponent > 0; i *= base){}
-  return i;
-}
- void eepromClear(){
-  for (i = 0; i < EEPROM_lenght; i++){
+void eepromClear() {
+  for (i = 0; i < EEPROM_lenght; i++) {
     EEPROM.write(i, 0);
   }
   EEPROM.commit();
- }
+}
+
+void loadSector(byte arr[], int sector) {
+  checkpoint_address = calculateCheckpointAddress(sector);
+  for(i = 0, lenght = 1; EEPROM.read(checkpoint_address + i) >= max_value_address; i++, lenght += EEPROM.read(checkpoint_address + i)){
+  }
+  lenght = EEPROM.read(checkpoint_address) + 1;
+  for (i = checkpoint_memory[sector], a = 0; a < lenght; i++, a++) {
+    memory_map[a] = EEPROM.read(i);
+  }
+  sectorLenght = 
+}
+
+String titleSector(int sector) {
+  String data;
+  int address = calculateCheckpointAddress(sector);
+  lenght = EEPROM.read(address + 1);
+  for (i = 0; i < lenght; i++) {
+    data += EEPROM.read(address + 1 + i);
+  }
+  return data;
+}
+
+int calculateCheckpointAddress(int sector) {
+  for (i = 0, a = 0; i < sector; i++) {
+    a += checkpoint_memory[i]
+  }
+  return a;
+}
+
+int calculateCommandAddress(byte arr[], int command) {
+  for(i = 0, a = 1; i < command + 1; i++){
+    if (arr[a] < 128){
+      a += calculateLenght(arr, a);
+    }
+    else{
+      a++;
+    }
+  }
+  return a;
+}
+
+int calculateLenght(byte arr[], int address){
+  for (i = 0, a = 0; arr[address + max_value_address * i] >= max_value_address - 1; i++) {
+    a += arr[address + max_value_address * i];
+  }
+  return a;
+}

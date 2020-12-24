@@ -1,2 +1,2 @@
 # cosimo
-An arduino based password manager, secure and fast.
+An arduino based password / keyboard commands manager, secure and fast.

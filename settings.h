@@ -1,21 +1,25 @@
-//Commands memorisation
+//Memory
 #define EEPROM_lenght 4096
-#define usable_address_bits 8
+#define usable_address_bits 7
+#define settings_bytes 100
 unsigned int max_value_address = 0;
-byte memory_map[EEPROM_lenght];
+byte memory_map[500];
+byte settings[settings_bytes];
 unsigned int checkpoint_memory[20];
+int checkpoint_address;
 unsigned short int n_address_bytes = 0;
-int lenght;
+int sectorLenght;
+int commandLenght;
 
 
-//variables declaration
+//Variables declaration
 struct section{
   String title;
   String email;
   String password;
 };
-int n_section=0; ////?
-struct section section[10]; ////?
+int n_section=0;
+struct section section[10];
 int i = 0, a = 0, c = 0, r = 0;
 
 

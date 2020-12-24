@@ -1,25 +1,3 @@
-
-
-void handle_conf() {
-  Serial.println("Qualcuno mi ha fatto una richiesta.../n");
-  section[n_section].title = server.arg("Title");
-  section[n_section].email = server.arg("Email");
-  section[n_section].password = server.arg("Password");
-  Serial.print("nome:");
-  Serial.print(section[n_section].title);
-  Serial.print(" Email:");
-  Serial.print(section[n_section].email);
-  Serial.print("Password:");
-  Serial.print(section[n_section].password);
-
-  server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
-}
-void handle_form() {
-
-  server.send(200, "text/html", pgForm());
-}
-
-
 void handle_getNetInfo() {
 
   server.send(200, "text/html", pgGetNetInfo());
@@ -28,15 +6,15 @@ void handle_getNetInfo() {
 void handle_confNetInfo() {
   Serial.println("Qualcuno mi ha fatto una richiesta.../n");
 
-  writeString(addrExtSSID,server.arg("SSID"));
-   writeString(addrExtSSID, server.arg("Password"));
+  writeString(settings, addrExtSSID,server.arg("SSID"));
+   writeString(settings, addrExtSSID, server.arg("Password"));
 
 
   Serial.print("SSID:");
-  Serial.print(readString(addrExtSSID));
+  Serial.print(readString(settings, addrExtSSID));
 
   Serial.print("Password:");
-  Serial.print(readString(addrExtPassword));
+  Serial.print(readString(settings, addrExtPassword));
 
   server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
   ESP.restart();
@@ -88,8 +66,8 @@ ESP.restart();
   Serial.println(WiFi.localIP());
 
 
-  server.on("/", handle_form);
-  server.on("/conf", handle_conf);
+  //server.on("/", handle_form);
+  //server.on("/conf", handle_conf);
 
   server.begin();
   Serial.println("mi sono connesso!");
