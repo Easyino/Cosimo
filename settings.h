@@ -6,10 +6,11 @@ unsigned int max_value_address = 0;
 byte memory_map[500];
 byte settings[settings_bytes];
 unsigned int checkpoint_memory[20];
-int checkpoint_address;
+unsigned int command_lenght[50];
+unsigned int settings_lenght[settings_bytes];
+int sector_lenght;
 unsigned short int n_address_bytes = 0;
-int sectorLenght;
-int commandLenght;
+
 
 
 //Variables declaration
@@ -20,7 +21,6 @@ struct section{
 };
 int n_section=0;
 struct section section[10];
-int i = 0, a = 0, c = 0, r = 0;
 
 
 
