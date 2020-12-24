@@ -1,7 +1,12 @@
 //Commands memorisation
-byte memory_map[4096];
+#define EEPROM_lenght 4096
+#define usable_address_bits 8
+unsigned int max_value_address = 0;
+byte memory_map[EEPROM_lenght];
 unsigned int checkpoint_memory[20];
-int i = 0, a = 0, c = 0, r = 0;
+unsigned short int n_address_bytes = 0;
+int lenght;
+
 
 //variables declaration
 struct section{
@@ -9,9 +14,9 @@ struct section{
   String email;
   String password;
 };
-int n_section=0;
-struct section section[10];
-
+int n_section=0; ////?
+struct section section[10]; ////?
+int i = 0, a = 0, c = 0, r = 0;
 
 
 
@@ -31,6 +36,6 @@ IPAddress subnet(255, 0, 0, 0);
 ESP8266WebServer server(80);
 
 
-//EEPROM
+//Addresses
 #define addrExtSSID 0
 #define addrExtPassword 1

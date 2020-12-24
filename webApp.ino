@@ -28,14 +28,14 @@ void handle_getNetInfo() {
 
 void handle_confNetInfo() {
   Serial.println("Qualcuno mi ha fatto una richiesta.../n");
-  newWriteString(addrExtSSID,server.arg("SSID"));
-   newWriteString(addrExtSSID, server.arg("Password"));
+  writeString(addrExtSSID,server.arg("SSID"));
+   writeString(addrExtSSID, server.arg("Password"));
 
   Serial.print("SSID:");
-  Serial.print(newReadString(addrExtSSID));
+  Serial.print(readString(addrExtSSID));
 
   Serial.print("Password:");
-  Serial.print(newReadString(addrExtPassword));
+  Serial.print(readString(addrExtPassword));
 
   server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
 }
