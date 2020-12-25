@@ -1,8 +1,9 @@
+#include <EEPROM.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
 #include "settings.h"
 #include <WiFiClient.h>
-#include<EEPROM.h>
+
 
 void setup() {
   Serial.begin(115200);

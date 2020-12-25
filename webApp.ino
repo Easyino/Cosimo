@@ -5,12 +5,12 @@ void handle_getNetInfo() {
 
 void handle_confNetInfo() {
   Serial.println("Qualcuno mi ha fatto una richiesta.../n");
-  
+
   loadSector(1);
-  
-  addString(addrExtSSID, server.arg("SSID"));
-  addString(addrExtPassword, server.arg("Password"));
-  
+
+  updateString(addrExtSSID, server.arg("SSID"));
+  updateString(addrExtPassword, server.arg("Password"));
+
   Serial.print("SSID:");
   Serial.print(readString(addrExtSSID));
 
@@ -24,22 +24,22 @@ void handle_confNetInfo() {
 
 
 void createNetwork() {
-    Serial.println("creo la rete...");
+  Serial.println("creo la rete...");
   WiFi.softAP(personal_ssid, personal_password);
   WiFi.softAPConfig(local_ip, gateway, subnet);
   server.on("/", handle_getNetInfo);
   server.on("/conf", handle_confNetInfo);
   server.begin();
   netStat = 1;
-    Serial.print("Fatto");
-    
+  Serial.print("Fatto");
+
 }
 
 bool tryConnect() {
   loadNetData();
   Serial.print("trying connecting to: ");
   Serial.print(ext_ssid);
-    Serial.print("  with this password:");
+  Serial.print("  with this password:");
   Serial.println(ext_ssid);
   int ret = 0;
   WiFi.mode(WIFI_STA);
@@ -51,11 +51,11 @@ bool tryConnect() {
     delay(500);
     Serial.print(".");
     ret++;
-    if (ret > 10){
+    if (ret > 10) {
       Serial.println("fallito!");
-  EEPROM.write(1,0);//set netmode to "create a wifi"
-EEPROM.commit();
-ESP.restart();
+      EEPROM.write(1, 0); //set netmode to "create a wifi"
+      EEPROM.commit();
+      ESP.restart();
       return false;
     }
   }
@@ -73,6 +73,6 @@ ESP.restart();
   server.begin();
   Serial.println("mi sono connesso!");
   netStat = 1;
-    Serial.println("SUCCESS!!!");
+  Serial.println("SUCCESS!!!");
   return true;
 }

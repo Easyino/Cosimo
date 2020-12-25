@@ -7,8 +7,8 @@ byte memory_map[500];
 unsigned int settings[settings_bytes];
 unsigned int checkpoint_memory[20];
 unsigned int command_lenght[50];
-unsigned int settings_lenght[settings_bytes];
-int sector = 0;
+//short int changes[50];
+int sector_loaded = 0;
 unsigned short int n_address_bytes = 0;
 int i, a, r, c;
 
@@ -45,7 +45,7 @@ ESP8266WebServer server(80);
 //EEPROM
 
 #define addrNetMode 0 //0 for creating a webpage; 1 for connecting to an existing one
-enum credential_commands{
+enum credential_commands {
   addrExtSSID,
   addrExtPassword
-}
+};
