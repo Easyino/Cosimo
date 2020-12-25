@@ -7,13 +7,13 @@ void eepromClear() {
 
 int calculateCheckpointAddress(int sector) {
   for (i = 0, a = 0; i < sector; i++) {
-    a += checkpoint_memory[i]
+    a += checkpoint_memory[i];
   }
   return a;
 }
 int calculateCommandAddress(int command){
   for (i = 0, a = 0; i < command; i++) {
-    a += command_lenght[i]
+    a += command_lenght[i];
   }
   return a;
 }
@@ -37,24 +37,20 @@ void loadCheckpoints() {
   }
 }
 
-byte loadCommandLenghts(int sector) {
-  byte arr[] = 0;
+void loadCommandLenghts(int sector) {
   for (r = checkpoint_memory[sector] / max_value_address + 1, c = 0; r < checkpoint_memory[sector]; r += a, c++) {
-    arr[c] = calculateLenght(r);
+    command_lenght[c] = calculateLenght(r);
   }
-  return arr;
 }
 
-byte loadSector(int sector) {
-  byte arr[];
-  loadCommandLenght(sector);
+void loadSector(int sector) {
+  loadCommandLenghts(sector);
   int address = calculateCheckpointAddress(sector) + checkpoint_memory[sector] / max_value_address + 1;
   for (a = 0; command_lenght[a] != 0; a++) {
     for (i = address + command_lenght[a] / max_value_address + 1; i < command_lenght[a]; i++) {
-      arr[i] = EEPROM.read(i);
+      memory_map[i] = EEPROM.read(i);
     }
   }
-  return arr;
 }
 
 String titleSector(int sector) {
@@ -68,13 +64,14 @@ String titleSector(int sector) {
 }
 
 void loadNetData() {
-  ext_ssid = readString(settings, addrExtSSID);
+  loadSector(1);
+  ext_ssid = readString(addrExtSSID);
   Serial.println("prendo SSID");
-  ext_password = readString(settings, addrExtPassword);
+  ext_password = readString(addrExtPassword);
   Serial.println("prendo password");
 }
 
-void addString (byte arr[], String data) {
+void addString (String data) {
   //  address = calculateLenght(arr[], 0) + 1;
   //  for (command_lenght = 0; data[command_lenght] > 0; command_lenght++) {}
   //  for (i = command_lenght, a = 0; i > 0; i -= max_value_address, a++) {
@@ -106,8 +103,10 @@ void addString (byte arr[], String data) {
   //  }
 }
 
-String readString (byte arr[], int command) {
+String readString (int command) {
   String data;
+  int address = calculateCommandAddress(command);
+  
   //  address = calculateCommandAddress(arr, command);
   //  command_lenght = calculateLenght(arr, address);
   //  n_address_bytes = command_lenght / max_value_address;
@@ -118,5 +117,9 @@ String readString (byte arr[], int command) {
   //      data += arr[i];
   //    }
   //  }
-  //  return data;
+  return data;
+}
+
+void updateString(int command, String data){
+  
 }

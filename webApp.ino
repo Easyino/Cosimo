@@ -5,16 +5,17 @@ void handle_getNetInfo() {
 
 void handle_confNetInfo() {
   Serial.println("Qualcuno mi ha fatto una richiesta.../n");
-
-  writeString(settings, addrExtSSID,server.arg("SSID"));
-   writeString(settings, addrExtSSID, server.arg("Password"));
-
-
+  
+  loadSector(1);
+  
+  addString(addrExtSSID, server.arg("SSID"));
+  addString(addrExtPassword, server.arg("Password"));
+  
   Serial.print("SSID:");
-  Serial.print(readString(settings, addrExtSSID));
+  Serial.print(readString(addrExtSSID));
 
   Serial.print("Password:");
-  Serial.print(readString(settings, addrExtPassword));
+  Serial.print(readString(addrExtPassword));
 
   server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
   ESP.restart();

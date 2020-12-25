@@ -9,8 +9,10 @@ void setup() {
   EEPROM.begin(EEPROM_lenght); 
   //eepromClear();
   loadCheckpoints();
-  settings = loadSector(0);
-  settings_lenght = command_lenght;
+  loadSector(0);
+  for(i = 0; i < settings_bytes; i++){
+    settings[i] = memory_map[i];
+  }
   Serial.println("sketch di prova etc etc");
   max_value_address = exponential(2, usable_address_bits);
   Serial.print("max address memory = ");

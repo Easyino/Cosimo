@@ -1,15 +1,16 @@
 //Memory
 #define EEPROM_lenght 4096
 #define usable_address_bits 7
-#define settings_bytes 100
+#define settings_bytes 50
 unsigned int max_value_address = 0;
 byte memory_map[500];
-byte settings[settings_bytes];
+unsigned int settings[settings_bytes];
 unsigned int checkpoint_memory[20];
 unsigned int command_lenght[50];
 unsigned int settings_lenght[settings_bytes];
-int sector_lenght;
+int sector = 0;
 unsigned short int n_address_bytes = 0;
+int i, a, r, c;
 
 
 
@@ -44,5 +45,7 @@ ESP8266WebServer server(80);
 //EEPROM
 
 #define addrNetMode 0 //0 for creating a webpage; 1 for connecting to an existing one
-#define addrExtSSID 1
-#define addrExtPassword 2
+enum credential_commands{
+  addrExtSSID,
+  addrExtPassword
+}
