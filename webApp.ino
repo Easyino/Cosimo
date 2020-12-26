@@ -8,14 +8,14 @@ void handle_confNetInfo() {
 
   loadSector(1);
 
-  updateString(addrExtSSID, server.arg("SSID"));
-  updateString(addrExtPassword, server.arg("Password"));
+  memory_map[addrExtSSID] = server.arg("SSID");
+  memory_map[addrExtPassword] = server.arg("Password");
 
   Serial.print("SSID:");
-  Serial.print(readString(addrExtSSID));
+  Serial.print(memory_map[addrExtSSID]);
 
   Serial.print("Password:");
-  Serial.print(readString(addrExtPassword));
+  Serial.print(memory_map[addrExtPassword]);
 
   server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
   ESP.restart();

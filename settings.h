@@ -2,14 +2,19 @@
 #define EEPROM_lenght 4096
 #define usable_address_bits 7
 #define settings_bytes 50
-unsigned int max_value_address = 0;
-byte memory_map[500];
-unsigned int settings[settings_bytes];
-unsigned int checkpoint_memory[20];
-unsigned int command_lenght[50];
+int max_value_address = 0;
+
+//byte memory_map[500];
+String memory_map[50];
+int settings[settings_bytes];
+
+int checkpoint_memory[20];
+//unsigned int address_bytes;
+
+int command_length[50];
 //short int changes[50];
 int sector_loaded = 0;
-unsigned short int n_address_bytes = 0;
+
 int i, a, r, c;
 
 
@@ -22,6 +27,11 @@ struct section{
 };
 int n_section=0;
 struct section section[10];
+
+
+//Serial comunication
+bool stringComplete = false;
+String inputString = "";
 
 
 
