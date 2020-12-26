@@ -125,7 +125,7 @@
   void updateEEPROM() {
 
   }
-*////////////////////////// Nuovo metodo di memorizzazione
+*////////////////////////// Nuovo metodo di memorizzazione..
 
 void loadCheckpoints() {
   for (r = 0, c = 0; EEPROM.read(r) != 0; r += a, c++) {
