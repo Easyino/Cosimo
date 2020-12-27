@@ -8,9 +8,9 @@ void handle_confNetInfo() {
 
   loadSector(1);
 
-  memory_map[addrExtSSID] = server.arg("SSID");
-  memory_map[addrExtPassword] = server.arg("Password");
-
+  updateString(addrExtSSID, server.arg("SSID"));
+  updateString(addrExtPassword, server.arg("Password"));
+  updateEEPROM();
   Serial.print("SSID:");
   Serial.print(memory_map[addrExtSSID]);
 

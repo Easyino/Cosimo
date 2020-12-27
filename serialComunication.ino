@@ -1,15 +1,22 @@
 void executeSerialCommands() {
-  if (stringComplete) {
-    Serial.println(inputString);
-    if (inputString == "add") {
-      
-    }
-    else {
-      Serial.println(F("Comando non riconosciuto"));
-    }
-    inputString = "";
-    stringComplete = false;
+  Serial.println(inputString);
+  if (serialString[0].equalsIgnoreCase("load")) {
+    loadSector(serialString[1].toInt());
+    Serial.print("Sector loaded: ");
+    Serial.println(serialString[1].toInt());
   }
+  else if (serialString[0].equalsIgnoreCase("update")) {
+    Serial.print("Command updated: ");
+    Serial.print(memory_map[serialString[1].toInt()]);
+    Serial.print(" --> ");
+    updateString(serialString[1].toInt(), serialString[2]);
+    Serial.println(memory_map[serialString[1].toInt()]);
+  }
+  else {
+    Serial.println("Comando non riconosciuto");
+  }
+  inputString = "";
+  stringComplete = false;
 }
 
 
@@ -25,13 +32,33 @@ void serialEvent() {
   }
 }
 
-String extractSerialCommand(String data, int command){
-  String sub_string;
-  for(a = 0; a < command; a++){
-    sub_string = "";
-    for(i = 0; data[i] != ' '; i++){
-      sub_string += data[i];
-    }
+void loadSerialCommands(String data) {
+  String subString;
+  for (c = 0; serialString[c] != '\0'; c++) {
+    serialString[c] = "\0";
   }
-  return sub_string;
+  for (a = 0, i = 0; data[i] != '\0'; a++) {
+    for (i = 0; data[i] != ' ' || data[i] != '\0'; i++) {
+      subString += data[i];
+    }
+    serialString[a] = subString;
+  }
+}
+
+
+
+void reportStarting(String comment){
+  Serial.print(comment + "... ");
+  execution_time = millis();
+  serial_reporter = 0;
+}
+void reportEnding(){
+  Serial.print("done ");
+  Serial.print(millis() - execution_time);
+  Serial.println("ms");
+}
+void reportStep(){
+  Serial.print(serial_reporter);
+  Serial.print(", ");
+  serial_reporter++;
 }

@@ -127,10 +127,20 @@
   }
 *////////////////////////// Nuovo metodo di memorizzazione..
 
+void eepromClear() {
+  for (i = 0; i < EEPROM_length; i++) {
+    EEPROM.write(i, 0);
+  }
+  EEPROM.commit();
+}
+
 void loadCheckpoints() {
+  reportStarting("Loading checkpoints");
+  reportStep();
   for (r = 0, c = 0; EEPROM.read(r) != 0; r += a, c++) {
     checkpoint_memory[c] = calculatelength(r);
   }
+  reportEnding();
 }
 
 void loadCommandlengths(int sector) {
@@ -162,21 +172,24 @@ int calculatelength(int address) {
 }
 
 
-
 void loadSector(int sector) {
+  reportStarting("Loading sector");
   loadCommandlengths(sector);
+  reportStep();
   sector_loaded = sector;
   for (i = 0; command_length[i] != 0; i++) {
-    memory_map[i] = "";
+    memory_map[i] = "\0";
   }
+  reportStep();
   int address = calculateCheckpointAddress(sector) + 1;
+  reportStep();
   for (c = 0, r = 0; c < checkpoint_memory[sector]; c += command_length[r] + command_length[r] / max_value_address + 1, r++) {
     for (i = address + command_length[r] / max_value_address + 1, a = 0; a < command_length[r]; i++, a++) {
       memory_map[r] += EEPROM.read(i);
     }
   }
+  reportEnding();
 }
-
 
 
 void updateEEPROM() {
@@ -191,9 +204,9 @@ void updateEEPROM() {
 }
 
 void shiftEEPROM(int address, int jump) {
-  for (i = 0; i < jump; i++) {
+  for (i = 0; i != jump; i += jump / abs(jump)) {
     c = EEPROM.read(address + jump + i);
-    for (a = address + jump + i; r != 0; a += jump) {
+    for (a = address + jump + i; r != 0; a += abs(jump)) {
       r = EEPROM.read(a);
       EEPROM.write(a, c);
       c = r;
@@ -221,10 +234,17 @@ String writelength(int length) {
   return data;
 }
 
+
+
 void loadNetData() {
   loadSector(1);
   ext_ssid = memory_map[addrExtSSID];
   Serial.println("prendo SSID");
   ext_password = memory_map[addrExtPassword];
   Serial.println("prendo password");
-  }
+}
+
+void updateString(int command, String data) {
+  checkpoint_memory[sector_loaded] += data.length() - memory_map[command].length();
+  memory_map[command] = data;
+}
