@@ -3,6 +3,8 @@
 #include <ESP8266WiFi.h>
 #include "settings.h"
 #include <WiFiClient.h>
+#include <Wire.h>
+#include <PolledTimeout.h>
 #include <TypeConversion.h>
 #include <Crypto.h>
 namespace TypeCast = experimental::TypeConversion;
@@ -13,19 +15,26 @@ uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
 
 
 void setup() {
+  pinMode(up, INPUT_PULLUP);
+  pinMode(confirm, INPUT_PULLUP);
+  pinMode(down, INPUT_PULLUP);
+  //Wire.begin(SDA_PIN, SCL_PIN, I2C_MASTER);
+
+
   Serial.begin(2000000);
+  Serial.println("--------------------------------");
+
   EEPROM.begin(EEPROM_length);
   inputString.reserve(200);
-  eepromClear();
+  max_value_address = pow(2, usable_address_bits);
+  Serial.print("max address memory = ");
+  Serial.println(max_value_address);
   loadCheckpoints();
   loadSector(0);
   for (i = 0; i < settings_bytes; i++) {
     settings[i] = memory_map[i][0];
   }
-  Serial.println("sketch di prova etc etc");
-  max_value_address = pow(2, usable_address_bits);
-  Serial.print("max address memory = ");
-  Serial.println(max_value_address);
+
   if (!tryConnect())createNetwork();
 }
 
@@ -33,7 +42,10 @@ void loop() {
   if (netStat) {
     server.handleClient();
   }
+  serialEvent();
   if (stringComplete) {
+    stringComplete = false;
+    loadSerialCommands(inputString);
     executeSerialCommands();
   }
 }
