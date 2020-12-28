@@ -1,4 +1,4 @@
-#include <EEPROM.h>
+ #include <EEPROM.h>
 #include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
 #include "settings.h"
@@ -23,7 +23,7 @@ void setup() {
   //Wire.begin(SDA_PIN, SCL_PIN, I2C_MASTER);
 
 
-  Serial.begin(2000000);
+  Serial.begin(9600);
   Serial.println("--------------------------------");
 
   EEPROM.begin(EEPROM_length);
@@ -37,7 +37,7 @@ void setup() {
     settings[i] = memory_map[i][0];
   }
 
-  if (!tryConnect())createNetwork();
+  //if (!tryConnect())createNetwork();
 }
 
 void loop() {

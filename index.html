@@ -5,123 +5,110 @@
     <title>Easyino - Cosimo</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <style>
-        .container {
-            padding-top: 20px;
-        }
 
-        .centrato {
-            margin: auto;
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        }
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-        .form-inline {
-            width: auto;
-        }
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 
-        .form-row {
-            padding: 10px;
-            margin: 10px;
-        }
-        .form-row button{
-            margin: 10px;
-        }
-        .form-row form-group{
-            margin: 10px;
-          
-        }
-        .form-row input {
-            margin-top: 10px;
-          
-        }
-        .nascosto{
-            display: none;
-        }
-    </style>
-    <script>
-        function nascondi(){
-
-            document.getElementById("table-place").classList.remove('nascosto');
-            document.getElementById("status-bar-not-connected").classList.add('nascosto');
-            document.getElementById("status-bar-connected").classList.remove('nascosto');
-            document.getElementById("IP-form").classList.add('nascosto');
-            document.getElementById("IP-connected").classList.remove('nascosto');
-
-        }
-    </script>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
+
+    <script src="src/script.js"></script>
+
+
     <h1 class="text-center">Il tuo easyino Cosimo</h1>
     <div class="container">
-<div id="status-bar-not-connected" class="text-center text-danger">
-    <h3>Not connected</h3>
-</div>
-<div id="status-bar-connected" class="text-center text-success nascosto">
-    <h3>Connected</h3>
-</div>
+        <div id="status-bar-not-connected" class="text-center text-danger">
+            <h3>Not connected</h3>
+        </div>
+        <div id="status-bar-connected" class="text-center text-success nascosto">
+            <h3>Connected</h3>
+        </div>
+        <button class="btn btn-primary mb-2" id="btn-connect">Connect</button>
 
         <div class="row">
 
             <div class="centrato">
-                <form id="IP-form" class="form-row align-items-center">
-
+                <div id="IP-form" class=" align-items-center">
                     <div class="form-group mx-sm-3 mb-2">
-                        <label for="inputIP" class="sr-only">Password</label>
-                        <input type="password" class="form-control" id="inputIP"
-                            placeholder="Insert here tour IP adress">
+                        <input type="text" class="form-control" id="ip-value" placeholder="Insert here tour IP adress">
                     </div>
-                    <button type="submit" class="btn btn-primary mb-2" >Connect</button>
-                </form>
-<div id="IP-connected" class="text-center text-muted nascosto">
+                </div>
+                <div id="IP-connected" class="text-center text-muted nascosto">
 
-    <h4>Your IP: 192.168.0.1</h4>
-</div>
-               
+                    <h4>Your IP: 192.168.0.1</h4>
+                </div>
+
             </div>
 
         </div>
-<div id="table-place"class="centrato nascosto">
+        <div id="table-place" class="centrato nascosto">
 
-    <table class="table">
-        <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Username</th>
-                <th scope="col">Password</th>
-                <th scope="col">Edit</th>
-            </tr>
-        </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td><button class="btn-sm btn-outline-primary">Edit</button></td>
-            </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td><button class="btn-sm btn-outline-primary">Edit</button></td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-                <td><button class="btn-sm btn-outline-primary">Edit</button></td>
-              </tr>
-            </tbody>
-        </table>
-    </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Password</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody id="list-all">
+                    <tr id="ghost-item"></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
     <button onclick="nascondi()">(sono connesso)</button>
+    <div class="result">
+
+    </div>
 </body>
+
+
+
+
+<div class="modal" id="form-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title">Modal Heading</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form id="input-modal" action="destination.html">
+                    <input type="text" id="input-modal-id" name="name" value="Nome" hidden>
+                    <input type="text" id="input-modal-name" name="name" value="Nome">
+                    <input type="text" id="input-modal-username" name="username" value="Username">
+                    <input type="password" id="input-modal-password" name="password" value="Password">
+                    <input type="submit" value="Go">
+                </form>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+
 
 </html>
