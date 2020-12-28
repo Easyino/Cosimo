@@ -10,6 +10,7 @@ void handle_confNetInfo() {
 
   updateString(addrExtSSID, server.arg("SSID"));
   updateString(addrExtPassword, server.arg("Password"));
+  
   updateEEPROM();
   Serial.print("SSID:");
   Serial.print(memory_map[addrExtSSID]);
@@ -40,7 +41,7 @@ bool tryConnect() {
   Serial.print("trying connecting to: ");
   Serial.print(ext_ssid);
   Serial.print("  with this password:");
-  Serial.println(ext_ssid);
+  Serial.println(ext_password);
   int ret = 0;
   WiFi.mode(WIFI_STA);
   WiFi.begin(ext_ssid, ext_password);
