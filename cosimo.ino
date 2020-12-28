@@ -53,6 +53,7 @@ void setup() {
   if (digitalRead(D5) == LOW && digitalRead(D7) == LOW){
     OTAupdate();
   }
+}
 
 void loop() {
   if (netStat) {
