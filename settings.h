@@ -9,7 +9,6 @@ String memory_map[50];
 int settings[settings_bytes];
 
 int checkpoint_memory[20];
-//unsigned int address_bytes;
 
 int command_length[50];
 //short int changes[50];

@@ -10,8 +10,9 @@
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
-uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
-
+#include "SSD1306Wire.h"
+#include "images.h"
+SSD1306Wire display(0x3c, SDA, SCL); 
 
 
 void setup() {
@@ -31,7 +32,7 @@ void setup() {
   Serial.println(max_value_address);
   loadCheckpoints();
   loadSector(0);
-  for (i = 0; i < settings_bytes; i++) {
+  for (i = 0; memory_map[i] != ""; i++) {
     settings[i] = memory_map[i][0];
   }
 
