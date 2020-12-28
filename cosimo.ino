@@ -10,9 +10,10 @@
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
+uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
 #include "SSD1306Wire.h"
 #include "images.h"
-SSD1306Wire display(0x3c, SDA, SCL); 
+SSD1306Wire display(0x3c, SDA, SCL);
 
 
 void setup() {
