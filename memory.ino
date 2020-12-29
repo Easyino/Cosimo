@@ -7,7 +7,7 @@ void eepromClear() {
 
 void loadCheckpoints() {
   reportStarting("Loading checkpoints");
-  for (r = 0, c = 0; (char)EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
+  for (r = EEPROM_offset, c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
     checkpoint_memory[c] = calculatelength(r);
   }
   reportEnding();
@@ -17,7 +17,7 @@ void loadCommandlengths(int sector) {
   int address = calculateCheckpointAddress(sector);
   int address_bytes = addressBytes(checkpoint_memory[sector]);
   Serial.println("Command lengths:");
-  for (r = address + address_bytes, c = 0; (char)EEPROM.read(r) != 0; r += command_length[c] + addressBytes(command_length[c]), c++) {
+  for (r = address + address_bytes, c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
     command_length[c] = calculatelength(r);
     Serial.print("r = ");
     Serial.println(r);
