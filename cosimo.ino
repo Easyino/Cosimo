@@ -59,6 +59,10 @@ void loop() {
   if (netStat) {
     server.handleClient();
   }
+
+  if (ota_initialised){
+    ArduinoOTA.handle();
+  }
   
   serialEvent();
   if (stringComplete) {

@@ -53,6 +53,7 @@ static uint32_t encryptionCounter = 0;
 //Network
 bool netStat = 0; //status of the network
 bool netMode = 0;
+bool ota_initialised = false;
 //SSID and PSWD of Cosimo's Network
 const char* personal_ssid = "Easyino Cosimo";
 const char* personal_password = "12345678";

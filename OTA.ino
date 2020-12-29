@@ -26,6 +26,7 @@ bool OTAupdate() {
     display.setFont(ArialMT_Plain_10);
     display.drawString(display.getWidth() / 2, display.getHeight() / 2, "Ready for OTA:\n" + WiFi.localIP().toString());
     display.display();
+    ota_initialised = true;
     return true;
   }
   else {
