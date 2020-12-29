@@ -1,6 +1,26 @@
 [
-    {"id":1,"name": "youtube", "username": "fede", "password": "aiutoo"},
-    {"id":2,"name": "youtube", "username": "fede", "password": "aiutoo"},
-    {"id":3,"name": "youtube", "username": "fede", "password": "aiutoo"},
-    {"id":4,"name": "youtube", "username": "fede", "password": "aiutoo"}
-  ]
+   {
+      \"id\":1,
+      \"name\":\"youtube\",
+      \"username\":\"fede\",
+      \"password\":\"aiutoo\"
+   },
+   {
+      \"id\":2,
+      \"name\":\"youtube\",
+      \"username\":\"fede\",
+      \"password\":\"aiutoo\"
+   },
+   {
+      \"id\":3,
+      \"name\":\"youtube\",
+      \"username\":\"fede\",
+      \"password\":\"aiutoo\"
+   },
+   {
+      \"id\":4,
+      \"name\":\"youtube\",
+      \"username\":\"fede\",
+      \"password\":\"aiutoo\"
+   }
+]

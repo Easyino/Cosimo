@@ -32,22 +32,25 @@
         <div id="status-bar-connected" class="text-center text-success nascosto">
             <h3>Connected</h3>
         </div>
-        <button class="btn btn-primary mb-2" id="btn-connect">Connect</button>
+
 
         <div class="row">
 
-            <div class="centrato">
-                <div id="IP-form" class=" align-items-center">
+            <div id="IP-form" class="centrato">
+                <div class=" align-items-center form-inline">
                     <div class="form-group mx-sm-3 mb-2">
-                        <input type="text" class="form-control" id="ip-value" placeholder="Insert here tour IP adress">
+                        <input type="text" class="form-control" id="ip-value" value="10.42.0.195"
+                            placeholder="Insert here tour IP adress">
                     </div>
+                    <button class="btn btn-primary mb-2" id="btn-connect">Connect</button>
                 </div>
-                <div id="IP-connected" class="text-center text-muted nascosto">
-
-                    <h4>Your IP: 192.168.0.1</h4>
-                </div>
-
             </div>
+            <div id="IP-connected" class="text-center text-muted nascosto centrato">
+
+                <h4 id=IP-label></h4>
+            </div>
+
+
 
         </div>
         <div id="table-place" class="centrato nascosto">
@@ -66,16 +69,17 @@
                     <tr id="ghost-item"></tr>
                 </tbody>
             </table>
+            <button class="btn btn-primary mb-2" id="btn-add">Add</button>
         </div>
     </div>
-    <button onclick="nascondi()">(sono connesso)</button>
+    <!--<button onclick="nascondi()">(sono connesso)</button>-->
     <div class="result">
 
     </div>
 </body>
 
 
-
+<!--MODAL-->
 
 <div class="modal" id="form-modal">
     <div class="modal-dialog">
@@ -89,12 +93,20 @@
 
             <!-- Modal body -->
             <div class="modal-body">
-                <form id="input-modal" action="destination.html">
+                <form id="input-modal">
                     <input type="text" id="input-modal-id" name="name" value="Nome" hidden>
-                    <input type="text" id="input-modal-name" name="name" value="Nome">
-                    <input type="text" id="input-modal-username" name="username" value="Username">
-                    <input type="password" id="input-modal-password" name="password" value="Password">
-                    <input type="submit" value="Go">
+                    <div class="form-group">
+                        <label for="input-modal-name" class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="input-modal-name" name="name" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-modal-username" class="col-form-label">Username:</label>
+                        <input type="text" class="form-control" id="input-modal-username" name="username" value="">
+                    </div>
+                    <div class="form-group">
+                        <label for="input-modal-password" class="col-form-label">Password:</label>
+                        <input type="password" class="form-control" id="input-modal-password" name="password" value="">
+                    </div>
                 </form>
             </div>
 
@@ -109,6 +121,8 @@
 
 
 
-
+<span id="loading-span" style="display: none;">
+    <img src="https://assets.materialup.com/uploads/e81a3088-dc99-48a1-a1dd-0680fbe707f0/preview.gif">
+</span>
 
 </html>
