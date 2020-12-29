@@ -45,9 +45,25 @@ function connetti() {
   $("#IP-label").html("");
   $("#IP-label").append("Your IP is: " + pureIp);
   $("#list-all").html("");
-  $.get(ip + url_tutti, function (data) {
-    var d = $.type(data);
-    console.log(d);
+
+  $.ajax({
+    type: "GET",
+    url: ip + url_tutti,
+    beforeSend: function (request) {
+      request.withCredentials = false;
+      //request.setRequestHeader("Authorization", "Basic " + btoa('admin' + ":" + 'password'));
+    },
+    success: function (data) {
+      compilaCose(data);
+      nascondi();
+      hideLoading();
+    },
+    fail: function (params) {
+      alert(params);
+    },
+  });
+
+  /* $.get(ip + url_tutti, function (data) {
     compilaCose(data);
     nascondi();
     hideLoading();
@@ -58,7 +74,7 @@ function connetti() {
       nonRaggiungibile();
       console.log(e);
     })
-    .always(function () {});
+    .always(function () {});*/
 }
 function showModal(id) {
   showLoading();
