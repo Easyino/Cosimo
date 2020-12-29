@@ -1,5 +1,6 @@
 //Memory
 #define EEPROM_length 4096
+#define EEPROM_offset 1
 #define usable_address_bits 7
 #define settings_bytes 50
 int max_value_address = 0;

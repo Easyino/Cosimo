@@ -27,7 +27,7 @@ void loadCommandlengths(int sector) {
 
 
 int calculateCheckpointAddress(int sector) {
-  for (i = 0, a = 0; i < sector; i++) {
+  for (i = 0, a = EEPROM_offset; i < sector; i++) {
     a += checkpoint_memory[i] + addressBytes(checkpoint_memory[i]);
   }
   return a;
