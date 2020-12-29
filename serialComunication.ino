@@ -25,13 +25,18 @@ void executeSerialCommands() {
     reportEnding();
   }
   else if (serialString[0].equalsIgnoreCase("load")) {
-    reportStarting("Loading sector");
-    loadSector(serialString[1].toInt());
-    Serial.println(serialString[1].toInt());
-    for (i = 0; memory_map[i] != ""; i++) {
-      Serial.println(memory_map[i]);
+    if (serialString[1].equalsIgnoreCase("checkpoints")) {
+
     }
-    reportEnding();
+    else {
+      reportStarting("Loading sector");
+      loadSector(serialString[1].toInt());
+      Serial.println(serialString[1].toInt());
+      for (i = 0; memory_map[i] != ""; i++) {
+        Serial.println(memory_map[i]);
+      }
+      reportEnding();
+    }
   }
   else if (serialString[0].equalsIgnoreCase("update")) {
     Serial.print("Command updated: ");
@@ -76,6 +81,17 @@ void executeSerialCommands() {
     else if (serialString[1].equalsIgnoreCase("create")) {
       createNetwork();
 
+    }
+    else {
+      Serial.println("Langheno ho cambiato i comandi");
+    }
+  }
+  else if (serialString[0].equalsIgnoreCase("OTA")) {
+    if (OTAupdate()) {
+      Serial.println("Ready to be update through the net");
+    }
+    else {
+      Serial.println("Failed");
     }
   }
   else {

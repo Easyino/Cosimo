@@ -1,4 +1,4 @@
-void OTAupdate() {
+bool OTAupdate() {
   if (WiFi.status() == WL_CONNECTED) {
     ArduinoOTA.begin();
     ArduinoOTA.onStart([]() {
@@ -26,5 +26,9 @@ void OTAupdate() {
     display.setFont(ArialMT_Plain_10);
     display.drawString(display.getWidth() / 2, display.getHeight() / 2, "Ready for OTA:\n" + WiFi.localIP().toString());
     display.display();
+    return true;
+  }
+  else {
+    return false;
   }
 }

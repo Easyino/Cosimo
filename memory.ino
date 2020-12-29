@@ -7,21 +7,20 @@ void eepromClear() {
 
 void loadCheckpoints() {
   reportStarting("Loading checkpoints");
-  reportStep();
-  for (r = 0, c = 0; (char)EEPROM.read(r) != 0; r += a, c++) {
+  for (r = 0, c = 0; (char)EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
     checkpoint_memory[c] = calculatelength(r);
   }
   reportEnding();
 }
 
 void loadCommandlengths(int sector) {
-  int address_bytes = addressBytes(checkpoint_memory[sector]);
   int address = calculateCheckpointAddress(sector);
+  int address_bytes = addressBytes(checkpoint_memory[sector]);
   Serial.println("Command lengths:");
-  for (r = address + address_bytes, c = 0; c < checkpoint_memory[sector] + address_bytes; r += command_length[c] + addressBytes(command_length[c]), c++) {
+  for (r = address + address_bytes, c = 0; (char)EEPROM.read(r) != 0; r += command_length[c] + addressBytes(command_length[c]), c++) {
     command_length[c] = calculatelength(r);
-    Serial.print(a);
-    Serial.print(", ");
+    Serial.print("r = ");
+    Serial.println(r);
   }
   Serial.println("");
 }
@@ -35,14 +34,16 @@ int calculateCheckpointAddress(int sector) {
 }
 
 int calculatelength(int address) {
-  if ((char)EEPROM.read(address + i) >= max_value_address) {
-    a = 1;
+  if ((char)EEPROM.read(address) == 0) {
+    a = 0;
   }
   else {
     for (i = 0, a = 0; (char)EEPROM.read(address + i) == max_value_address; i++) {
-      a += address + max_value_address * i;
+      a += max_value_address * i;
     }
     a += (char)EEPROM.read(address);
+    Serial.print("a = ");
+    Serial.println(a);
   }
   return a;
 }
@@ -51,17 +52,15 @@ int calculatelength(int address) {
 void loadSector(int sector) {
   reportStarting("Loading sector");
   loadCommandlengths(sector);
-  reportStep();
   sector_loaded = sector;
   for (i = 0; memory_map[i] != ""; i++) {
     memory_map[i] = "";
   }
-  reportStep();
-  int address = calculateCheckpointAddress(sector) + 1;
-  reportStep();
-  for (c = 0, r = 0; c < checkpoint_memory[sector]; c += command_length[r] + addressBytes(command_length[r]), r++) {
-    for (i = address + addressBytes(command_length[r]); i < command_length[r] + addressBytes(command_length[r]); i++) {
-      memory_map[r] += (char)EEPROM.read(i);
+  int address = calculateCheckpointAddress(sector);
+  int address_bytes = addressBytes(address);
+  for (c = address + address_bytes + addressBytes(command_length[0]), i = 0; c < checkpoint_memory[sector] + address + address_bytes; c += command_length[i] + addressBytes(command_length[i]), i++) {
+    for (r = 0; r < command_length[i]; r++){
+      memory_map[i] += (char)EEPROM.read(r + c);
     }
   }
   reportEnding();
@@ -145,8 +144,8 @@ int rawLength(String data) {
 int addressBytes(int length) {
   int n;
   for (n = 0; length >= max_value_address; length -= max_value_address, n++) {}
-  if (length != 0){
-    a++;
+  if (length != 0) {
+    n++;
   }
   return n;
 }

@@ -59,7 +59,6 @@ void loop() {
   if (netStat) {
     server.handleClient();
   }
-
   
   serialEvent();
   if (stringComplete) {
