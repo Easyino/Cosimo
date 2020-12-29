@@ -1,8 +1,9 @@
- #include <EEPROM.h>
-#include <ESP8266WebServer.h>
+#include <EEPROM.h>
+//#include <ESP8266WebServer.h>
+#include <ESP8266WebServerSecure.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
- #include <ArduinoOTA.h>
+#include <ArduinoOTA.h>
 #include "settings.h"
 #include <WiFiClient.h>
 #include <Wire.h>
@@ -25,7 +26,7 @@ void setup() {
   Serial.begin(2000000);
   Serial.println("--------------------------------");
 
-  
+
   //Wire.begin(SDA_PIN, SCL_PIN, I2C_MASTER);
   display.init();
   display.flipScreenVertically();
@@ -36,11 +37,11 @@ void setup() {
   inputString.reserve(200);
   max_value_address = pow(2, usable_address_bits);
 
-  if (digitalRead(D5) == LOW && digitalRead(D6) == LOW && digitalRead(D7) == LOW){
+  if (digitalRead(D5) == LOW && digitalRead(D6) == LOW && digitalRead(D7) == LOW) {
     eepromClear();
   }
 
-  
+
   Serial.print("max address memory = ");
   Serial.println(max_value_address);
   loadCheckpoints();
@@ -50,7 +51,7 @@ void setup() {
   }
 
   if (!tryConnect())createNetwork();
-  if (digitalRead(D5) == LOW && digitalRead(D7) == LOW){
+  if (digitalRead(D5) == LOW && digitalRead(D7) == LOW) {
     OTAupdate();
   }
 }
@@ -60,10 +61,10 @@ void loop() {
     server.handleClient();
   }
 
-  if (ota_initialised){
+  if (ota_initialised) {
     ArduinoOTA.handle();
   }
-  
+
   serialEvent();
   if (stringComplete) {
     stringComplete = false;

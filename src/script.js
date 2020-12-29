@@ -18,7 +18,7 @@ var url_new = "/new";
 
 $(document).ready(() => {
   $("#btn-connect").on("click", function () {
-    ip = "http://" + $("#ip-value").val();
+    ip = "https://" + $("#ip-value").val();
     pureIp = $("#ip-value").val();
     console.log(ip);
     connetti();
