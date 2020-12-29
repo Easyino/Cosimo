@@ -25,13 +25,18 @@ void executeSerialCommands() {
     reportEnding();
   }
   else if (serialString[0].equalsIgnoreCase("load")) {
-    reportStarting("Loading sector");
-    loadSector(serialString[1].toInt());
-    Serial.println(serialString[1].toInt());
-    for (i = 0; memory_map[i] != ""; i++) {
-      Serial.println(memory_map[i]);
+    if (serialString[1].equalsIgnoreCase("checkpoints")) {
+
     }
-    reportEnding();
+    else {
+      reportStarting("Loading sector");
+      loadSector(serialString[1].toInt());
+      Serial.println(serialString[1].toInt());
+      for (i = 0; memory_map[i] != ""; i++) {
+        Serial.println(memory_map[i]);
+      }
+      reportEnding();
+    }
   }
   else if (serialString[0].equalsIgnoreCase("update")) {
     Serial.print("Command updated: ");
@@ -69,68 +74,80 @@ void executeSerialCommands() {
   }
 
   else if (serialString[0].equalsIgnoreCase("wifi")) {
-    if (serialString[1].equalsIgnoreCase("tryconnect")) {
+    if (serialString[1].equalsIgnoreCase("connect")) {
       Serial.print(tryConnect());
 
     }
-    else if (serialString[1].equalsIgnoreCase("createNetwork")) {
+    else if (serialString[1].equalsIgnoreCase("create")) {
       createNetwork();
 
-    }}
+    }
     else {
-      Serial.println("Command not recongnised");
-    }
-    inputString = "";
-    stringComplete = false;
-  
-  }
-
-  void serialEvent() {
-    while (Serial.available()) {
-      char inChar = (char)Serial.read();
-      if (inChar == '\n') {
-        stringComplete = true;
-      }
-      else {
-        inputString += inChar;
-      }
-      Serial.print(inChar);
+      Serial.println("Langheno ho cambiato i comandi");
     }
   }
-
-
-  void loadSerialCommands(String data) {
-    reportStarting("Loading serial command");
-    String subString;
-    for (c = 0; serialString[c][0] != '\0'; c++) {
-      serialString[c] = "";
+  else if (serialString[0].equalsIgnoreCase("OTA")) {
+    if (OTAupdate()) {
+      Serial.println("Ready to be update through the net");
     }
-    for (a = 0, i = 0; data[i] != '\0'; a++, i++) {
-      subString = "";
-      for (; (data[i] != ' ' || a == 2) && data[i] != '\0'; i++) {
-        subString += data[i];
-      }
-      serialString[a] = subString;
-      Serial.println(subString);
+    else {
+      Serial.println("Failed");
     }
-    reportEnding();
   }
+  else {
+    Serial.println("Command not recongnised");
+  }
+  inputString = "";
+  stringComplete = false;
+
+}
+
+void serialEvent() {
+  while (Serial.available()) {
+    char inChar = (char)Serial.read();
+    if (inChar == '\n') {
+      stringComplete = true;
+    }
+    else {
+      inputString += inChar;
+    }
+    Serial.print(inChar);
+  }
+}
+
+
+void loadSerialCommands(String data) {
+  reportStarting("Loading serial command");
+  String subString;
+  for (c = 0; serialString[c][0] != '\0'; c++) {
+    serialString[c] = "";
+  }
+  for (a = 0, i = 0; data[i] != '\0'; a++, i++) {
+    subString = "";
+    for (; (data[i] != ' ' || a == 2) && data[i] != '\0'; i++) {
+      subString += data[i];
+    }
+    serialString[a] = subString;
+    Serial.println(subString);
+  }
+  reportEnding();
+}
 
 
 
-  void reportStarting(String comment) {
-    Serial.println("--------------------------------");
-    Serial.print(comment + "...\n");
-    execution_time = micros();
-    serial_reporter = 0;
-  }
-  void reportEnding() {
-    Serial.print("\ndone ");
-    Serial.print(micros() - execution_time);
-    Serial.println("us\n");
-  }
-  void reportStep() {
-    Serial.print(serial_reporter);
-    Serial.print(", ");
-    serial_reporter++;
-  }
+void reportStarting(String comment) {
+  Serial.println("--------------------------------");
+  Serial.print(comment + "...\n");
+  execution_time = micros();
+  serial_reporter = 0;
+}
+void reportEnding() {
+  Serial.print("\ndone ");
+  Serial.print(micros() - execution_time);
+  Serial.println("us\n");
+}
+void reportStep() {
+  Serial.print(serial_reporter);
+  Serial.print(", ");
+  serial_reporter++;
+}

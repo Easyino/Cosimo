@@ -8,9 +8,10 @@ void handle_confNetInfo() {
 
   loadSector(1);
 
-  updateString(addrExtSSID, server.arg("SSID"));
-  updateString(addrExtPassword, server.arg("Password"));
-  updateEEPROM();
+//  updateString(addrExtSSID, server.arg("SSID"));
+//  updateString(addrExtPassword, server.arg("Password"));
+//  
+//  updateEEPROM();
   Serial.print("SSID:");
   Serial.print(memory_map[addrExtSSID]);
 
@@ -40,7 +41,7 @@ bool tryConnect() {
   Serial.print("trying connecting to: ");
   Serial.print(ext_ssid);
   Serial.print("  with this password:");
-  Serial.println(ext_ssid);
+  Serial.println(ext_password);
   int ret = 0;
   WiFi.mode(WIFI_STA);
   WiFi.begin(ext_ssid, ext_password);
@@ -53,7 +54,7 @@ bool tryConnect() {
     ret++;
     if (ret > 10) {
       Serial.println("fallito!");
-      EEPROM.write(1, 0); //set netmode to "create a wifi"
+      EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
       ESP.restart();
       return false;
