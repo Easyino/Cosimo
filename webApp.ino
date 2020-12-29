@@ -53,7 +53,7 @@ bool tryConnect() {
     Serial.print(".");
     ret++;
     if (ret > 10) {
-      Serial.println("fallito!");
+      Serial.println("FAILED!");
       EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
       ESP.restart();
@@ -64,7 +64,7 @@ bool tryConnect() {
 
   Serial.println("");
 
-  Serial.print("indirizzoIP:  ");
+  Serial.print("IP address:  ");
   Serial.println(WiFi.localIP());
 
 
@@ -72,7 +72,7 @@ bool tryConnect() {
   //server.on("/conf", handle_conf);
 
   server.begin();
-  Serial.println("mi sono connesso!");
+  Serial.println("I'm connected!");
   netStat = 1;
   Serial.println("SUCCESS!!!");
   return true;

@@ -88,11 +88,12 @@ void updateEEPROM() {
 
 void shiftEEPROM(int address, int jump) {
   for (i = 0; i != jump; i += jump / abs(jump)) {
-    c = (char)EEPROM.read(address + jump + i);
+    r = (char)EEPROM.read(address + jump + i);
     for (a = address + jump + i; r != 0; a += abs(jump)) {
+      c = r;
       r = (char)EEPROM.read(a);
       EEPROM.write(a, c);
-      c = r;
+      
     }
   }
   EEPROM.commit();

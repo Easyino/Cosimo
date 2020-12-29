@@ -1,5 +1,4 @@
 void executeSerialCommands() {
-  Serial.println(inputString);
   if (serialString[0].equalsIgnoreCase("info")) {
     reportStarting("Printing info");
 
@@ -24,9 +23,12 @@ void executeSerialCommands() {
     }
     reportEnding();
   }
+
+
+  
   else if (serialString[0].equalsIgnoreCase("load")) {
     if (serialString[1].equalsIgnoreCase("checkpoints")) {
-
+      loadCheckpoints();
     }
     else {
       reportStarting("Loading sector");
@@ -52,6 +54,9 @@ void executeSerialCommands() {
     }
     reportEnding();
   }
+
+
+  
   else if (serialString[0].equalsIgnoreCase("EEPROM")) {
     if (serialString[1].equalsIgnoreCase("update")) {
       updateEEPROM();
@@ -73,6 +78,8 @@ void executeSerialCommands() {
     }
   }
 
+
+
   else if (serialString[0].equalsIgnoreCase("wifi")) {
     if (serialString[1].equalsIgnoreCase("connect")) {
       Serial.print(tryConnect());
@@ -82,10 +89,11 @@ void executeSerialCommands() {
       createNetwork();
 
     }
-    else {
-      Serial.println("Langheno ho cambiato i comandi");
-    }
   }
+
+
+
+  
   else if (serialString[0].equalsIgnoreCase("OTA")) {
     if (OTAupdate()) {
       Serial.println("Ready to be update through the net");
@@ -94,6 +102,9 @@ void executeSerialCommands() {
       Serial.println("Failed");
     }
   }
+
+
+  
   else {
     Serial.println("Command not recongnised");
   }
@@ -144,7 +155,7 @@ void reportStarting(String comment) {
 void reportEnding() {
   Serial.print("\ndone ");
   Serial.print(micros() - execution_time);
-  Serial.println("us\n");
+  Serial.println("us\n--------------------------------\n");
 }
 void reportStep() {
   Serial.print(serial_reporter);
