@@ -34,11 +34,11 @@ int calculateCheckpointAddress(int sector) {
 }
 
 int calculatelength(int address) {
-  if ((char)EEPROM.read(address) == 0) {
-    a = 0;
+  if ((char)EEPROM.read(address) >= max_value_address) {
+    a = 1;
   }
   else {
-    for (i = 0, a = 0; (char)EEPROM.read(address + i) == max_value_address; i++) {
+    for (i = 0, a = 0; (char)EEPROM.read(address + i) == max_value_address - 1; i++) {
       a += max_value_address * i;
     }
     a += (char)EEPROM.read(address);
@@ -150,3 +150,20 @@ int addressBytes(int length) {
   }
   return n;
 }
+
+// Troppa ram occupata non si può fare
+////salvo tutto sulla ram
+//String memory_map_global[50][50];
+//void loadStrings(){
+//  int address;
+//  int length0, length1;
+//  int address_bytes0, address_bytes1;
+//  for(address = EEPROM_offset; EEPROM.read(address) != 0; address += length0 + address_bytes0){
+//    length0 = calculatelength(address);
+//    address_bytes0 = addressBytes(length0);
+//    length1 = calculatelength(address + address_bytes0);
+//    for (address += address_bytes0; ; address += length0 + address_bytes0){
+//      
+//    }
+//  }
+//}
