@@ -1,6 +1,6 @@
 void sendSector() {
   Wire.beginTransmission(I2C_SLAVE);
-  for (i = 0; memory_map[i] != "\0"; i++) {
+  for (i = 0; memory_map[i] != ""; i++) {
     for(a = 0; memory_map[i][a] != '\0'; a++){
       Wire.write(memory_map[i][a]);
     }

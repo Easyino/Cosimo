@@ -39,7 +39,7 @@ void setup() {
   inputString.reserve(200);
   max_value_address = pow(2, usable_address_bits);
 
-  if (digitalRead(D5) == LOW && digitalRead(D6) == LOW && digitalRead(D7) == LOW) {
+  if (digitalRead(up) == LOW && digitalRead(confirm) == LOW && digitalRead(down) == LOW) {
     eepromClear();
   }
 
@@ -61,7 +61,7 @@ void setup() {
 
 
   
-  if (digitalRead(D5) == LOW && digitalRead(D7) == LOW) {
+  if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(up) == HIGH) {
     OTAupdate();
   }
 

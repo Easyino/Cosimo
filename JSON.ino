@@ -1,7 +1,3 @@
-//qua ficchiamo tutte le funzioni riguardanti i json
-
-
-
 void handle_GetAllJson() {
   server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(200, "text/plain", getAllJson());
@@ -23,12 +19,12 @@ void handle_delete() {
 
 void handle_Set() {
   server.sendHeader("Access-Control-Allow-Origin", "*");
-if(server.arg("id").toInt()!=0){
-  Serial.print("è stato modificato l'elemento: ");
-  Serial.println( server.arg("id").toInt());
+  if (server.arg("id").toInt() != 0) {
+    Serial.print("è stato modificato l'elemento: ");
+    Serial.println( server.arg("id").toInt());
   }
-  else{
-     Serial.println("è stato creato un nuovo elemento:");
+  else {
+    Serial.println("è stato creato un nuovo elemento:");
   }
 
   Serial.print("title: ");
@@ -65,16 +61,16 @@ String getAllJson() {
 String getSingleJson(int id) {
 
 
-   String text = " { \"id\":";
-    text += id;
-    text += ", \"title\":\"";
-    text += section[id].title;
-    text += "\", \"email\":\"";
-    text += section[id].email;
-        text += "\", \"password\":\"";
-    text += section[id].password;
-    text += "\" }";
-  
+  String text = " { \"id\":";
+  text += id;
+  text += ", \"title\":\"";
+  text += section[id].title;
+  text += "\", \"email\":\"";
+  text += section[id].email;
+  text += "\", \"password\":\"";
+  text += section[id].password;
+  text += "\" }";
+
 
   return text;
 }

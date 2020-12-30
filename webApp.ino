@@ -17,7 +17,7 @@ void handle_confNetInfo() {
 
   Serial.print("Password:");
   Serial.print(memory_map[addrExtPassword]);
-//  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
+  //  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
 
   server.send(200, "text/html", "ORA MI RIAVVIO");
 
@@ -81,10 +81,10 @@ void tryConnect() {
   server.on("/all", handle_GetAllJson);
   server.on("/get", handle_GetSingleJson);
   server.on("/set", handle_Set);
-    server.on("/delete", handle_delete);
+  server.on("/delete", handle_delete);
   server.begin();
   Serial.println("I'm connected!");
   netStat = 1;
   Serial.println("SUCCESS!!!");
- 
+
 }

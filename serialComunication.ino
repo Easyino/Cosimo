@@ -108,7 +108,7 @@ void executeSerialCommands() {
 
   else if (serialString[0].equalsIgnoreCase("OTA")) {
     if (OTAupdate()) {
-      Serial.println("Ready to be update through the net");
+      Serial.println("Ready to be updated through the net");
     }
     else {
       Serial.println("Failed");
