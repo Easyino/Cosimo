@@ -40,15 +40,13 @@ if(server.arg("id").toInt()!=0){
   Serial.print("password: ");
   Serial.println( server.arg("password"));
 
-
   server.send(200, "text/plain", server.arg("id") );
 }
 
-String getJsonPasswords() {
-String  text = "[";
-  for (i = 2; checkpoint_memory[sector_loaded + 1] != 0; i++) {
-    loadSector(i);
+String getAllJson() {
 
+  String  text = "[";
+  for (i = 0; i < n_section; i++) {
     text += " { \"id\":";
     text += i;
     text += ", \"title\":\"";
@@ -62,6 +60,8 @@ String  text = "[";
   text += "]";
   return text;
 }
+
+
 String getSingleJson(int id) {
 
 
