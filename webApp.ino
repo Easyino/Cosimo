@@ -60,7 +60,7 @@ void tryConnect() {
     delay(500);
     Serial.print(".");
     ret++;
-    if (ret > 10) {
+    if (ret > 20) {
       Serial.println("FAILED!");
       EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
