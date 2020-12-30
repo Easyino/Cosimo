@@ -12,33 +12,52 @@ var url_modifica = "";
 //var url_tutti = "src/response.text";
 var url_tutti = "/all";
 //var url_get = "src/3.text;
-var url_get = "/get/?id=";
-var url_set = "/set/?id=";
+var url_get = "/get?id=";
+var url_set = "/set?";
 var url_new = "/new";
+var url_delete = "/delete?";
+
 
 $(document).ready(() => {
   $("#btn-connect").on("click", function () {
     ip = "http://" + $("#ip-value").val();
     pureIp = $("#ip-value").val();
-    console.log(ip);
     connetti();
   });
   $("#btn-add").on("click", function () {
     resetForm();
-    $("#form-modal").modal();
+    $("#modal-edit").modal();
   });
-  $("#input-modal").submit(function (event) {
-    console.log(event.targhet);
-    $.post(
-      ip + url_set + $("#input-modal").serialize().id,
-      $("#input-modal").serialize()
-    ).done(function (data) {
-      alert("Data Loaded: " + data);
+
+  $("#btn-add-modal").on("click", function (event) {
+    var data = $("#form-modal ").serialize();
+    $.post(ip + url_set, data, function (data) {
+      connetti();
     });
-    alert("Handler for .submit() called.");
     event.preventDefault();
   });
+  $("#btn-delete-modal").on("click", function (event) {
+    var data = $("#form-modal ").serialize();
+    $.post(ip + url_delete, data, function (data) {
+      connetti();
+    });
+    event.preventDefault();
+  });
+
+  $(".toggle-password").on("click", function () {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    let input = $($(this).attr("toggle"));
+    if (input.attr("type") == "password") {
+      input.attr("type", "text");
+    } else {
+      input.attr("type", "password");
+    }
+  });
 });
+
+function sendNew() {
+  $.get(ip + url_new);
+}
 
 function connetti() {
   showLoading();
@@ -82,13 +101,13 @@ function connetti() {
 }
 function showModal(id) {
   showLoading();
-  console.log($("#form-modal"));
+  console.log($("#modal-edit"));
   $.get(ip + url_get + id, function (data) {
     var json = JSON.parse(data);
     $.each(json, function (key, value) {
       $("#input-modal-" + key).val(value);
     });
-    $("#form-modal").modal();
+    $("#modal-edit").modal();
     hideLoading();
   }).fail(function (e) {
     hideLoading();
@@ -111,8 +130,6 @@ function compilaCose(data) {
         value.title +
         "</td><td>" +
         value.email +
-        "</td><td>" +
-        value.password +
         '</td><td><button class="btn-sm btn-outline-primary" onclick= "showModal(' +
         value.id +
         ')" >Edit</button></td></tr>'
@@ -134,6 +151,6 @@ function hideLoading() {
   $("#loading-span").hide();
 }
 function resetForm() {
-  console.log($("#form-modal"));
+  console.log($("#modal-edit"));
   $("#form-modal").trigger("reset");
 }

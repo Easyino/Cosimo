@@ -78,7 +78,10 @@ void tryConnect() {
 
 
   server.on("/", handle_conncetionSuccess);
-  server.on("/all", handle_json);
+  server.on("/all", handle_GetAllJson);
+  server.on("/get", handle_GetSingleJson);
+  server.on("/set", handle_Set);
+    server.on("/delete", handle_delete);
   server.begin();
   Serial.println("I'm connected!");
   netStat = 1;

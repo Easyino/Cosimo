@@ -1,35 +1,53 @@
 .container {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .centrato {
-    margin: auto;
-
+  margin: auto;
 }
 
 .form-inline {
-    width: auto;
+  width: auto;
 }
 
 .form-row {
-    padding: 10px;
-    margin: 10px;
+  padding: 10px;
+  margin: 10px;
 }
 
 .form-row button {
-    margin: 10px;
+  margin: 10px;
 }
 
 .form-row form-group {
-    margin: 10px;
-
+  margin: 10px;
 }
 
 .form-row input {
-    margin-top: 10px;
-
+  margin-top: 10px;
 }
 
 .nascosto {
-    display: none;
+  display: none;
+}
+
+input[type="text"].form-control.valid + label:after,
+input[type="text"].form-control:focus.valid + label:after,
+input[type="text"].form-control.invalid + label:after,
+input[type="text"].form-control:focus.invalid + label:after,
+input[type="password"].form-control.valid + label:after,
+input[type="password"].form-control:focus.valid + label:after,
+input[type="password"].form-control.invalid + label:after,
+input[type="password"].form-control:focus.invalid + label:after {
+  top: 3.75rem !important;
+}
+
+span.field-icon {
+
+  display: inline-block;
+  cursor: pointer;
+  right: 0.5rem;
+  top: 0.7rem;
+  color: blueviolet;
+  z-index: 2;
 }

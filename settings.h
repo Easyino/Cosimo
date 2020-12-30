@@ -63,7 +63,6 @@ struct section {
   String email;
   String password;
 };
-
 int n_section = 0;
 struct section section[10];
 //SSID and PSWD of external wifi network
