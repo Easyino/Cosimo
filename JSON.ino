@@ -4,40 +4,24 @@
 
 void handle_json() {
   server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.send(200, "text/plain", getJson());
-//  server.send(200, "text/plain", "[ { \"id\":1, \"name\":\"name1\", \"username\":\"username1\", \"password\":\"password1\" }, { \"id\":2, \"name\":\"name2\", \"username\":\"username2\", \"password\":\"password2\" }  ]");
+  server.send(200, "text/plain", getJsonPasswords());
 }
 
 
-String getJson() {
-
-n_section=4;
-section[0].title="nome-0";
-section[0].email="email-0";
-section[0].password="password-0";
-section[1].title="nome-1";
-section[1].email="email-1";
-section[1].password="password-1";
-section[2].title="nome-2";
-section[2].email="email-2";
-section[2].password="password-2";
-section[3].title="nome-3";
-section[3].email="email-3";
-section[3].password="password-3";
-  
+String getJsonPasswords() {
 String  text = "[";
-  for (i = 0; i < n_section; i++) {
+  for (i = 0; checkpoint_memory[sector_loaded] != 0; i++) {
+    loadSector(i);
     text += " { \"id\":";
     text += i;
     text += ", \"title\":\"";
-    text += section[i].title;
+    text += memory_map[0];
     text += "\", \"email\":\"";
-    text += section[i].email;
+    text += memory_map[1];
     text += "\", \"password\":\"";
-    text += section[i].password;
+    text += memory_map[2];
     text += "\" }";
-    if (i + 1 < n_section)text += ",";
-
+    if (checkpoint_memory[sector_loaded + 1] != 0)text += ",";
   }
   text += "]";
   return text;
