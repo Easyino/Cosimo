@@ -25,7 +25,7 @@ void executeSerialCommands() {
   }
 
 
-  
+
   else if (serialString[0].equalsIgnoreCase("load")) {
     if (serialString[1].equalsIgnoreCase("checkpoints")) {
       loadCheckpoints();
@@ -56,7 +56,7 @@ void executeSerialCommands() {
   }
 
 
-  
+
   else if (serialString[0].equalsIgnoreCase("EEPROM")) {
     if (serialString[1].equalsIgnoreCase("update")) {
       updateEEPROM();
@@ -82,18 +82,30 @@ void executeSerialCommands() {
 
   else if (serialString[0].equalsIgnoreCase("wifi")) {
     if (serialString[1].equalsIgnoreCase("connect")) {
-      Serial.print(tryConnect());
+      tryConnect();
 
     }
     else if (serialString[1].equalsIgnoreCase("create")) {
       createNetwork();
 
     }
+    else if (serialString[1].equalsIgnoreCase("stopAP")) {
+      WiFi.softAPdisconnect (true);
+      Serial.println("WIFI access point has been stopped");
+    }
+
+    if (serialString[1].equalsIgnoreCase("setMode")) {
+      EEPROM.write(0, serialString[2].toInt());
+      EEPROM.commit();
+      Serial.print("setting wifi mode to ");
+      Serial.println(serialString[2].toInt());
+    }
   }
 
+  else if (serialString[0].equalsIgnoreCase("reboot")) {
+    ESP.restart();
+  }
 
-
-  
   else if (serialString[0].equalsIgnoreCase("OTA")) {
     if (OTAupdate()) {
       Serial.println("Ready to be update through the net");
@@ -104,7 +116,7 @@ void executeSerialCommands() {
   }
 
 
-  
+
   else {
     Serial.println("Command not recongnised");
   }

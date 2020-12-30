@@ -108,9 +108,9 @@ function compilaCose(data) {
         '"><th scope="row">' +
         value.id +
         "</th><td>" +
-        value.name +
+        value.title +
         "</td><td>" +
-        value.username +
+        value.email +
         "</td><td>" +
         value.password +
         '</td><td><button class="btn-sm btn-outline-primary" onclick= "showModal(' +

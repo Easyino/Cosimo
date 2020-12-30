@@ -8,20 +8,28 @@ void handle_confNetInfo() {
 
   loadSector(1);
 
-//  updateString(addrExtSSID, server.arg("SSID"));
-//  updateString(addrExtPassword, server.arg("Password"));
-//  
-//  updateEEPROM();
+  updateString(addrExtSSID, server.arg("SSID"));
+  updateString(addrExtPassword, server.arg("Password"));
+
+  updateEEPROM();
   Serial.print("SSID:");
   Serial.print(memory_map[addrExtSSID]);
 
   Serial.print("Password:");
   Serial.print(memory_map[addrExtPassword]);
+//  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
 
-  server.send(200, "text/html", "<meta http-equiv='refresh' content='1; URL=/' >");
+  server.send(200, "text/html", "ORA MI RIAVVIO");
+
+  EEPROM.write(0, 1); //set netmode to "try connect"
+  EEPROM.commit();
   ESP.restart();
 }
 
+void handle_conncetionSuccess() {
+
+  server.send(200, "text/html", "ti sei connesso con successo alla rete");
+}
 
 
 void createNetwork() {
@@ -36,7 +44,7 @@ void createNetwork() {
 
 }
 
-bool tryConnect() {
+void tryConnect() {
   loadNetData();
   Serial.print("trying connecting to: ");
   Serial.print(ext_ssid);
@@ -57,7 +65,7 @@ bool tryConnect() {
       EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
       ESP.restart();
-      return false;
+
     }
   }
 
@@ -68,12 +76,12 @@ bool tryConnect() {
   Serial.println(WiFi.localIP());
 
 
-  //server.on("/", handle_form);
-  //server.on("/conf", handle_conf);
 
+  server.on("/", handle_conncetionSuccess);
+  server.on("/all", handle_json);
   server.begin();
   Serial.println("I'm connected!");
   netStat = 1;
   Serial.println("SUCCESS!!!");
-  return true;
+ 
 }

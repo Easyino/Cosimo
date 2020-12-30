@@ -1,15 +1,17 @@
-#include <EEPROM.h>
-//#include <ESP8266WebServer.h>
-#include <ESP8266WebServerSecure.h>
+#include <ESP8266WebServer.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
-#include <ArduinoOTA.h>
-#include "settings.h"
 #include <WiFiClient.h>
+
+#include <ArduinoOTA.h>
+
+#include <EEPROM.h>
 #include <Wire.h>
 #include <PolledTimeout.h>
 #include <TypeConversion.h>
 #include <Crypto.h>
+
+#include "settings.h"
+
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
@@ -23,7 +25,7 @@ void setup() {
   pinMode(up, INPUT_PULLUP);
   pinMode(confirm, INPUT_PULLUP);
   pinMode(down, INPUT_PULLUP);
-  Serial.begin(2000000);
+  Serial.begin(250000);
   Serial.println("--------------------------------");
 
 
@@ -50,16 +52,23 @@ void setup() {
     settings[i] = memory_map[i][0];
   }
 
-  if (!tryConnect())createNetwork();
+  if (EEPROM.read(0)) {
+    tryConnect();
+  }
+  else {
+    createNetwork();
+  }
+
+
+  
   if (digitalRead(D5) == LOW && digitalRead(D7) == LOW) {
     OTAupdate();
   }
 }
 
 void loop() {
-  if (netStat) {
     server.handleClient();
-  }
+  
 
   if (ota_initialised) {
     ArduinoOTA.handle();
