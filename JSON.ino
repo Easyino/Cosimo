@@ -10,7 +10,7 @@ void handle_json() {
 
 String getJsonPasswords() {
 String  text = "[";
-  for (i = 0; checkpoint_memory[sector_loaded] != 0; i++) {
+  for (i = 2; checkpoint_memory[sector_loaded + 1] != 0; i++) {
     loadSector(i);
     text += " { \"id\":";
     text += i;
