@@ -87,7 +87,8 @@ void updateEEPROM() {
 }
 
 void shiftEEPROM(int address, int jump) {
-  for (i = 0; i != jump; i += jump / abs(jump)) {
+  int sign_indicator = jump / abs(jump);
+  for (i = 0; i != jump; i += sign_indicator) {
     r = (char)EEPROM.read(address + jump + i);
     for (a = address + jump + i; r != 0; a += abs(jump)) {
       c = r;
