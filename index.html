@@ -6,11 +6,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
-    <link rel="stylesheet" href="src/style.css">
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
         integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
         crossorigin="anonymous" />
+    <link rel="stylesheet" href="src/style.css">
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -88,7 +89,7 @@
 
             <!-- Modal Header -->
             <div class="modal-header">
-                <h4 class="modal-title">Create a new section</h4>
+                <h4 class="modal-title" id="modal-title">Create a new section</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
 
@@ -96,31 +97,13 @@
             <div class="modal-body">
                 <form id="form-modal">
                     <input type="text" id="input-modal-id" name="id" value="" hidden>
-                    <div class="form-group">
-                        <label for="input-modal-title" class="col-form-label">Title:</label>
-                        <input type="text" class="form-control" id="input-modal-title" name="title" value="">
-                    </div>
-                    <div class="form-group">
-                        <label for="input-modal-email" class="col-form-label">Email:</label>
-                        <input type="text" class="form-control" id="input-modal-email" name="email" value="">
-                    </div>
-                    <div class="form-group">
-
-
-    <label for="input-modal-password" class="col-form-label">Password:</label>
-    <div class="passwordwrapper">
-    <input type="password" class="form-control "id="input-modal-password" name="password" value="">
-    <span toggle="#input-modal-password" class="fa fa-fw fa-eye field-icon toggle-password"></span>
-</div>
+                    <div id='autoform'>
 
                     </div>
-                    
-
-                  
-                      
 
 
-                </form>
+                </form> <button button type="button" class="btn btn-primary" id="add-voice-modal"
+                    onclick="inputNum++;loadAutoform()">+</button>
             </div>
 
             <!-- Modal footer -->
@@ -141,3 +124,27 @@
 </span>
 
 </html>
+
+
+
+<div class="d-none">
+
+    <div class="input-group mb-3 " id="input-row-shape">
+        <div class="input-group-prepend">
+            <select class="dropdown-tipo-class custom-select" id="dropdown-tipo-shape" toggle="#input-modal-title">
+                <option selected>Choose...</option>
+                <option value="text">Username</option>
+                <option value="password">Password</option>
+                <option value="hidden">Hidden</option>
+            </select>
+        </div>
+        <input type='text' class='form-control border-right-0' id='input-modal-shape' name='title'>
+        <div class="input-group-append border-left-0">
+            <span class="input-group-text bg-white " id="span-remove-row-shape">
+                <i class="fa fa-fw fa-times" id="i-remove-row-shape"></i>
+            </span>
+        </div>
+        <!--<span style="position: absolute;" class="fa fa-fw fa-times field-icon toggle-password"
+            id="span-remove-row"></span>-->
+    </div>
+</div>

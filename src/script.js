@@ -16,7 +16,7 @@ var url_get = "/get?id=";
 var url_set = "/set?";
 var url_new = "/new";
 var url_delete = "/delete?";
-
+var inputNum = 1;
 
 $(document).ready(() => {
   $("#btn-connect").on("click", function () {
@@ -53,6 +53,18 @@ $(document).ready(() => {
       input.attr("type", "password");
     }
   });
+
+  $(".dropdown-tipo-class").on("change", function (e) {
+    console.log(e);
+  });
+  $(".dropdown-tipo-class").change(function (e) {
+    console.log(e);
+  });
+  $("select").on("change", function () {
+    alert(this.value);
+  });
+  console.log($("select>option"));
+
 });
 
 function sendNew() {
@@ -64,48 +76,53 @@ function connetti() {
   $("#IP-label").html("");
   $("#IP-label").append("Your IP is: " + pureIp);
   $("#list-all").html("");
-
-  /* $.ajax({
-    type: "GET",
-    url: ip + url_tutti,
-    cache: false,
-    beforeSend: function (request) {
-      request.withCredentials = false;
-      request.setRequestHeader(
-        "Authorization",
-        "Basic " + btoa("admin" + ":" + "password")
-      );
-    },
-    success: function (data) {
-      compilaCose(data);
-      nascondi();
-      hideLoading();
-    },
-    fail: function (params) {
-      alert(params);
-    },
-  });*/
-
   $.get(ip + url_tutti, function (data) {
     compilaCose(data);
     nascondi();
     hideLoading();
-  })
-    .done(function () {})
-    .fail(function (e) {
-      hideLoading();
-      nonRaggiungibile();
-      console.log(e);
-    })
-    .always(function () {});
+  }).fail(function (e) {
+    hideLoading();
+    nonRaggiungibile();
+    console.log(e);
+  });
 }
 function showModal(id) {
   showLoading();
-  console.log($("#modal-edit"));
   $.get(ip + url_get + id, function (data) {
     var json = JSON.parse(data);
+    $("#autoform").html("");
     $.each(json, function (key, value) {
-      $("#input-modal-" + key).val(value);
+      var idEl = "input-row-" + value.n_seq;
+      var row = $("#input-row-shape").clone();
+      row.attr("id", idEl);
+      $("#autoform").append(row);
+
+      var input = $("#" + idEl + ">#input-modal-shape");
+      input.attr("id", "input-modal-" + value.n_seq);
+      input.attr("value", value.content);
+
+      var dropdown = $("#" + idEl + ">div>#dropdown-tipo-shape");
+      dropdown.attr("id", "dropdown-tipo-" + value.n_seq);
+      dropdown.attr("toggle", "#input-modal-" + value.n_seq);
+      dropdown.val(value.type);
+      dropdown[0].addEventListener("change", (event) => {
+        var input = $($(event.target).attr("toggle"));
+        dropdownCambiato(input, $(event.target));
+      });
+      dropdownCambiato(input, dropdown);
+
+      var btnRemove = $("#" + idEl + ">div>#span-remove-row-shape");
+      btnRemove.attr("id", "span-remove-row-" + value.n_seq);
+      btnRemove.data("n_seq", value.n_seq);
+      btnRemove.children().data("n_seq", value.n_seq);
+      btnRemove.data("p_id", id);
+      btnRemove.children().data("p_id", id);
+      console.log(btnRemove);
+      btnRemove[0].addEventListener("click", (event) => {
+        var btn = $(event.target);
+        console.log(btn);
+        rimuoviriga(btn.data("n_seq"), btn.data("p_id"));
+      });
     });
     $("#modal-edit").modal();
     hideLoading();
@@ -153,4 +170,33 @@ function hideLoading() {
 function resetForm() {
   console.log($("#modal-edit"));
   $("#form-modal").trigger("reset");
+}
+
+function loadAutoform() {
+  var t = $("#input-row-shape").clone();
+  console.log(t);
+  t.attr("id", "input-row-temp");
+  $("#autoform").append(t);
+}
+function dropdownCambiato(input, targhet) {
+  console.log(input);
+  console.log(targhet);
+  var sel = $("#" + targhet.attr("id") + ">option:selected").attr("value");
+  console.log(sel);
+  switch (sel) {
+    case "text":
+      input.attr("type", "text");
+      break;
+    case "password":
+      input.attr("type", "password");
+      break;
+    case "hidden":
+      input.attr("type", "hidden");
+      break;
+  }
+}
+function rimuoviriga(n_seq, n_id) {
+  $.post(ip + url_delete, "n_seq=" + n_seq + "&n_id=" + n_id, function (data) {
+    alert(data);
+  });
 }

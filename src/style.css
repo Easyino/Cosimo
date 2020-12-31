@@ -43,15 +43,27 @@ input[type="password"].form-control:focus.invalid + label:after {
 }
 
 span.field-icon {
-    position: absolute;
-    
+  position: absolute;
+
   display: inline-block;
   cursor: pointer;
   right: 0.5rem;
   top: 0.7rem;
-  
+
   z-index: 2;
 }
-.passwordwrapper{
-    position: relative;
+.inputwrapper {
+  width: auto;
+  position: relative;
+}
+
+.custom-select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-inline .form-control {
+  width: auto;
+}
+.form-inline .form-group {
+  display: inline-block;
 }
