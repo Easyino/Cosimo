@@ -6,6 +6,12 @@ int max_value_address = 0;
 
 //byte memory_map[500];
 String memory_map[50];
+int memory_type[50] = {-1};
+enum types{
+  text,
+  command,
+  password
+};
 int settings[50];
 
 int checkpoint_memory[20];
@@ -14,7 +20,7 @@ int command_length[50];
 //short int changes[50];
 int sector_loaded = 0;
 
-int i, a, r, c;
+int i, a, r, c, q;
 
 
 //Commands
@@ -41,7 +47,7 @@ int serial_reporter;
 constexpr char masterKey[] PROGMEM = "w86vn@rpfA O+S"; //esempio
 uint8_t resultingNonce[12] { 0 };
 uint8_t resultingTag[16] { 0 };
-static uint32_t encryptionCounter = 0;
+static uint32_t encryptionCounter = 5;
 
 
 //Buttons

@@ -8,8 +8,8 @@ void handle_confNetInfo() {
 
   loadSector(1);
 
-  updateString(addrExtSSID, server.arg("SSID"));
-  updateString(addrExtPassword, server.arg("Password"));
+  updateCommand(addrExtSSID, server.arg("SSID"), text);
+  updateCommand(addrExtPassword, server.arg("Password"), text);
 
   updateEEPROM();
   Serial.print("SSID:");
@@ -17,7 +17,7 @@ void handle_confNetInfo() {
 
   Serial.print("Password:");
   Serial.print(memory_map[addrExtPassword]);
-//  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
+  //  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
 
   server.send(200, "text/html", "ORA MI RIAVVIO");
 
@@ -60,7 +60,7 @@ void tryConnect() {
     delay(500);
     Serial.print(".");
     ret++;
-    if (ret > 10) {
+    if (ret > 20) {
       Serial.println("FAILED!");
       EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
@@ -81,10 +81,10 @@ void tryConnect() {
   server.on("/all", handle_GetAllJson);
   server.on("/get", handle_GetSingleJson);
   server.on("/set", handle_Set);
-    server.on("/delete", handle_delete);
+  server.on("/delete", handle_delete);
   server.begin();
   Serial.println("I'm connected!");
   netStat = 1;
   Serial.println("SUCCESS!!!");
- 
+
 }

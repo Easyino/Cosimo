@@ -35,7 +35,7 @@ int calculateCheckpointAddress(int sector) {
 
 int calculatelength(int address) {
   if ((char)EEPROM.read(address) >= max_value_address) {
-    a = 1;
+    a = -1;
   }
   else {
     for (i = 0, a = 0; (char)EEPROM.read(address + i) == max_value_address - 1; i++) {
@@ -53,14 +53,41 @@ void loadSector(int sector) {
   reportStarting("Loading sector");
   loadCommandlengths(sector);
   sector_loaded = sector;
+  String data;
   for (i = 0; memory_map[i] != ""; i++) {
     memory_map[i] = "";
+    memory_type[i] = -1;
   }
   int address = calculateCheckpointAddress(sector);
   int address_bytes = addressBytes(address);
-  for (c = address + address_bytes + addressBytes(command_length[0]), i = 0; c < checkpoint_memory[sector] + address + address_bytes; c += command_length[i] + addressBytes(command_length[i]), i++) {
-    for (r = 0; r < command_length[i]; r++){
-      memory_map[i] += (char)EEPROM.read(r + c);
+  for (c = address + address_bytes + addressBytes(command_length[0]), i = 0, q = 0; c < checkpoint_memory[sector] + address + address_bytes; c += command_length[i] + addressBytes(command_length[i]), i++, q++) {
+    if (command_length[i] == -1) {
+      if (EEPROM.read(c) == 255) {
+        memory_type[q] = password;
+        q--;
+      }
+      else {
+        if (EEPROM.read(c) == 254 || EEPROM.read(c) == 253){
+          q--;
+        }
+        else{
+          memory_type[q] = command;
+        }
+        memory_map[q] += (char)EEPROM.read(c);
+      }
+    }
+    else {
+      data = "";
+      for (r = 0; r < command_length[i]; r++) {
+        data += (char)EEPROM.read(r + c);
+      }
+      if (memory_type[q] == password){
+        memory_map[q] = decryptString(data);
+      }
+      else{
+        memory_map[q] = data;
+        memory_type[q] = text;
+      }
     }
   }
   reportEnding();
@@ -89,12 +116,11 @@ void updateEEPROM() {
 void shiftEEPROM(int address, int jump) {
   int sign_indicator = jump / abs(jump);
   for (i = 0; i != jump; i += sign_indicator) {
-    r = (char)EEPROM.read(address + jump + i);
-    for (a = address + jump + i; r != 0; a += abs(jump)) {
-      c = r;
+    c = (char)EEPROM.read(address + jump + i);
+    for (a = address + jump + i; EEPROM.read(a) != 0; a += abs(jump)) {
       r = (char)EEPROM.read(a);
       EEPROM.write(a, c);
-      
+      c = r;
     }
   }
   EEPROM.commit();
@@ -104,8 +130,18 @@ String rawData() {
   String data;
   data += writelength(checkpoint_memory[sector_loaded]);
   for (i = 0; memory_map[i] != ""; i++) {
-    data += writelength(memory_map[i].length());
-    data += memory_map[i];
+    if (memory_type[i] == password) {
+      data += (char)255;
+    }
+    if (memory_type[i] != command) {
+      data += writelength(memory_map[i].length());
+    }
+    if (memory_type[i] != password){
+      data += memory_map[i];
+    }
+    else{
+      data += encryptString(memory_map[i]);
+    }
   }
   return data;
 }
@@ -128,16 +164,22 @@ void loadNetData() {
   Serial.println("prendo password");
 }
 
-void updateString(int command, String data) {
-  checkpoint_memory[sector_loaded] += rawLength(data) - rawLength(memory_map[command]);
+void updateCommand(int command, String data, int type) {
+  checkpoint_memory[sector_loaded] += rawLength(data, type) - rawLength(memory_map[command], memory_type[command]);
   memory_map[command] = data;
+  memory_type[command] = type;
 }
 
-int rawLength(String data) {
+int rawLength(String data, int type) {
   int length;
   if (data.length() != 0) {
     length = data.length();
-    length += length / max_value_address + 1;
+    if (type == password){
+      length++;
+    }
+    if (type != command){
+      length += length / max_value_address + 1;
+    }
     return length;
   }
   return 0;
@@ -145,26 +187,14 @@ int rawLength(String data) {
 
 int addressBytes(int length) {
   int n;
-  for (n = 0; length >= max_value_address; length -= max_value_address, n++) {}
-  if (length != 0) {
-    n++;
+  if (length != -1) {
+    for (n = 0; length >= max_value_address; length -= max_value_address, n++) {}
+    if (length != 0) {
+      n++;
+    }
+  }
+  else {
+    n = 2;
   }
   return n;
 }
-
-// Troppa ram occupata non si può fare
-////salvo tutto sulla ram
-//String memory_map_global[50][50];
-//void loadStrings(){
-//  int address;
-//  int length0, length1;
-//  int address_bytes0, address_bytes1;
-//  for(address = EEPROM_offset; EEPROM.read(address) != 0; address += length0 + address_bytes0){
-//    length0 = calculatelength(address);
-//    address_bytes0 = addressBytes(length0);
-//    length1 = calculatelength(address + address_bytes0);
-//    for (address += address_bytes0; ; address += length0 + address_bytes0){
-//      
-//    }
-//  }
-//}

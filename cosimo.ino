@@ -39,7 +39,7 @@ void setup() {
   inputString.reserve(200);
   max_value_address = pow(2, usable_address_bits);
 
-  if (digitalRead(D5) == LOW && digitalRead(D6) == LOW && digitalRead(D7) == LOW) {
+  if (digitalRead(up) == LOW && digitalRead(confirm) == LOW && digitalRead(down) == LOW) {
     eepromClear();
   }
 
@@ -48,9 +48,14 @@ void setup() {
   Serial.println(max_value_address);
   loadCheckpoints();
   loadSector(0);
-  for (i = 0; memory_map[i] != ""; i++) {
-    settings[i] = memory_map[i][0];
+  if (memory_map[0] != "Impostazioni") {
+    eepromClear();
+    updateCommand(0, "Impostazioni", text);
+    updateEEPROM();
   }
+  //  for (i = 0; memory_map[i] != ""; i++) {
+  //    settings[i] = memory_map[i][0];
+  //  }
 
   if (EEPROM.read(0)) {
     tryConnect();
@@ -60,8 +65,8 @@ void setup() {
   }
 
 
-  
-  if (digitalRead(D5) == LOW && digitalRead(D7) == LOW) {
+
+  if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(up) == HIGH) {
     OTAupdate();
   }
 
@@ -78,12 +83,12 @@ void setup() {
   section[3].title = "nome-3";
   section[3].email = "email-3";
   section[3].password = "password-3";
-  
+
 }
 
 void loop() {
-    server.handleClient();
-  
+  server.handleClient();
+
 
   if (ota_initialised) {
     ArduinoOTA.handle();
