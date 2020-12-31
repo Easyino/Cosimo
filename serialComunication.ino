@@ -16,9 +16,15 @@ void executeSerialCommands() {
     Serial.println("\n\nSector loaded:");
     Serial.print(sector_loaded);
 
-    Serial.println("\n\nCommands:");
+    Serial.println("\n\nCommand lengths:");
     for (i = 0; i < 10; i++) {
       Serial.print(command_length[i]);
+      Serial.print(", ");
+    }
+    
+    Serial.println("\n\nTypes:");
+    for (i = 0; i < 10; i++) {
+      Serial.print(memory_type[i]);
       Serial.print(", ");
     }
     reportEnding();
@@ -44,7 +50,7 @@ void executeSerialCommands() {
     Serial.print("Command updated: ");
     Serial.print(memory_map[serialString[1].toInt()]);
     Serial.print(" --> ");
-    updateString(serialString[1].toInt(), serialString[2]);
+    updateCommand(serialString[1].toInt(), serialString[3], serialString[1].toInt());
     Serial.println(memory_map[serialString[1].toInt()]);
   }
   else if (serialString[0].equalsIgnoreCase("print")) {
@@ -147,7 +153,7 @@ void loadSerialCommands(String data) {
   }
   for (a = 0, i = 0; data[i] != '\0'; a++, i++) {
     subString = "";
-    for (; (data[i] != ' ' || a == 2) && data[i] != '\0'; i++) {
+    for (; (data[i] != ' ' || a == 3) && data[i] != '\0'; i++) {
       subString += data[i];
     }
     serialString[a] = subString;

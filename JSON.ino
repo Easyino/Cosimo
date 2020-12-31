@@ -43,15 +43,8 @@ String getAllJson() {
 
   String  text = "[";
   for (i = 0; i < n_section; i++) {
-    text += " { \"id\":";
-    text += i;
-    text += ", \"title\":\"";
-    text += section[i].title;
-    text += "\", \"email\":\"";
-    text += section[i].email;
-    text += "\" }";
+    getSingleJson(i);
     if (i + 1 < n_section)text += ",";
-
   }
   text += "]";
   return text;
@@ -59,8 +52,6 @@ String getAllJson() {
 
 
 String getSingleJson(int id) {
-
-
   String text = " { \"id\":";
   text += id;
   text += ", \"title\":\"";
@@ -70,7 +61,5 @@ String getSingleJson(int id) {
   text += "\", \"password\":\"";
   text += section[id].password;
   text += "\" }";
-
-
   return text;
 }

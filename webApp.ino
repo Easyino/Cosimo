@@ -8,8 +8,8 @@ void handle_confNetInfo() {
 
   loadSector(1);
 
-  updateString(addrExtSSID, server.arg("SSID"));
-  updateString(addrExtPassword, server.arg("Password"));
+  updateCommand(addrExtSSID, server.arg("SSID"), text);
+  updateCommand(addrExtPassword, server.arg("Password"), text);
 
   updateEEPROM();
   Serial.print("SSID:");
