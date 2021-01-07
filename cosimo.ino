@@ -16,6 +16,11 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
 uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
+constexpr char masterKey[] PROGMEM = "w86vn@rpfA O+S"; //esempio
+uint8_t resultingNonce[12] { 0 };
+uint8_t resultingTag[16] { 0 };
+static uint32_t encryptionCounter = 5;
+uint8_t hkdfSalt[16] { 0 };
 #include "SSD1306Wire.h"
 #include "images.h"
 SSD1306Wire display(0x3c, SDA, SCL);
@@ -37,6 +42,11 @@ void setup() {
 
   EEPROM.begin(EEPROM_length);
   inputString.reserve(200);
+  
+  getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
+  HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
+  hkdfInstance.produce(derivedKey, sizeof derivedKey);
+  
   max_value_address = pow(2, usable_address_bits);
 
   if (digitalRead(up) == LOW && digitalRead(confirm) == LOW && digitalRead(down) == LOW) {

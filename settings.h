@@ -44,10 +44,11 @@ int serial_reporter;
 
 
 //Encryption
-constexpr char masterKey[] PROGMEM = "w86vn@rpfA O+S"; //esempio
-uint8_t resultingNonce[12] { 0 };
-uint8_t resultingTag[16] { 0 };
-static uint32_t encryptionCounter = 5;
+//constexpr char masterKey[] PROGMEM = "w86vn@rpfA O+S"; //esempio
+//uint8_t resultingNonce[12] { 0 };
+//uint8_t resultingTag[16] { 0 };
+//static uint32_t encryptionCounter = 5;
+//uint8_t hkdfSalt[16] { 0 };
 
 
 //Buttons

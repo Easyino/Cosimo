@@ -31,7 +31,6 @@ void executeSerialCommands() {
   }
 
 
-
   else if (serialString[0].equalsIgnoreCase("load")) {
     if (serialString[1].equalsIgnoreCase("checkpoints")) {
       loadCheckpoints();
@@ -53,12 +52,28 @@ void executeSerialCommands() {
     updateCommand(serialString[1].toInt(), serialString[3], serialString[1].toInt());
     Serial.println(memory_map[serialString[1].toInt()]);
   }
+  
   else if (serialString[0].equalsIgnoreCase("print")) {
     reportStarting("Printing sector");
     for (i = 0; memory_map[i] != ""; i++) {
       Serial.println(memory_map[i]);
     }
     reportEnding();
+  }
+  else if (serialString[0].equalsIgnoreCase("encrypt")){
+    String data = encryptString(serialString[1]);
+    Serial.println(data);
+    for(i = 0; data[i] != '\0'; i++){
+      Serial.print((int)data[i]);
+      Serial.print(" ");
+    }
+    Serial.print("\nencryption counter = ");
+    Serial.println(encryptionCounter);
+  }
+  else if (serialString[0].equalsIgnoreCase("decrypt")){
+    Serial.println(decryptString(serialString[1]));
+    Serial.print("\nencryption counter = ");
+    Serial.println(encryptionCounter);
   }
 
 
