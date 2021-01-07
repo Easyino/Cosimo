@@ -64,7 +64,6 @@ $(document).ready(() => {
     alert(this.value);
   });
   console.log($("select>option"));
-
 });
 
 function sendNew() {
@@ -137,21 +136,41 @@ function compilaCose(data) {
   console.log(data);
   var json = jQuery.parseJSON(data);
   $.each(json, function (index, value) {
-    $("#list-all").append(
-      //$("#ghost-item").before(
-      '<tr class="item-row" id = "item-row-' +
-        value.id +
-        '"><th scope="row">' +
-        value.id +
-        "</th><td>" +
-        value.title +
-        "</td><td>" +
-        value.email +
-        '</td><td><button class="btn-sm btn-outline-primary" onclick= "showModal(' +
-        value.id +
-        ')" >Edit</button></td></tr>'
-    );
-    console.log(value);
+    var idEl = "item-row-" + value.id;
+    var item = $("#item-row-shape").clone();
+    console.log(item);
+
+    item.attr("id", idEl);
+    $("#list-all").append(item);
+
+    var col1 = $("#" + idEl + ">#item-row-col-1-shape");
+    col1.attr("id", "item-row-col-1-" + value.id);
+    col1.val(value.id);
+
+    var col2 = $("#" + idEl + ">#item-row-col-2-shape");
+    col2.attr("id", "item-row-col-1-" + value.id);
+    col2.val(value.title);
+
+    var col2 = $("#" + idEl + ">#item-row-col-3-shape");
+    col2.attr("id", "item-row-col-3-" + value.id);
+    col2.val(value.email);
+
+    var col2 = $("#" + idEl + ">#item-row-col-4-shape");
+    col2.attr("id", "item-row-col-4-" + value.id);
+
+    //var btnEdit = $("#" + idEl + ">td>#btn-show-modal-shape");
+    var btnEdit = $("#" + idEl + ">.el-click-shape");
+    console.log(btnEdit);
+    btnEdit.removeClass("el-click-shape").addClass("el-click-" + value.id);
+    btnEdit.data("n_id", value.id);
+    //btnEdit.children().data("n_id", value.id);
+
+    btnEdit.on("click", (event) => {
+      console.log(event);
+      var btn = $(event.target);
+      console.log(btn);
+      showModal(btn.data("n_id"));
+    });
   });
 
   $(".result").html(json);
@@ -191,7 +210,10 @@ function dropdownCambiato(input, targhet) {
       input.attr("type", "password");
       break;
     case "hidden":
-      input.attr("type", "hidden");
+      input.attr("localName", "select");
+      break;
+    case "key":
+      input.attr("localName", "select");
       break;
   }
 }
