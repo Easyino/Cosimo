@@ -61,21 +61,15 @@ void executeSerialCommands() {
     reportEnding();
   }
   else if (serialString[0].equalsIgnoreCase("encrypt")){
-    String data = encryptString(serialString[1]);
-    Serial.println(data);
-    for(i = 0; data[i] != '\0'; i++){
-      Serial.print((int)data[i]);
-      Serial.print(" ");
-    }
-    Serial.print("\nencryption counter = ");
-    Serial.println(encryptionCounter);
+    encryptString(serialString[1]);
   }
   else if (serialString[0].equalsIgnoreCase("decrypt")){
-    Serial.println(decryptString(serialString[1]));
-    Serial.print("\nencryption counter = ");
-    Serial.println(encryptionCounter);
+    decryptString(serialString[1]);
   }
-
+  else if (serialString[0].equalsIgnoreCase("key")){
+    setMasterKey(serialString[1]);
+  }
+    
 
 
   else if (serialString[0].equalsIgnoreCase("EEPROM")) {

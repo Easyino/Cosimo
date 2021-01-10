@@ -1,30 +1,6 @@
-#include <ESP8266WebServer.h>
-#include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-
-#include <ArduinoOTA.h>
-
-#include <EEPROM.h>
-#include <Wire.h>
-#include <PolledTimeout.h>
-#include <TypeConversion.h>
-#include <Crypto.h>
-
 #include "settings.h"
-
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
-uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
-uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
-constexpr char masterKey[] PROGMEM = "w86vn@rpfA O+S"; //esempio
-uint8_t resultingNonce[12] { 0 };
-uint8_t resultingTag[16] { 0 };
-static uint32_t encryptionCounter = 5;
-uint8_t hkdfSalt[16] { 0 };
-#include "SSD1306Wire.h"
-#include "images.h"
-SSD1306Wire display(0x3c, SDA, SCL);
-
 
 void setup() {
   pinMode(up, INPUT_PULLUP);
