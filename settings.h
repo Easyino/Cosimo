@@ -28,8 +28,8 @@ enum types {
   command,
   password
 };
-String text_types[3] {"text", "command", "password"};
-int textTypes(String type) {
+String data_types[3] {"text", "command", "password"};
+int dataTypes(String type) {
   if (type.equalsIgnoreCase("text")) {
     return text;
   }

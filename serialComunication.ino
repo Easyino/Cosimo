@@ -40,7 +40,7 @@ void executeSerialCommands() {
       for (i = 0; memory_map[i] != ""; i++) {
         Serial.print((int)i);
         Serial.print(" ");
-        Serial.print(text_types[memory_type[i]]);
+        Serial.print(data_types[memory_type[i]]);
         Serial.print((char)9);
         if (memory_type[i] == command) {
           Serial.println(commandToString(memory_map[i]));
@@ -55,7 +55,7 @@ void executeSerialCommands() {
     Serial.print("Command updated: ");
     Serial.print(memory_map[serialString[1].toInt()]);
     Serial.print(" --> ");
-    updateCommand(serialString[1].toInt(), serialString[3], textTypes(serialString[2]));
+    updateCommand(serialString[1].toInt(), serialString[3], dataTypes(serialString[2]));
     Serial.println(memory_map[serialString[1].toInt()]);
   }
 
@@ -64,7 +64,7 @@ void executeSerialCommands() {
     for (i = 0; memory_map[i] != ""; i++) {
       Serial.print((int)i);
       Serial.print(" ");
-      Serial.print(text_types[memory_type[i]]);
+      Serial.print(data_types[memory_type[i]]);
       Serial.print((char)9);
       if (memory_type[i] == command) {
         Serial.println(commandToString(memory_map[i]));

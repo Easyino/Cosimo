@@ -36,7 +36,7 @@ void setup() {
   loadSector(0);
   if (memory_map[0] != "Impostazioni") {
     eepromClear();
-    updateCommand(0, "Impostazioni", text);
+    updateCommand(0, "impostazioni", text);
     updateEEPROM();
   }
   //  for (i = 0; memory_map[i] != ""; i++) {

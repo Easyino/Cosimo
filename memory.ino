@@ -170,8 +170,12 @@ void loadNetData() {
 }
 
 void updateCommand(int command, String data, int type) {
+  //Serial.print(data_types[type] + "  ");
+  Serial.print(type + "  ");
   if (type == command){
     data = stringToCommand(data);
+    //Serial.println(data);
+    Serial.println("to mare omo");
   }
   checkpoint_memory[sector_loaded] += rawLength(data, type) - rawLength(memory_map[command], memory_type[command]);
   memory_map[command] = data;

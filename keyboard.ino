@@ -1,3 +1,8 @@
+String reverseCommandTable[76]
+{"POWERDOWN", "WAKEUP", "SLEEP", "PLAY", "PAUSE", "RECORD", "FASTFORWARD", "REWIND", "NEXTTRACK", "PREVTRAK", "STOP", "EJECT", "MUTE", "VOLUMEINC", 
+"VOLUMEDEC", "ENTER", "ESC", "BACKSPACE", "TAB", "SPACE", "CAPSLOCK", "F1", "F2", "F3", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
+"PRINTSCREEN", "SCROLLLOCK", "HOME", "PAGEUP", "PAGEDOWN", "DELETE", "END", "RIGHT", "LEFT", "DOWN", "UP", "NUMLOCK", "A", "B", "C", "D", "E", "F", "G",
+"H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "CTRL", "SHIFT", "ALT", "GUI"};
 String commandTable(int command) {
   switch (command) {
     case 0: return "POWER DOWN";
@@ -75,6 +80,7 @@ String commandTable(int command) {
     case 72: return "SHIFT";
     case 73: return "ALT";
     case 74: return "GUI";
+    default: return "ERROR 404";
   }
 }
 
@@ -82,42 +88,40 @@ String commandTable(int command) {
 String stringToCommand(String data) {
   String command_global;
   String command_single;
-  String confrontable_command_table = commandTable(0);
-  confrontable_command_table.trim();
   int number = 0;
   int command;
   data.trim();
-  for (a = 0; data[q] != '\0'; a += q) {
+  for (a = 0, q = 0; data[a] != '\0'; a += q) {
     command_single = "";
-    for (q = 0; data[q] != '*' && data[q] != '+' && data[q] != '\0'; q++) {
+    for (q = 0; data[a + q] != '*' && data[a + q] != '+' && data[a + q] != '\0'; q++) {
       if (number) {
-        number = data[q];
+        number = data[a + q];
         if (number > 100) {
           number = 100;
         }
-        command_single += number;
+        command_single += (char)number;
       }
       else {
-        if (data[q] != '_') {
-          command_single += data[q];
+        if (data[a + q] != '_') {
+          command_single += (char)data[a + q];
         }
       }
     }
     command_single.toUpperCase();
-    for (command = 1; command_single != confrontable_command_table; command++) {
-      confrontable_command_table = commandTable(command);
-      confrontable_command_table.trim();
+    for (command = 0; command_single != reverseCommandTable[command]; command++) {
       if (command > 74) {
         return "error";
       }
     }
-    command_global += command + 128 - 1;
-    if (data[q] == '+') {
+    command_global += (char)(command + 128 - 1);
+    if (data[a + q] == '+') {
       command_global += 253;
+      q++;
     }
-    if (data[q] == '*') {
+    else if (data[a + q] == '*') {
       command_global += 254;
       number = 1;
+      q++;
     }
   }
   return command_global;
