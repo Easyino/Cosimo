@@ -21,7 +21,7 @@ void executeSerialCommands() {
       Serial.print(command_length[i]);
       Serial.print(", ");
     }
-    
+
     Serial.println("\n\nTypes:");
     for (i = 0; i < 10; i++) {
       Serial.print(memory_type[i]);
@@ -36,40 +36,55 @@ void executeSerialCommands() {
       loadCheckpoints();
     }
     else {
-      reportStarting("Loading sector");
       loadSector(serialString[1].toInt());
-      Serial.println(serialString[1].toInt());
       for (i = 0; memory_map[i] != ""; i++) {
-        Serial.println(memory_map[i]);
+        Serial.print((int)i);
+        Serial.print(" ");
+        Serial.print(text_types[memory_type[i]]);
+        Serial.print((char)9);
+        if (memory_type[i] == command) {
+          Serial.println(commandToString(memory_map[i]));
+        }
+        else {
+          Serial.println(memory_map[i]);
+        }
       }
-      reportEnding();
     }
   }
   else if (serialString[0].equalsIgnoreCase("update")) {
     Serial.print("Command updated: ");
     Serial.print(memory_map[serialString[1].toInt()]);
     Serial.print(" --> ");
-    updateCommand(serialString[1].toInt(), serialString[3], serialString[1].toInt());
+    updateCommand(serialString[1].toInt(), serialString[3], textTypes(serialString[2]));
     Serial.println(memory_map[serialString[1].toInt()]);
   }
-  
+
   else if (serialString[0].equalsIgnoreCase("print")) {
     reportStarting("Printing sector");
     for (i = 0; memory_map[i] != ""; i++) {
-      Serial.println(memory_map[i]);
+      Serial.print((int)i);
+      Serial.print(" ");
+      Serial.print(text_types[memory_type[i]]);
+      Serial.print((char)9);
+      if (memory_type[i] == command) {
+        Serial.println(commandToString(memory_map[i]));
+      }
+      else {
+        Serial.println(memory_map[i]);
+      }
     }
     reportEnding();
   }
-  else if (serialString[0].equalsIgnoreCase("encrypt")){
-    encryptString(serialString[1]);
+  else if (serialString[0].equalsIgnoreCase("encrypt")) {
+    Serial.println(encryptString(serialString[1]));
   }
-  else if (serialString[0].equalsIgnoreCase("decrypt")){
-    decryptString(serialString[1]);
+  else if (serialString[0].equalsIgnoreCase("decrypt")) {
+    Serial.println(decryptString(serialString[1]));
   }
-  else if (serialString[0].equalsIgnoreCase("key")){
+  else if (serialString[0].equalsIgnoreCase("key")) {
     setMasterKey(serialString[1]);
   }
-    
+
 
 
   else if (serialString[0].equalsIgnoreCase("EEPROM")) {
@@ -80,7 +95,7 @@ void executeSerialCommands() {
     else if (serialString[1].equalsIgnoreCase("print")) {
       c = serialString[2].toInt();
       reportStarting("Start reading EEPROM");
-      for (i = 0; i < c; i++) {
+      for (i = EEPROM_offset; i < c + EEPROM_offset; i++) {
         Serial.print((int)EEPROM.read(i));
         Serial.print((char)9);
         Serial.println((char)EEPROM.read(i));

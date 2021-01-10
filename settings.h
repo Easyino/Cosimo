@@ -22,12 +22,25 @@ SSD1306Wire display(0x3c, SDA, SCL);
 int max_value_address = 0;
 
 String memory_map[50];
-int memory_type[50] = {-1};
-enum types{
+int memory_type[50] = { -1};
+enum types {
   text,
   command,
   password
 };
+String text_types[3] {"text", "command", "password"};
+int textTypes(String type) {
+  if (type.equalsIgnoreCase("text")) {
+    return text;
+  }
+  else if (type.equalsIgnoreCase("command")) {
+    return command;
+  }
+  else if (type.equalsIgnoreCase("password")) {
+    return password;
+  }
+  return -1;
+}
 int settings[50];
 
 int checkpoint_memory[20];

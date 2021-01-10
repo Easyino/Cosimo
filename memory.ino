@@ -64,11 +64,11 @@ void loadSector(int sector) {
     if (command_length[i] == -1) {
       if (EEPROM.read(c) == 255) {
         memory_type[q] = password;
-        q--;
+        q -= 2;
       }
       else {
         if (EEPROM.read(c) == 254 || EEPROM.read(c) == 253){
-          q--;
+          q -= 2;
         }
         else{
           memory_type[q] = command;
@@ -134,7 +134,12 @@ String rawData() {
       data += (char)255;
     }
     if (memory_type[i] != command) {
-      data += writelength(memory_map[i].length());
+      if (memory_type[i] == password){
+        data += writelength(memory_map[i].length() + 28);
+      }
+      else{
+        data += writelength(memory_map[i].length());
+      }
     }
     if (memory_type[i] != password){
       data += memory_map[i];
@@ -165,6 +170,9 @@ void loadNetData() {
 }
 
 void updateCommand(int command, String data, int type) {
+  if (type == command){
+    data = stringToCommand(data);
+  }
   checkpoint_memory[sector_loaded] += rawLength(data, type) - rawLength(memory_map[command], memory_type[command]);
   memory_map[command] = data;
   memory_type[command] = type;
@@ -175,7 +183,7 @@ int rawLength(String data, int type) {
   if (data.length() != 0) {
     length = data.length();
     if (type == password){
-      length++;
+      length += 29;
     }
     if (type != command){
       length += length / max_value_address + 1;

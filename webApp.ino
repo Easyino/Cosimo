@@ -27,7 +27,6 @@ void handle_confNetInfo() {
 }
 
 void handle_conncetionSuccess() {
-
   server.send(200, "text/html", "ti sei connesso con successo alla rete");
 }
 
