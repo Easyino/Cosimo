@@ -16,6 +16,9 @@ void loadCheckpoints() {
 void loadCommandlengths(int sector) {
   int address = calculateCheckpointAddress(sector);
   int address_bytes = addressBytes(checkpoint_memory[sector]);
+  for(i = 0; command_length[i] != 0; i++){
+    command_length[i] = 0;
+  }
   Serial.println("Command lengths:");
   for (r = address + address_bytes, c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
     command_length[c] = calculatelength(r);
@@ -50,6 +53,11 @@ int calculatelength(int address) {
 
 
 void loadSector(int sector) {
+  if (sector < 0) { //injection code protection
+    Serial.println("Protection triggered");
+    eepromClear();
+    ESP.restart();
+  }
   reportStarting("Loading sector");
   loadCommandlengths(sector);
   sector_loaded = sector;
@@ -60,34 +68,46 @@ void loadSector(int sector) {
   }
   int address = calculateCheckpointAddress(sector);
   int address_bytes = addressBytes(address);
-  for (c = address + address_bytes + addressBytes(command_length[0]), i = 0, q = 0; c < checkpoint_memory[sector] + address + address_bytes; c += command_length[i] + addressBytes(command_length[i]), i++, q++) {
+  for (c = address + address_bytes, i = 0, q = 0; command_length[i] != 0; i++, q++) {
+    Serial.print("i = ");
+    Serial.print(i);
+    Serial.print("    q = ");
+    Serial.print(q);
+    Serial.print("    c = ");
+    Serial.println(c);
     if (command_length[i] == -1) {
+      Serial.print("EEPROM value = ");
+      Serial.println(EEPROM.read(c));
       if (EEPROM.read(c) == 255) {
         memory_type[q] = password;
-        q -= 2;
+        Serial.println("Questa è una password");
+        q--;
       }
       else {
-        if (EEPROM.read(c) == 254 || EEPROM.read(c) == 253){
-          q -= 2;
+        if (EEPROM.read(c) == 254 || EEPROM.read(c) == 253) {
+          q--;
         }
-        else{
+        else {
           memory_type[q] = command;
         }
         memory_map[q] += (char)EEPROM.read(c);
       }
+      c++;
     }
     else {
+      c += addressBytes(command_length[i]);
       data = "";
       for (r = 0; r < command_length[i]; r++) {
         data += (char)EEPROM.read(r + c);
       }
-      if (memory_type[q] == password){
+      if (memory_type[q] == password) {
         memory_map[q] = decryptString(data);
       }
-      else{
+      else {
         memory_map[q] = data;
         memory_type[q] = text;
       }
+      c += command_length[i];
     }
   }
   reportEnding();
@@ -134,17 +154,17 @@ String rawData() {
       data += (char)255;
     }
     if (memory_type[i] != command) {
-      if (memory_type[i] == password){
+      if (memory_type[i] == password) {
         data += writelength(memory_map[i].length() + 28);
       }
-      else{
+      else {
         data += writelength(memory_map[i].length());
       }
     }
-    if (memory_type[i] != password){
+    if (memory_type[i] != password) {
       data += memory_map[i];
     }
-    else{
+    else {
       data += encryptString(memory_map[i]);
     }
   }
@@ -169,27 +189,25 @@ void loadNetData() {
   Serial.println("prendo password");
 }
 
-void updateCommand(int command, String data, int type) {
-  //Serial.print(data_types[type] + "  ");
-  Serial.print(type + "  ");
-  if (type == command){
+void updateCommand(int com, String data, int type) {
+  Serial.print(data_types[type] + "  ");
+  if (type == command) {
     data = stringToCommand(data);
-    //Serial.println(data);
-    Serial.println("to mare omo");
+    Serial.println(data);
   }
-  checkpoint_memory[sector_loaded] += rawLength(data, type) - rawLength(memory_map[command], memory_type[command]);
-  memory_map[command] = data;
-  memory_type[command] = type;
+  checkpoint_memory[sector_loaded] += rawLength(data, type) - rawLength(memory_map[com], memory_type[com]);
+  memory_map[com] = data;
+  memory_type[com] = type;
 }
 
 int rawLength(String data, int type) {
   int length;
   if (data.length() != 0) {
     length = data.length();
-    if (type == password){
+    if (type == password) {
       length += 29;
     }
-    if (type != command){
+    if (type != command) {
       length += length / max_value_address + 1;
     }
     return length;

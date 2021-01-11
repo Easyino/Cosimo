@@ -3,8 +3,8 @@ String reverseCommandTable[76]
 "VOLUMEDEC", "ENTER", "ESC", "BACKSPACE", "TAB", "SPACE", "CAPSLOCK", "F1", "F2", "F3", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
 "PRINTSCREEN", "SCROLLLOCK", "HOME", "PAGEUP", "PAGEDOWN", "DELETE", "END", "RIGHT", "LEFT", "DOWN", "UP", "NUMLOCK", "A", "B", "C", "D", "E", "F", "G",
 "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "CTRL", "SHIFT", "ALT", "GUI"};
-String commandTable(int command) {
-  switch (command) {
+String commandTable(int com) {
+  switch (com) {
     case 0: return "POWER DOWN";
     case 1: return "WAKE UP";
     case 2: return "SLEEP";
@@ -89,7 +89,7 @@ String stringToCommand(String data) {
   String command_global;
   String command_single;
   int number = 0;
-  int command;
+  int com;
   data.trim();
   for (a = 0, q = 0; data[a] != '\0'; a += q) {
     command_single = "";
@@ -108,12 +108,12 @@ String stringToCommand(String data) {
       }
     }
     command_single.toUpperCase();
-    for (command = 0; command_single != reverseCommandTable[command]; command++) {
-      if (command > 74) {
+    for (com = 0; command_single != reverseCommandTable[com]; com++) {
+      if (com > 74) {
         return "error";
       }
     }
-    command_global += (char)(command + 128 - 1);
+    command_global += (char)(com + 128 - 1);
     if (data[a + q] == '+') {
       command_global += 253;
       q++;
@@ -127,21 +127,21 @@ String stringToCommand(String data) {
   return command_global;
 }
 
-String commandToString(String command) {
+String commandToString(String com) {
   String command_global;
-  for (q = 0; command[q] != '\0'; q++) {
-    if (command[q] == 253) {
+  for (q = 0; com[q] != '\0'; q++) {
+    if (com[q] == 253) {
       command_global += " + ";
     }
-    else if (command[q] == 253) {
+    else if (com[q] == 253) {
       command_global += " * ";
     }
     else {
-      if (command[q - 1] == 253) {
-        command_global.concat(command[q]);
+      if (com[q - 1] == 253) {
+        command_global.concat(com[q]);
       }
       else {
-        command_global += commandTable(command[q]);
+        command_global += commandTable(com[q]);
       }
     }
   }

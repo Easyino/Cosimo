@@ -76,10 +76,12 @@ void executeSerialCommands() {
     reportEnding();
   }
   else if (serialString[0].equalsIgnoreCase("encrypt")) {
-    Serial.println(encryptString(serialString[1]));
+    memory_map[serialString[1].toInt()] = encryptString(serialString[2]);
+    Serial.println(memory_map[serialString[1].toInt()]);
   }
   else if (serialString[0].equalsIgnoreCase("decrypt")) {
-    Serial.println(decryptString(serialString[1]));
+    memory_map[serialString[1].toInt()] = decryptString(memory_map[serialString[1].toInt()]);
+    Serial.println(memory_map[serialString[1].toInt()]);
   }
   else if (serialString[0].equalsIgnoreCase("key")) {
     setMasterKey(serialString[1]);
