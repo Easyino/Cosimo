@@ -22,6 +22,6 @@ First time you use your cosimo? follow
 ## What are you looking for?
 Some links that you might need:
 - <a href="https://easyino.github.io/cosimo">Here</a> you can manage your Cosimo
-- <a href="#">Here</a> you can download the schematics
+- <a href="https://github.com/Easyino/cosimo/blob/main/Schematics%20and%20PCB/Easyino_Cosimo.schdoc">Here</a> you can get the schematics
 
 
