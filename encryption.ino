@@ -34,7 +34,6 @@ void setMasterKey(String data) {
   for (i = 0; data[i] != '\0'; i++) {
     masterKey[i] = data[i];
   }
-  //getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt);
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
 }

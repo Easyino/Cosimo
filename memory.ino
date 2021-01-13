@@ -20,7 +20,7 @@ void loadCommandlengths(int sector) {
     command_length[i] = 0;
   }
   Serial.println("Command lengths:");
-  for (r = address + address_bytes, c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
+  for (r = address + address_bytes, c = 0; r < address + checkpoint_memory[sector]; r += a + addressBytes(a), c++) {
     command_length[c] = calculatelength(r);
     Serial.print("r = ");
     Serial.println(r);

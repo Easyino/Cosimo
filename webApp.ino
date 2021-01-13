@@ -9,7 +9,7 @@ void handle_confNetInfo() {
   loadSector(1);
 
   updateCommand(addrExtSSID, server.arg("SSID"), text);
-  updateCommand(addrExtPassword, server.arg("Password"), text);
+  updateCommand(addrExtPassword, server.arg("Password"), password);
 
   updateEEPROM();
   Serial.print("SSID:");

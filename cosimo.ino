@@ -18,11 +18,7 @@ void setup() {
 
   EEPROM.begin(EEPROM_length);
   inputString.reserve(200);
-  
-  getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
-  HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
-  hkdfInstance.produce(derivedKey, sizeof derivedKey);
-  
+
   max_value_address = pow(2, usable_address_bits);
 
   if (digitalRead(up) == LOW && digitalRead(confirm) == LOW && digitalRead(down) == LOW) {
@@ -30,26 +26,43 @@ void setup() {
   }
 
 
+
   Serial.print("max address memory = ");
   Serial.println(max_value_address);
   loadCheckpoints();
-  loadSector(0);
-  if (memory_map[0] != "Impostazioni") {
+  if (checkpoint_memory[0] != 17) {
     eepromClear();
-    updateCommand(0, "impostazioni", text);
+    loadSector(0);
+    getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
+    for (i = 0; i < 16; i++) {
+      memory_map[0] += (char)hkdfSalt[i];
+    }
+    checkpoint_memory[0] = 17;
     updateEEPROM();
   }
-  //  for (i = 0; memory_map[i] != ""; i++) {
-  //    settings[i] = memory_map[i][0];
-  //  }
+  else {
+    loadSector(0);
+    for (i = 0; i < 16; i++) {
+      hkdfSalt[i] = memory_map[0][i];
+    }
+  }
+  HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
+  hkdfInstance.produce(derivedKey, sizeof derivedKey);
+  Serial.println("hdfsalt:");
+  for (i = 0; i < 16; i++) {
+    Serial.print(hkdfSalt[i]);
+    Serial.print(", ");
+  }
+  Serial.println("");
 
+
+  
   if (EEPROM.read(0)) {
     tryConnect();
   }
   else {
     createNetwork();
   }
-
 
 
   if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(up) == HIGH) {
