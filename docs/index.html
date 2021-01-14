@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Easyino - Cosimo</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+        integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+        crossorigin="anonymous" />
+    <link rel="stylesheet" href="src/style.css">
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <script src="src/script.js"></script>
+
+
+    <h1 class="text-center">Il tuo easyino Cosimo</h1>
+    <div class="container">
+        <div id="status-bar-not-connected" class="text-center text-danger">
+            <h3>Not connected</h3>
+        </div>
+        <div id="status-bar-connected" class="text-center text-success nascosto">
+            <h3>Connected</h3>
+        </div>
+
+
+        <div class="row">
+
+            <div id="IP-form" class="centrato">
+                <div class=" align-items-center form-inline">
+                    <div class="form-group mx-sm-3 mb-2">
+                        <input type="text" class="form-control" id="ip-value" value="10.42.0.195"
+                            placeholder="Insert here tour IP adress">
+                    </div>
+                    <button class="btn btn-primary mb-2" id="btn-connect">Connect</button>
+                </div>
+            </div>
+            <div id="IP-connected" class="text-center text-muted nascosto centrato">
+
+                <h4 id=IP-label></h4>
+            </div>
+
+
+
+        </div>
+        <div id="table-place" class="centrato nascosto">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Edit</th>
+                    </tr>
+                </thead>
+                <tbody id="list-all">
+                    <tr id="ghost-item"></tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary mb-2" id="btn-add">Add</button>
+        </div>
+    </div>
+    <!--<button onclick="nascondi()">(sono connesso)</button>-->
+    <div class="result">
+
+    </div>
+</body>
+
+
+<!--MODAL-->
+
+<div class="modal" id="modal-edit">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-title">Create a new section</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+                <form id="form-modal">
+                    <input type="text" id="input-modal-id" name="id" value="" hidden>
+                    <div id='autoform'>
+
+                    </div>
+
+
+                </form> <button button type="button" class="btn btn-primary" id="add-voice-modal"
+                    onclick="inputNum++;loadAutoform()">+</button>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btn-delete-modal" data-dismiss="modal">Delete</button>
+
+                <button type="button" class="btn btn-success" id="btn-add-modal" data-dismiss="modal">Add</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<span id="loading-span" style="display: none;">
+    <img src="https://assets.materialup.com/uploads/e81a3088-dc99-48a1-a1dd-0680fbe707f0/preview.gif">
+</span>
+
+</html>
+
+
+
+<div class="d-none">
+
+    <div class="input-group mb-3 " id="input-row-shape">
+        <div class="input-group-prepend">
+            <select class="dropdown-tipo-class custom-select" id="dropdown-tipo-shape" toggle="#input-modal-title">
+                <option selected>Choose...</option>
+                <option value="text">Username</option>
+                <option value="password">Password</option>
+                <option value="hidden">Hidden</option>
+            </select>
+        </div>
+        <input type='text' class='form-control border-right-0' id='input-modal-shape' name='title'>
+        <div class="input-group-append border-left-0">
+            <span class="input-group-text bg-white " id="span-remove-row-shape">
+                <i class="fa fa-fw fa-times" id="i-remove-row-shape"></i>
+            </span>
+        </div>
+        <!--<span style="position: absolute;" class="fa fa-fw fa-times field-icon toggle-password"
+            id="span-remove-row"></span>-->
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Email</th>
+                <th scope="col">Edit</th>
+            </tr>
+        </thead>
+        <tbody id="list-all">
+            <tr class="item-row el-click" id="item-row-shape">
+                <th id="item-row-col-1-shape" class="el-click-shape" scope="row">0</th>
+                <td id="item-row-col-2-shape" class="el-click-shape">nome-0</td>
+                <td id="item-row-col-3-shape" class="el-click-shape">email-0</td>
+                <td id="item-row-col-4-shape" class="el-click-shape">
+                    <button id="btn-show-modal-shape"
+                        class="btn-sm btn-outline-primary show-modal el-click-shape">Edit</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>

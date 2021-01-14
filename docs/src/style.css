@@ -1,0 +1,69 @@
+.container {
+  padding-top: 20px;
+}
+
+.centrato {
+  margin: auto;
+}
+
+.form-inline {
+  width: auto;
+}
+
+.form-row {
+  padding: 10px;
+  margin: 10px;
+}
+
+.form-row button {
+  margin: 10px;
+}
+
+.form-row form-group {
+  margin: 10px;
+}
+
+.form-row input {
+  margin-top: 10px;
+}
+
+.nascosto {
+  display: none;
+}
+
+input[type="text"].form-control.valid + label:after,
+input[type="text"].form-control:focus.valid + label:after,
+input[type="text"].form-control.invalid + label:after,
+input[type="text"].form-control:focus.invalid + label:after,
+input[type="password"].form-control.valid + label:after,
+input[type="password"].form-control:focus.valid + label:after,
+input[type="password"].form-control.invalid + label:after,
+input[type="password"].form-control:focus.invalid + label:after {
+  top: 3.75rem !important;
+}
+
+span.field-icon {
+  position: absolute;
+
+  display: inline-block;
+  cursor: pointer;
+  right: 0.5rem;
+  top: 0.7rem;
+
+  z-index: 2;
+}
+.inputwrapper {
+  width: auto;
+  position: relative;
+}
+
+.custom-select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.form-inline .form-control {
+  width: auto;
+}
+.form-inline .form-group {
+  display: inline-block;
+}

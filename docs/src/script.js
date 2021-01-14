@@ -9,9 +9,9 @@ function nascondi() {
 var ip = "";
 var pureIp = "";
 var url_modifica = "";
-//var url_tutti = "src/test/response.text";
+//var url_tutti = "test/response.text";
 var url_tutti = "/all";
-//var url_get = "src/test/3.text;
+//var url_get = "test/3.text;
 var url_get = "/get?id=";
 var url_set = "/set?";
 var url_new = "/new";
