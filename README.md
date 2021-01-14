@@ -32,7 +32,7 @@ Some links that you might need:
 Easyino Cosimo is licensed using GPL-3 license. For every contribution or suggestion feel free to contact us at easyino.team@gmail.com or in the <a href="https://github.com/Easyino/cosimo/discussions">discussion page</a>.
 <br>
 
-#:it: ITA
+# :it: ITA
 
 # Easyino Cosimo
 Chi è Cosimo?
