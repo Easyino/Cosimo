@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "programmer": "AVR ISP",
+    "port": "COM7",
+    "sketch": "..\\prova_seriale\\prova_seriale.ino"
+}
