@@ -44,6 +44,7 @@ int dataTypes(String type) {
 int settings[50];
 
 int checkpoint_memory[20];
+int checkpoint_jump;
 
 int command_length[50];
 //short int changes[50];
@@ -77,7 +78,7 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
 uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
-char masterKey[] = "w86vn@rp"; //esempio
+char masterKey[] = "w86vn@rp";
 uint8_t resultingNonce[12] { 0 };
 uint8_t resultingTag[16] { 0 };
 static uint32_t encryptionCounter = 5;
@@ -106,8 +107,8 @@ struct section {
 int n_section = 0;
 struct section section[10];
 //SSID and PSWD of external wifi network
-String ext_ssid = "federixo-Inspiron-5567";
-String ext_password = "pasword";
+String ext_ssid;
+String ext_password;
 IPAddress local_ip(10, 10, 10, 1);
 IPAddress gateway(10, 10, 10, 1);
 IPAddress subnet(255, 0, 0, 0);

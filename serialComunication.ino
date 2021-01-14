@@ -154,7 +154,6 @@ void executeSerialCommands() {
   }
   inputString = "";
   stringComplete = false;
-
 }
 
 void serialEvent() {

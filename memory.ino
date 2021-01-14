@@ -61,6 +61,7 @@ void loadSector(int sector) {
   reportStarting("Loading sector");
   loadCommandlengths(sector);
   sector_loaded = sector;
+  checkpoint_jump = 0;
   String data;
   for (i = 0; memory_map[i] != ""; i++) {
     memory_map[i] = "";
@@ -80,7 +81,6 @@ void loadSector(int sector) {
       Serial.println(EEPROM.read(c));
       if (EEPROM.read(c) == 255) {
         memory_type[q] = password;
-        Serial.println("Questa è una password");
         q--;
       }
       else {
@@ -119,14 +119,14 @@ void updateEEPROM() {
   Serial.print("Raw data = ");
   Serial.println(data);
   int address = calculateCheckpointAddress(sector_loaded);
-  Serial.print("Address end = ");
+  
+  Serial.print("Address = ");
   Serial.println(address);
-  Serial.print("length = ");
-  Serial.println(calculatelength(address));
-  shiftEEPROM(address + checkpoint_memory[sector_loaded], checkpoint_memory[sector_loaded] - calculatelength(address));
+  Serial.print("Jump = ");
+  Serial.println(checkpoint_jump);
+  
+  shiftEEPROM(address + checkpoint_memory[sector_loaded] - checkpoint_jump, checkpoint_jump);
   address -= checkpoint_memory[sector_loaded] / max_value_address;
-  Serial.print("Address start = ");
-  Serial.println(address);
   for (i = 0; data[i] != '\0'; i++) {
     EEPROM.write(address + i, data[i]);
   }
@@ -190,12 +190,15 @@ void loadNetData() {
 }
 
 void updateCommand(int com, String data, int type) {
+  int jump;
   Serial.print(data_types[type] + "  ");
   if (type == command) {
     data = stringToCommand(data);
-    Serial.println(data);
   }
-  checkpoint_memory[sector_loaded] += rawLength(data, type) - rawLength(memory_map[com], memory_type[com]);
+  Serial.println(data);
+  jump = rawLength(data, type) - rawLength(memory_map[com], memory_type[com]);
+  checkpoint_jump += jump;
+  checkpoint_memory[sector_loaded] += jump;
   memory_map[com] = data;
   memory_type[com] = type;
 }

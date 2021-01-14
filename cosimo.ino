@@ -34,10 +34,11 @@ void setup() {
     eepromClear();
     loadSector(0);
     getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
+    String buffer;
     for (i = 0; i < 16; i++) {
-      memory_map[0] += (char)hkdfSalt[i];
+      buffer += (char)hkdfSalt[i];
     }
-    checkpoint_memory[0] = 17;
+    updateCommand(0, buffer, text);
     updateEEPROM();
   }
   else {
@@ -65,7 +66,7 @@ void setup() {
   }
 
 
-  if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(up) == HIGH) {
+  if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(confirm) == HIGH) {
     OTAupdate();
   }
 

@@ -42,13 +42,13 @@ void handle_Set() {
 
 String getAllJson() {
 
-  String  text = "[";
+  String  tuaNonna = "[";
   for (i = 0; i < n_section; i++) {
     getSingleJson(i);
-    if (i + 1 < n_section)text += ",";
+    if (i + 1 < n_section)tuaNonna += ",";
   }
-  text += "]";
-  return text;
+  tuaNonna += "]";
+  return tuaNonna;
 }
 
 
