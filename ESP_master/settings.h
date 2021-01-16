@@ -60,8 +60,8 @@ enum credential_commands {
 };
 
 //I2C
-#define SDA_PIN 4
-#define SCL_PIN 5
+#define SDA_PIN D5
+#define SCL_PIN D3
 const int16_t I2C_MASTER = 0x42;
 const int16_t I2C_SLAVE = 0x08;
 
@@ -86,9 +86,9 @@ uint8_t hkdfSalt[16] { 0 };
 
 
 //Buttons
-#define up D5
-#define confirm D6
-#define down D7
+#define up D6
+#define confirm D7
+#define down D8
 
 //Network
 bool netStat = 0; //status of the network

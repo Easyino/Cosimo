@@ -10,7 +10,7 @@ void setup() {
   Serial.println("--------------------------------");
 
 
-  //Wire.begin(SDA_PIN, SCL_PIN, I2C_MASTER);
+  Wire.begin(SDA_PIN, SCL_PIN, I2C_MASTER);
   display.init();
   display.flipScreenVertically();
   display.setContrast(255);
@@ -57,7 +57,7 @@ void setup() {
   Serial.println("");
 
 
-  
+
   if (EEPROM.read(0)) {
     tryConnect();
   }
@@ -83,7 +83,7 @@ void setup() {
   section[3].title = "nome-3";
   section[3].email = "email-3";
   section[3].password = "password-3";
-
+  sendSlave("/*caboom schadow digispark*/", text);
 }
 
 void loop() {
