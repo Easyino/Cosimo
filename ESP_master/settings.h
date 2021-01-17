@@ -101,11 +101,15 @@ const char* personal_password = "12345678";
 //Variables declaration
 struct section {
   String title;
-  String email;
-  String password;
 };
-int n_section = 0;
+int n_section = 3;
 struct section section[10];
+
+
+  
+  
+
+
 //SSID and PSWD of external wifi network
 String ext_ssid;
 String ext_password;

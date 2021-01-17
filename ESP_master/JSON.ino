@@ -1,7 +1,10 @@
 void handle_GetAllJson() {
+  Serial.print("Someone asked me the complete JSON...");
   server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send(200, "text/plain", getAllJson());
   //  server.send(200, "text/plain", "[ { \"id\":1, \"name\":\"name1\", \"username\":\"username1\", \"password\":\"password1\" }, { \"id\":2, \"name\":\"name2\", \"username\":\"username2\", \"password\":\"password2\" }  ]");
+  Serial.println("Sent");
+
 }
 
 void handle_GetSingleJson() {
@@ -41,38 +44,50 @@ void handle_Set() {
 }
 
 String getAllJson() {
-
-  String  tuaNonna = "[";
+Serial.print("I'm creating the complete JSON...");
+  String  AJ = "[";
   for (i = 0; i < n_section; i++) {
-    getSingleJson(i);
-    if (i + 1 < n_section)tuaNonna += ",";
+
+
+
+ AJ += " { \"id\":";
+    AJ += i;
+    AJ += ", \"title\":\"";
+ AJ+=section[i].title;
+    AJ += "\" }";
+
+
+    if (i + 1 < n_section)AJ += ",";
   }
-  tuaNonna += "]";
-  return tuaNonna;
+  AJ += "]";
+    Serial.println("Done");
+  return AJ;
 }
 
 
 String getSingleJson(int id) {
+  Serial.print("I'm creating the single JSON...");
 
-  struct box {
+
+
+struct box_template {
     String type;
     String content;
   };
-  struct box box[10];
-  int n_box = 3;
+  struct  box_template box[10];
+  int n_box = 5;
 
-
-
-
+  //only for text purpouse
   box[0].type = "text";
   box[0].content = "testo1";
   box[1].type = "password";
   box[1].content = "pass1";
   box[2].type ="text";
   box[2].content = "testo2";
-  
-  String  text = "[";
 
+
+  String  text = "[";
+  i=0;
   for (i = 0; i < n_box; i++) {
     text += " { \"n_seq\":";
     text += i;
@@ -85,4 +100,6 @@ String getSingleJson(int id) {
 
   }
   text += "]";
+      Serial.println("Done");
+  return text;
 }
