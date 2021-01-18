@@ -75,6 +75,16 @@ void executeSerialCommands() {
     }
     reportEnding();
   }
+  else if (serialString[0].equalsIgnoreCase("keyboard")){
+    if (serialString[1].equalsIgnoreCase("send")){
+      reportStarting("Sending on the keyboard");
+      sendSlave(serialString[3], text);
+      reportEnding();
+    }
+  }
+
+
+  
   else if (serialString[0].equalsIgnoreCase("encrypt")) {
     memory_map[serialString[1].toInt()] = encryptString(serialString[2]);
     Serial.println(memory_map[serialString[1].toInt()]);
@@ -146,7 +156,6 @@ void executeSerialCommands() {
       Serial.println("Failed");
     }
   }
-
 
 
   else {

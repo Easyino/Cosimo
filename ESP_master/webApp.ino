@@ -56,10 +56,23 @@ void tryConnect() {
 
   while (WiFi.status() != WL_CONNECTED) {
 
+    display.clear();
+    display.setTextAlignment(TEXT_ALIGN_RIGHT);
+    display.drawString(128, 52, "Connecting...");
+    display.display();
+
+
     delay(500);
     Serial.print(".");
     ret++;
     if (ret > 20) {
+      
+      display.clear();
+      display.setTextAlignment(TEXT_ALIGN_RIGHT);
+      display.drawString(128, 52, "Failed!");
+      display.display();
+
+      
       Serial.println("FAILED!");
       EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
@@ -73,6 +86,7 @@ void tryConnect() {
 
   Serial.print("IP address:  ");
   Serial.println(WiFi.localIP());
+  wifi_IP = WiFi.localIP().toString();
 
 
 

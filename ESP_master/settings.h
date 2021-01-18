@@ -12,7 +12,7 @@
 
 #include "SSD1306Wire.h"
 #include "images.h"
-SSD1306Wire display(0x3c, SDA, SCL);
+SSD1306Wire display(0x3c, D3, D5);
 
 
 //Memory
@@ -60,8 +60,8 @@ enum credential_commands {
 };
 
 //I2C
-#define SDA_PIN D5
-#define SCL_PIN D3
+#define SDA_PIN D1
+#define SCL_PIN D2
 const int16_t I2C_MASTER = 0x42;
 const int16_t I2C_SLAVE = 0x08;
 
@@ -87,8 +87,8 @@ uint8_t hkdfSalt[16] { 0 };
 
 //Buttons
 #define up D6
-#define confirm D7
-#define down D8
+#define confirm D4
+#define down D7
 
 //Network
 bool netStat = 0; //status of the network
@@ -106,13 +106,14 @@ int n_section = 3;
 struct section section[10];
 
 
-  
-  
+
+
 
 
 //SSID and PSWD of external wifi network
 String ext_ssid;
 String ext_password;
+String wifi_IP = "Not connected";
 IPAddress local_ip(10, 10, 10, 1);
 IPAddress gateway(10, 10, 10, 1);
 IPAddress subnet(255, 0, 0, 0);

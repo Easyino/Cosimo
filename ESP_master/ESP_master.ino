@@ -9,13 +9,12 @@ void setup() {
   Serial.begin(230400);
   Serial.println("--------------------------------");
 
-
   Wire.begin(SDA_PIN, SCL_PIN, I2C_MASTER);
   display.init();
   display.flipScreenVertically();
   display.setContrast(255);
-
-
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
   EEPROM.begin(EEPROM_length);
   inputString.reserve(200);
 
@@ -60,32 +59,50 @@ void setup() {
 
   if (EEPROM.read(0)) { //check the state of the network, saved in the first byte of EEPROM
     tryConnect();
+    
   }
   else {
     createNetwork();
   }
 
-
-  if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(confirm) == HIGH) {
-    OTAupdate();
-  }
-
   n_section = 4;
   section[0].title = "nome-0";
-  
+
   section[1].title = "nome-1";
 
   section[2].title = "nome-2";
 
   section[3].title = "nome-3";
 
-  sendSlave("/*caboom schadow digispark*/", text);
+  //sendSlave("/*caboom shadow digispark*/", text);
 }
 
 void loop() {
   server.handleClient();
 
 
+  if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(confirm) == HIGH) {
+    OTAupdate();
+  }
+  display.clear();
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  display.drawString(1, 1, String(millis() / 1000));
+  display.setTextAlignment(TEXT_ALIGN_RIGHT);
+  if (ota_initialised){
+    display.drawString(128, 52, "OTA  " + wifi_IP);
+  }
+  else{
+    display.drawString(128, 52, wifi_IP);
+  }
+  display.display();
+  if (digitalRead(confirm) == LOW){
+    if (checkReady()){
+      
+    }
+    sendSlave("sono vivo", text);
+  }
+
+  
   if (ota_initialised) {
     ArduinoOTA.handle();
   }
