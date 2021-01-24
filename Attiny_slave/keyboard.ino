@@ -5,7 +5,7 @@ unsigned int commandTable[76] =
   KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T, KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_LEFT_CTRL, KEY_LEFT_SHIFT, KEY_LEFT_ALT, KEY_LEFT_GUI
 };
 void keyboardExecution(String data, int type) {
-  if (type == text || type == password) {
+  if (true) {//type == text || type == password
     DigiKeyboard.sendKeyPress(0);
     DigiKeyboard.print(data);
   }

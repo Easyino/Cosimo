@@ -12,7 +12,7 @@
 
 #include "SSD1306Wire.h"
 #include "images.h"
-SSD1306Wire display(0x3c, D3, D5);
+SSD1306Wire display(0x3c, D2, D1);//D3, D5
 
 
 //Memory
@@ -60,8 +60,6 @@ enum credential_commands {
 };
 
 //I2C
-#define SDA_PIN D1
-#define SCL_PIN D2
 const int16_t I2C_MASTER = 0x42;
 const int16_t I2C_SLAVE = 0x08;
 
@@ -71,6 +69,20 @@ String inputString = "";
 String serialString[10];
 unsigned long int execution_time;
 int serial_reporter;
+
+//Oled
+enum alignment {
+  left,
+  right
+};
+typedef struct {
+  byte aligned = left;
+  byte x;
+  byte y;
+  String data;
+} elements;
+elements element[10];
+int element_counter = 0;
 
 
 //Encryption
@@ -86,8 +98,8 @@ uint8_t hkdfSalt[16] { 0 };
 
 
 //Buttons
-#define up D6
-#define confirm D4
+#define up D5
+#define confirm D6
 #define down D7
 
 //Network
@@ -97,6 +109,8 @@ bool ota_initialised = false;
 //SSID and PSWD of Cosimo's Network
 const char* personal_ssid = "Easyino Cosimo";
 const char* personal_password = "12345678";
+
+
 
 //Variables declaration
 struct section {
