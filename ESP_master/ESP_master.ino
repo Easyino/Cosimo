@@ -25,7 +25,6 @@ void setup() {
   }
 
 
-
   Serial.print("max address memory = ");
   Serial.println(max_value_address);
   loadCheckpoints();
@@ -56,7 +55,6 @@ void setup() {
   Serial.println("");
 
 
-
   if (EEPROM.read(0)) { //check the state of the network, saved in the first byte of EEPROM
     tryConnect();
 
@@ -65,6 +63,8 @@ void setup() {
     createNetwork();
   }
 
+
+///////////////////////////////////////////////////////Demo code to try thigns
   newDisplayElement(1, 1, String(millis() / 1000));
   newDisplayElement(right, 128, 52, wifi_IP);
 
@@ -88,19 +88,9 @@ void loop() {
 
   updateDisplayElement(0, String(millis() / 1000));
 
-  if (digitalRead(confirm) == LOW) {
-    sendSlave("ciao", text);
-  }
 
-  
-  if (millis() % 5000 == 0) {
-//    if (checkReady() == 1){
-//      sendSlave("/**/", text);
-//    }
-  }
   if (ota_initialised) {
     ArduinoOTA.handle();
-    updateDisplayElement(1, "OTA " + wifi_IP);
   }
 
 

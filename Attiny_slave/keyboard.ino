@@ -6,27 +6,26 @@ unsigned int commandTable[76] =
 };
 void keyboardExecution(String data, int type) {
   if (true) {//type == text || type == password
-    DigiKeyboard.sendKeyPress(0);
     DigiKeyboard.print(data);
   }
   else if (type == command) {
     bool number = false;
     for (i = 0, c = 0; data[i] != '\0'; i++) {
       if (number == true) {
-        c += data[i] - 128;
+        c += data[i];
         data[i] = 0;
       }
-      else if (data[i] == 253) {
+      else if (data[i] == 125) {
         data[i] = 0;
       }
-      if (data[i] == 254) {
+      if (data[i] == 126) {
         number = true;
         data[i] = 0;
       }
     }
     for (; c > 0; c--) {
       for (i = 0; data[i] != '\0'; i++) {
-        DigiKeyboard.sendKeyPress(commandTable[(int)(data[i] - 128)]);
+        DigiKeyboard.sendKeyPress(commandTable[(int)(data[i])]);
       }
       DigiKeyboard.delay(20);
       DigiKeyboard.sendKeyPress(0);

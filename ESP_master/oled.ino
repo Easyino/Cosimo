@@ -12,7 +12,6 @@ void newDisplayElement(int alignment, int x, int y, String data) {
 
 void updateDisplayElement(int number, String new_data) {
   if (element[number].data != new_data) {
-    Serial.println("\nUpdate display element");
     element[number].data = new_data;
     loadDisplay();
   }
@@ -26,18 +25,11 @@ void loadDisplay() {
   for (int i = 0; i < element_counter; i++) {
     if (element[i].aligned == left) {
       display.setTextAlignment(TEXT_ALIGN_LEFT);
-      Serial.print("left ");
     }
     else{
       display.setTextAlignment(TEXT_ALIGN_RIGHT);
-      Serial.print("right ");
     }
     display.drawString(element[i].x, element[i].y, element[i].data);
-    Serial.print(element[i].x);
-    Serial.print(" ");
-    Serial.print(element[i].y);
-    Serial.print(" ");
-    Serial.println(element[i].data);
   }
   display.display();
 }

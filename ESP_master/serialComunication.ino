@@ -75,16 +75,23 @@ void executeSerialCommands() {
     }
     reportEnding();
   }
-  else if (serialString[0].equalsIgnoreCase("keyboard")){
-    if (serialString[1].equalsIgnoreCase("send")){
+  else if (serialString[0].equalsIgnoreCase("keyboard")) {
+    if (serialString[1].equalsIgnoreCase("send")) {
       reportStarting("Sending on the keyboard");
-      sendSlave(serialString[3], text);
+      Serial.print(data_types[memory_type[serialString[2].toInt()]]);
+      Serial.print((char)9);
+      Serial.println(memory_map[serialString[2].toInt()]);
+      sendSlave(memory_map[serialString[2].toInt()], memory_type[serialString[2].toInt()]);
+      reportEnding();
+    }
+    else if (serialString[1].equalsIgnoreCase("request")){
+      reportStarting("Requesting to slave");
+      Serial.println(checkReady());
       reportEnding();
     }
   }
 
 
-  
   else if (serialString[0].equalsIgnoreCase("encrypt")) {
     memory_map[serialString[1].toInt()] = encryptString(serialString[2]);
     Serial.println(memory_map[serialString[1].toInt()]);
@@ -131,12 +138,12 @@ void executeSerialCommands() {
       createNetwork();
 
     }
-    else if (serialString[1].equalsIgnoreCase("stopAP")) {
+    else if (serialString[1].equalsIgnoreCase("stop")) {
       WiFi.softAPdisconnect (true);
       Serial.println("WIFI access point has been stopped");
     }
 
-    if (serialString[1].equalsIgnoreCase("setMode")) {
+    if (serialString[1].equalsIgnoreCase("mode")) {
       EEPROM.write(0, serialString[2].toInt());
       EEPROM.commit();
       Serial.print("setting wifi mode to ");

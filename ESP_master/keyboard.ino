@@ -133,6 +133,7 @@ String stringToCommand(String data) {
       q++;
     }
   }
+  Serial.println(command_global);
   return command_global;
 }
 
