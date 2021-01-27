@@ -3,9 +3,9 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 
 void setup() {
-  pinMode(up, INPUT_PULLUP);
-  pinMode(confirm, INPUT_PULLUP);
-  pinMode(down, INPUT_PULLUP);
+  pinMode(button_up, INPUT_PULLUP);
+  pinMode(button_confirm, INPUT_PULLUP);
+  pinMode(button_down, INPUT_PULLUP);
   Serial.begin(230400);
   Serial.println("--------------------------------");
 
@@ -20,7 +20,7 @@ void setup() {
 
   max_value_address = pow(2, usable_address_bits);
 
-  if (digitalRead(up) == LOW && digitalRead(confirm) == LOW && digitalRead(down) == LOW) {
+  if (digitalRead(button_up) == LOW && digitalRead(button_confirm) == LOW && digitalRead(button_down) == LOW) {
     eepromClear();
   }
 
@@ -65,7 +65,7 @@ void setup() {
 
 
 ///////////////////////////////////////////////////////Demo code to try thigns
-  newDisplayElement(1, 1, String(millis() / 1000));
+  newDisplayElement(1, 1, String (millis() / 1000));
   newDisplayElement(right, 128, 52, wifi_IP);
 
 
@@ -82,11 +82,11 @@ void setup() {
 void loop() {
   server.handleClient();
 
-  if (digitalRead(up) == LOW && digitalRead(down) == LOW && digitalRead(confirm) == HIGH) {
+  if (digitalRead(button_up) == LOW && digitalRead(button_down) == LOW && digitalRead(button_confirm) == HIGH) {
     OTAupdate();
   }
 
-  updateDisplayElement(0, String(millis() / 1000));
+  updateDisplayElement(0, String (millis() / 1000));
 
 
   if (ota_initialised) {

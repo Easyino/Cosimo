@@ -4,7 +4,7 @@ unsigned int commandTable[76] =
   KEY_PRINTSCREEN, KEY_SCROLL_LOCK, KEY_HOME, KEY_PAGE_UP, KEY_PAGE_DOWN, KEY_DELETE, KEY_END, KEY_RIGHT, KEY_LEFT, KEY_DOWN, KEY_UP, KEY_NUM_LOCK, KEY_A, KEY_B, KEY_C, KEY_D, KEY_E, KEY_F, KEY_G,
   KEY_H, KEY_I, KEY_J, KEY_K, KEY_L, KEY_M, KEY_N, KEY_O, KEY_P, KEY_Q, KEY_R, KEY_S, KEY_T, KEY_U, KEY_V, KEY_W, KEY_X, KEY_Y, KEY_Z, KEY_LEFT_CTRL, KEY_LEFT_SHIFT, KEY_LEFT_ALT, KEY_LEFT_GUI
 };
-void keyboardExecution(String data, int type) {
+void keyboardExecution(String data) {
   if (true) {//type == text || type == password
     DigiKeyboard.print(data);
   }

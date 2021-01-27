@@ -17,7 +17,7 @@ SSD1306Wire display(0x3c, D2, D1);//D3, D5
 
 //Memory
 #define EEPROM_length 4096
-#define EEPROM_offset 1
+#define EEPROM_offset 2
 #define usable_address_bits 7
 int max_value_address = 0;
 
@@ -73,7 +73,8 @@ int serial_reporter;
 //Oled
 enum alignment {
   left,
-  right
+  right,
+  center
 };
 typedef struct {
   byte aligned = left;
@@ -83,7 +84,8 @@ typedef struct {
 } elements;
 elements element[10];
 int element_counter = 0;
-
+int interface = 0;
+int loaded_interface = -1;
 
 //Encryption
 namespace TypeCast = experimental::TypeConversion;
@@ -98,9 +100,16 @@ uint8_t hkdfSalt[16] { 0 };
 
 
 //Buttons
-#define up D5
-#define confirm D6
-#define down D7
+#define button_up D5
+#define button_confirm D6
+#define button_down D7
+unsigned long int last_millis;
+unsigned long int millis_gap;
+enum buttons{
+  up,
+  confirm,
+  down
+};
 
 //Network
 bool netStat = 0; //status of the network

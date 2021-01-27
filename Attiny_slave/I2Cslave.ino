@@ -1,16 +1,31 @@
 void receiveEvent(int howMany) {
   String data = "";
-  int type = text;
   ready_byte = 0;
-  for (i = 0; i < howMany - 1; i++) {
+  for (i = 0; i < howMany; i++) {
     r = Wire.read();
     if (r >= 128) {
       r -= 128;
     }
-    data += (char)r;
+    if (new_data) {
+      new_data = false;
+      type = r;
+      buffer = "";
+    }
+    else {
+      data += (char)r;
+      if (r == '\0') {
+        new_data = true;
+      }
+    }
   }
-  type = Wire.read() - 1;
-  keyboardExecution(data, type);
+  data += Wire.read();
+  buffer += data;
+  if (type != command){
+    keyboardExecution(data);
+  }
+  else if (new_data){
+    keyboardExecution(buffer);
+  }
 }
 
 void requestEvent() {
