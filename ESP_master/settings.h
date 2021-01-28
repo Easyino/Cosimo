@@ -116,13 +116,8 @@ enum buttons{
   down
 };
 
-//Network
-bool netStat = 0; //status of the network
-bool netMode = 0;
-bool ota_initialised = false;
-//SSID and PSWD of Cosimo's Network
-const char* personal_ssid = "Easyino Cosimo";
-const char* personal_password = "12345678";
+
+
 
 
 
@@ -139,6 +134,14 @@ struct section section[10];
 
 
 //SSID and PSWD of external wifi network
+
+bool netStat = 0; //status of the network
+bool netMode = 0;
+bool ota_initialised = false;
+int ret=20; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
+//SSID and PSWD of Cosimo's Network
+const char* personal_ssid = "Easyino Cosimo";//you can change your cosimo's SSID here
+const char* personal_password = "12345678"; //you can change your cosimo's password here
 String ext_ssid;
 String ext_password;
 String wifi_IP = "Not connected";

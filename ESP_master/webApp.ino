@@ -49,7 +49,6 @@ void tryConnect() {
   Serial.print(ext_ssid);
   Serial.print("  with this password:");
   Serial.println(ext_password);
-  int ret = 0;
   WiFi.mode(WIFI_STA);
   WiFi.begin(ext_ssid, ext_password);
   Serial.println("");
@@ -64,8 +63,8 @@ void tryConnect() {
 
     delay(500);
     Serial.print(".");
-    ret++;
-    if (ret > 20) {
+    ret--;
+    if (ret <= 0) {
       
       display.clear();
       display.setTextAlignment(TEXT_ALIGN_RIGHT);

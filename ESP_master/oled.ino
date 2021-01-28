@@ -34,6 +34,8 @@ void loadDisplay() {
   }
   display.display();
 }
+
+
 void interfaceSelector() {
   switch (interface) {
     case 0: {
@@ -46,6 +48,7 @@ void interfaceSelector() {
       }
   }
 }
+
 
 String temporaneous_pin;
 void pin() {
@@ -90,7 +93,7 @@ void pin() {
       Serial.println(data);
       setMasterKey(data);
       loadSector(1);
-      if (wrong_key == true) {
+      if (wrong_key) {
         wrong_key = false;
         f++;
         if (f > 4) {

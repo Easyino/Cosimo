@@ -80,12 +80,12 @@ void loadSector(int sector) {
     if (command_length[i] == -1) {
       Serial.print("EEPROM value = ");
       Serial.println(EEPROM.read(c));
-      if (EEPROM.read(c) == 255 && number == false) {
+      if (EEPROM.read(c) == 255 && !number) {
         memory_type[q] = password;
         q--;
       }
       else {
-        if (number == true) {
+        if (number) {
           number = false;
         }
         else {
@@ -215,7 +215,7 @@ void updateCommand(int com, String data, int type) {
 
 int rawLength(String data, int type) {
   int length;
-  if (data.length() != 0) {
+  if (data.length()) {
     length = data.length();
     if (type == password) {
       length += 29;
