@@ -24,6 +24,7 @@ String decryptString(String data) {
   if (decryptionSucceeded) {
     return data;
   }
+  wrong_key = true;
   Serial.println("Decryption failed");
   return "Error";
 }

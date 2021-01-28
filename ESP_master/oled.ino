@@ -34,44 +34,107 @@ void loadDisplay() {
   }
   display.display();
 }
+void interfaceSelector() {
+  switch (interface) {
+    case 0: {
+        pin();
+        break;
+      }
+    case 1: {
+        timeTrack();
+        break;
+      }
+  }
+}
 
 String temporaneous_pin;
 void pin() {
+  String message;
   if (interface != loaded_interface) {
     loaded_interface = interface;
     element_counter = 0;
     temporaneous_pin = "_";
-    a = 0;
-    i = 0;
-    if (EEPROM.read(1) == 0) {
-      newDisplayElement(center, 64, 10, "Insert the pin");
+    d = 0;
+    e = -1;
+    message = "There are 5 more tryes\nbefore erasing everything";
+    f = EEPROM.read(1);
+    message[10] = char(48 + (5 - f));
+    if (f == 0) {
+      newDisplayElement(center, 64, 20, "Insert the pin");
+    }
+    else if (f == chances + 1){
+      newDisplayElement(center, 64, 20, "Chose your own pin");
     }
     else {
-      newDisplayElement(center, 64, 10, "There are" + char(48 + 5 - EEPROM.read(1) + "more tryes before formatting everything"));
+      newDisplayElement(center, 64, 20, message);
     }
-    newDisplayElement(center, 64, 40, temporaneous_pin);
+    newDisplayElement(center, 64, 45, temporaneous_pin);
   }
 
-  if (debouncedButtons == up) {
-    i = (i + 1) % 10;
-    temporaneous_pin[a * 2] = char(48 + i);
+  if (debouncedButtons() == up) {
+    e = (e + 1) % 10;
+    temporaneous_pin[d] = char(48 + e);
   }
-  else if (debouncedButtons == down) {
-    i = (i + 9) % 10;
-    temporaneous_pin[a * 2] = char(48 + i);
+  else if (debouncedButtons() == down) {
+    e = (e + 9) % 10;
+    temporaneous_pin[d] = char(48 + e);
   }
-  else if (debouncedButtons == confirm) {
-    if (temporaneous_pin[a * 2] == '_' || a == 16) {
+  else if (debouncedButtons() == confirm) {
+    if (temporaneous_pin[d] == '_' || d == 16) {
       String data;
-      for (r = 0; temporaneous_pin[r] != '\0'; r += 2) {
-        data += temporaneous_pin[r];
+      for (q = 0; temporaneous_pin[q] != '_'; q += 2) {
+        data += temporaneous_pin[q];
       }
+      data += '\0';
+      Serial.print("Inserted key = ");
+      Serial.println(data);
       setMasterKey(data);
+      loadSector(1);
+      if (wrong_key == true) {
+        wrong_key = false;
+        f++;
+        if (f > 4) {
+          eepromClear();
+          ESP.restart();
+        }
+        else {
+          EEPROM.write(1, f);
+          EEPROM.commit();
+          temporaneous_pin = "_";
+          d = 0;
+          message = "There are 5 more tryes\nbefore erasing everything"; //??????????
+          message[10] = (char)(48 + (5 - f));
+          updateDisplayElement(0, message);
+          Serial.print("Message = ");
+          Serial.println(message);
+        }
+      }
+      else {
+        EEPROM.write(1, 0);
+        EEPROM.commit();
+        interface = 1;
+      }
     }
     else {
       temporaneous_pin += " _";
-      a += 2;
+      d += 2;
     }
+    e = -1;
+    while (debouncedButtons() == confirm);
   }
   updateDisplayElement(1, temporaneous_pin);
+}
+
+void timeTrack() {
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    element_counter = 0;
+    temporaneous_pin = "_";
+    newDisplayElement(1, 1, String (millis() / 1000));
+    newDisplayElement(right, 128, 52, wifi_IP);
+  }
+  if (ota_initialised){
+    updateDisplayElement(1, "OTA " + wifi_IP);
+  }
+  updateDisplayElement(0, String (millis() / 1000));
 }

@@ -20,8 +20,9 @@ void setup() {
 
   max_value_address = pow(2, usable_address_bits);
 
-  if (digitalRead(button_up) == LOW && digitalRead(button_confirm) == LOW && digitalRead(button_down) == LOW) {
+  if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {
     eepromClear();
+    while(!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down));
   }
 
 
@@ -38,6 +39,7 @@ void setup() {
     }
     updateCommand(0, buffer, text);
     updateEEPROM();
+    EEPROM.write(1, chances + 1);
   }
   else {
     loadSector(0);
@@ -45,16 +47,21 @@ void setup() {
       hkdfSalt[i] = memory_map[0][i];
     }
   }
-  HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
-  hkdfInstance.produce(derivedKey, sizeof derivedKey);
-  Serial.println("hdfsalt:");
-  for (i = 0; i < 16; i++) {
-    Serial.print(hkdfSalt[i]);
-    Serial.print(", ");
+//  HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
+//  hkdfInstance.produce(derivedKey, sizeof derivedKey);
+//  Serial.println("hdfsalt:");
+//  for (i = 0; i < 16; i++) {
+//    Serial.print(hkdfSalt[i]);
+//    Serial.print(", ");
+//  }
+//  Serial.println("");
+
+
+  while(interface == 0){
+    interfaceSelector();
+    ESP.wdtFeed(); // Diamo un pò da mangiare al cane sennò rompe le palle
   }
-  Serial.println("");
-
-
+  
   if (EEPROM.read(0)) { //check the state of the network, saved in the first byte of EEPROM
     tryConnect();
 
@@ -65,8 +72,6 @@ void setup() {
 
 
 ///////////////////////////////////////////////////////Demo code to try thigns
-  newDisplayElement(1, 1, String (millis() / 1000));
-  newDisplayElement(right, 128, 52, wifi_IP);
 
 
   n_section = 4;
@@ -82,17 +87,15 @@ void setup() {
 void loop() {
   server.handleClient();
 
-  if (digitalRead(button_up) == LOW && digitalRead(button_down) == LOW && digitalRead(button_confirm) == HIGH) {
+  if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {
     OTAupdate();
   }
-
-  updateDisplayElement(0, String (millis() / 1000));
-
-
+  
   if (ota_initialised) {
     ArduinoOTA.handle();
   }
-
+  
+  interfaceSelector();
 
   serialEvent();
   if (stringComplete) {

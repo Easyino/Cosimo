@@ -21,7 +21,6 @@ bool OTAupdate() {
       display.drawString(display.getWidth() / 2, display.getHeight() / 2, "Restart");
       display.display();
     });
-    updateDisplayElement(1, "OTA " + wifi_IP);
     ota_initialised = true;
     return true;
   }

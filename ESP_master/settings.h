@@ -50,7 +50,7 @@ int command_length[50];
 //short int changes[50];
 int sector_loaded = 0;
 
-int i, a, r, c, q;
+int i, a, r, c, q, d, e, f;
 
 
 //Commands
@@ -87,22 +87,27 @@ int element_counter = 0;
 int interface = 0;
 int loaded_interface = -1;
 
+
 //Encryption
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
 uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
-char masterKey[] = "w86vn@rp";
+char masterKey[] = "0       ";
 uint8_t resultingNonce[12] { 0 };
 uint8_t resultingTag[16] { 0 };
 static uint32_t encryptionCounter = 5;
 uint8_t hkdfSalt[16] { 0 };
+bool wrong_key = false;
+#define chances 5
 
 
 //Buttons
 #define button_up D5
 #define button_confirm D6
 #define button_down D7
+#define scrolling_time 100
+#define bouncing_time 2
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons{
