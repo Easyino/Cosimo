@@ -86,7 +86,7 @@ elements element[10];
 int element_counter = 0;
 int interface = 0;
 int loaded_interface = -1;
-
+bool oled_updated = false;
 
 //Encryption
 namespace TypeCast = experimental::TypeConversion;

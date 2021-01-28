@@ -8,13 +8,13 @@ void newDisplayElement(int alignment, int x, int y, String data) {
   element[element_counter].y = y;
   element[element_counter].data = data;
   element_counter++;
-  loadDisplay();
+  oled_updated = true;
 }
 
 void updateDisplayElement(int number, String new_data) {
   if (element[number].data != new_data) {
     element[number].data = new_data;
-    loadDisplay();
+    oled_updated = true;
   }
 }
 
@@ -46,6 +46,10 @@ void interfaceSelector() {
         timeTrack();
         break;
       }
+  }
+  if (oled_updated){
+    oled_updated = false;
+    loadDisplay();
   }
 }
 
@@ -85,7 +89,7 @@ void pin() {
   else if (debouncedButtons() == confirm) {
     if (temporaneous_pin[d] == '_' || d == 16) {
       String data;
-      for (q = 0; temporaneous_pin[q] != '_'; q += 2) {
+      for (q = 0; q < d; q += 2) {
         data += temporaneous_pin[q];
       }
       data += '\0';
@@ -105,7 +109,7 @@ void pin() {
           EEPROM.commit();
           temporaneous_pin = "_";
           d = 0;
-          message = "There are 5 more tryes\nbefore erasing everything"; //??????????
+          message = "There are 5 more tryes\nbefore erasing everything"; //?????????? Mi si cancella da sola la stringa...
           message[10] = (char)(48 + (5 - f));
           updateDisplayElement(0, message);
           Serial.print("Message = ");
