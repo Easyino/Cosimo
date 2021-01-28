@@ -82,9 +82,12 @@ void setup() {
   section[2].title = "nome-2";
 
   section[3].title = "nome-3";
+
+  
 }
 
 void loop() {
+  Dlog("this is a log message");
   server.handleClient();
 
   if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {
@@ -94,7 +97,7 @@ void loop() {
   if (ota_initialised) {
     ArduinoOTA.handle();
   }
-  
+
   interfaceSelector();
 
   serialEvent();

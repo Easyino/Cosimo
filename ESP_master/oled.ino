@@ -8,13 +8,13 @@ void newDisplayElement(int alignment, int x, int y, String data) {
   element[element_counter].y = y;
   element[element_counter].data = data;
   element_counter++;
-  oled_updated = true;
+  loadDisplay();
 }
 
 void updateDisplayElement(int number, String new_data) {
   if (element[number].data != new_data) {
     element[number].data = new_data;
-    oled_updated = true;
+    loadDisplay();
   }
 }
 
@@ -46,10 +46,10 @@ void interfaceSelector() {
         timeTrack();
         break;
       }
-  }
-  if (oled_updated){
-    oled_updated = false;
-    loadDisplay();
+      case 2:{
+        logInterface();
+        break;
+      }
   }
 }
 
@@ -89,7 +89,7 @@ void pin() {
   else if (debouncedButtons() == confirm) {
     if (temporaneous_pin[d] == '_' || d == 16) {
       String data;
-      for (q = 0; q < d; q += 2) {
+      for (q = 0; temporaneous_pin[q] != '_'; q += 2) {
         data += temporaneous_pin[q];
       }
       data += '\0';
@@ -109,7 +109,7 @@ void pin() {
           EEPROM.commit();
           temporaneous_pin = "_";
           d = 0;
-          message = "There are 5 more tryes\nbefore erasing everything"; //?????????? Mi si cancella da sola la stringa...
+          message = "There are 5 more tryes\nbefore erasing everything"; //??????????
           message[10] = (char)(48 + (5 - f));
           updateDisplayElement(0, message);
           Serial.print("Message = ");
@@ -136,7 +136,6 @@ void timeTrack() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
     element_counter = 0;
-    temporaneous_pin = "_";
     newDisplayElement(1, 1, String (millis() / 1000));
     newDisplayElement(right, 128, 52, wifi_IP);
   }
@@ -144,4 +143,21 @@ void timeTrack() {
     updateDisplayElement(1, "OTA " + wifi_IP);
   }
   updateDisplayElement(0, String (millis() / 1000));
+}
+
+void logInterface() {
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    element_counter = 0;
+    newDisplayElement(left, 1, 1, "connected to");
+    newDisplayElement(right, 128, 52, wifi_IP);
+
+  }
+
+}
+
+void Dlog(String logtext){
+  interface=2;
+  interfaceSelector();
+ updateDisplayElement(0, logtext);
 }
