@@ -105,7 +105,6 @@ void executeSerialCommands() {
   }
 
 
-
   else if (serialString[0].equalsIgnoreCase("EEPROM")) {
     if (serialString[1].equalsIgnoreCase("update")) {
       updateEEPROM();
@@ -126,8 +125,7 @@ void executeSerialCommands() {
       Serial.println("EEPROM cleaned");
     }
   }
-
-
+  
 
   else if (serialString[0].equalsIgnoreCase("wifi")) {
     if (serialString[1].equalsIgnoreCase("connect")) {
@@ -163,7 +161,9 @@ void executeSerialCommands() {
       Serial.println("Failed");
     }
   }
-
+  else if (serialString[0].equalsIgnoreCase("interface")){
+    interface = serialString[1].toInt();
+  }
 
   else {
     Serial.println("Command not recongnised");
@@ -214,7 +214,7 @@ void reportStarting(String comment) {
 void reportEnding() {
   Serial.print("\ndone ");
   Serial.print(micros() - execution_time);
-  Serial.println("us\n--------------------------------\n");
+  Serial.println("\n--------------------------------\n");
 }
 void reportStep() {
   Serial.print(serial_reporter);

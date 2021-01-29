@@ -2,8 +2,8 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 String encryptString(String data) {
   if (EEPROM.read(1) == chances + 1) {
-    interface = 1;
-    while (interface == 1) {
+    interface = firstPinInter;
+    while (interface == firstPinInter) {
       interfaceSelector();
       ESP.wdtFeed();
     }
@@ -33,7 +33,7 @@ retry:
   bool decryptionSucceeded = ChaCha20Poly1305::decrypt(data.begin(), data.length(), derivedKey, &encryptionCounter, sizeof encryptionCounter, resultingNonce, resultingTag);
   if (decryptionSucceeded) {
     if (interface == 0) {
-      interface = 2;
+      interface = firstPinInter;
       EEPROM.write(1, 0);
       EEPROM.commit();
     }
@@ -41,7 +41,7 @@ retry:
   }
   Serial.println("Decryption failed");
   wrong_key = true;
-  interface = 0;
+  interface = pinInter;
   oled_updated = true;// This is an exceptional declaration to make the pin interface work better
   while (wrong_key) {
     interfaceSelector();

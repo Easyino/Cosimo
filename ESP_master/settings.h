@@ -76,6 +76,13 @@ enum alignment {
   right,
   center
 };
+enum interfaces{
+  firstPinInter,
+  pinInter,
+  timeInter,
+  logInter,
+  questionInter
+};
 typedef struct {
   byte aligned = left;
   byte x;
@@ -84,9 +91,11 @@ typedef struct {
 } elements;
 elements element[10];
 int element_counter = 0;
-int interface = 2;
+int interface = logInter;
 int loaded_interface = -1;
+int previous_interface;
 bool oled_updated = false;
+String elements_list[20];
 
 //Encryption
 namespace TypeCast = experimental::TypeConversion;
@@ -133,7 +142,7 @@ struct section section[10];
 bool netStat = 0; //status of the network
 bool netMode = 0;
 bool ota_initialised = false;
-int ret=20; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
+/*da togliere!!!!*/int ret = 20; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
 //SSID and PSWD of Cosimo's Network
 const char* personal_ssid = "Easyino Cosimo";//you can change your cosimo's SSID here
 const char* personal_password = "12345678"; //you can change your cosimo's password here

@@ -37,33 +37,35 @@ void loadDisplay() {
 
 
 void interfaceSelector() {
+  if (interface != loaded_interface) {
+    previous_interface = loaded_interface;
+    element_counter = 0;
+  }
   switch (interface) {
-    case 0: {
+    case pinInter: {
         pin(false);
         break;
       }
-    case 1: {
+    case firstPinInter: {
         pin(true);
         break;
       }
-    case 2: {
+    case timeInter: {
         timeTrack();
         break;
       }
-    case 3: {
+    case logInter: {
         logInterface();
+        break;
+      }
+    case questionInter: {
+        //question();
         break;
       }
   }
   if (oled_updated) {
     oled_updated = false;
     loadDisplay();
-  }
-  serialEvent();
-  if (stringComplete) {
-    stringComplete = false;
-    loadSerialCommands(inputString);
-    executeSerialCommands();
   }
 }
 
@@ -73,7 +75,6 @@ void pin(bool first_configuration) {
   String message;
   if (interface != loaded_interface) {
     loaded_interface = interface;
-    element_counter = 0;
     temporaneous_pin = "_";
     d = 0;
     e = 0;
@@ -91,7 +92,7 @@ void pin(bool first_configuration) {
     }
     newDisplayElement(center, 64, 45, temporaneous_pin);
   }
-  
+
   if (debouncedButtons() == up) {
     e = (e + 1) % 10;
     temporaneous_pin[d] = char(48 + e);
@@ -133,7 +134,7 @@ void pin(bool first_configuration) {
       else {
         EEPROM.write(1, 0);
         EEPROM.commit();
-        interface = 2;
+        interface = previous_interface;
       }
     }
     else {
@@ -149,7 +150,6 @@ void pin(bool first_configuration) {
 void timeTrack() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
-    element_counter = 0;
     newDisplayElement(1, 1, String (millis() / 1000));
     newDisplayElement(right, 128, 52, wifi_IP);
   }
@@ -159,19 +159,72 @@ void timeTrack() {
   updateDisplayElement(0, String (millis() / 1000));
 }
 
+#define n_rows 5
+int element_selected;
+int elementListSelector() {
+  if (debouncedButtons() == up) {
+    if (element_selected != 0) {
+      element_selected--;
+      if (element_selected % n_rows == 0) {
+        updateList();
+      }
+    }
+  }
+  else if (debouncedButtons() == down) {
+    if (elements_list[element_selected + 1] != "") {
+      element_selected++;
+      if (element_selected % n_rows == 0) {
+        updateList();
+      }
+    }
+  }
+  else if (debouncedButtons() == confirm) {
+    return element_selected;
+  }
+  return -1;
+}
+
+void createList() {
+  element_selected = 0;
+  for (d = 0; d < n_rows; d++) {
+    newDisplayElement(1, d * (64 / n_rows) + 1, elements_list[d]);
+  }
+}
+
+void updateList() {
+  for (d = 0; d < n_rows; d++) {
+    updateDisplayElement(d, elements_list[element_selected / n_rows + d]);
+  }
+}
+
 void logInterface() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
-    element_counter = 0;
-    newDisplayElement(left, 1, 1, "connected to");
-    newDisplayElement(right, 128, 52, wifi_IP);
-
+    createList();
   }
-
 }
 
-void Dlog(String logtext) {
-  interface = 2;
-  interfaceSelector();
-  updateDisplayElement(0, logtext);
+void oledReport(String data) {
+  if (interface == logInter) {
+    for (int i = n_rows; i >= 0; i--) {
+      elements_list[i + 1] = elements_list[i];
+    }
+    elements_list[0] = data;
+    updateList();
+  }
 }
+
+/////////////////////////////////////////////////////////// Cooming soon
+//const char* dialogText[] PROGMEM = {
+//  "Someone wants to connect to connect. Do you want it?",
+//  "Do you want to erase everything?"
+//};
+//
+//void question() {
+//  if (interface != loaded_interface) {
+//    loaded_interface = interface;
+//    newDisplayElement();
+//    newDisplayElement();
+//    newDisplayElement();
+//  }
+//}

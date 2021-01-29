@@ -1,26 +1,19 @@
 void handle_getNetInfo() {
-
   server.send(200, "text/html", pgGetNetInfo());
 }
 
 void handle_confNetInfo() {
   Serial.println("Qualcuno mi ha fatto una richiesta.../n");
-
   loadSector(1);
-
   updateCommand(addrExtSSID, server.arg("SSID"), text);
   updateCommand(addrExtPassword, server.arg("Password"), password);
-
   updateEEPROM();
   Serial.print("SSID:");
   Serial.print(memory_map[addrExtSSID]);
-
   Serial.print("Password:");
   Serial.print(memory_map[addrExtPassword]);
   //  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
-
   server.send(200, "text/html", "ORA MI RIAVVIO");
-
   EEPROM.write(0, 1); //set netmode to "try connect"
   EEPROM.commit();
   ESP.restart();
@@ -40,7 +33,6 @@ void createNetwork() {
   server.begin();
   netStat = 1;
   Serial.print("Fatto");
-
 }
 
 void tryConnect() {
@@ -54,24 +46,21 @@ void tryConnect() {
   Serial.println("");
 
   while (WiFi.status() != WL_CONNECTED) {
-
     display.clear();
     display.setTextAlignment(TEXT_ALIGN_RIGHT);
     display.drawString(128, 52, "Connecting...");
     display.display();
-
-
     delay(500);
     Serial.print(".");
     ret--;
     if (ret <= 0) {
-      
+
       display.clear();
       display.setTextAlignment(TEXT_ALIGN_RIGHT);
       display.drawString(128, 52, "Failed!");
       display.display();
 
-      
+
       Serial.println("FAILED!");
       EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
@@ -79,16 +68,10 @@ void tryConnect() {
 
     }
   }
-
-
   Serial.println("");
-
   Serial.print("IP address:  ");
   Serial.println(WiFi.localIP());
   wifi_IP = WiFi.localIP().toString();
-
-
-
   server.on("/", handle_conncetionSuccess);
   server.on("/all", handle_GetAllJson);
   server.on("/get", handle_GetSingleJson);
@@ -98,5 +81,4 @@ void tryConnect() {
   Serial.println("I'm connected!");
   netStat = 1;
   Serial.println("SUCCESS!!!");
-
 }
