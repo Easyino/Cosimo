@@ -73,7 +73,7 @@ void pin(bool first_configuration) {
     e = 0;
     message = "There are   more tryes\nbefore erasing everything";
     f = EEPROM.read(1);
-    message[10] = char(48 + (chances - f));
+    message[10] = char(48 + (chances - f + 1));
     if (f == 0) {
       newDisplayElement(center, 64, 20, "Insert the pin");
     }
@@ -115,9 +115,10 @@ void pin(bool first_configuration) {
           temporaneous_pin = "_";
           d = 0;
           message = "There are   more tryes\nbefore erasing everything";// Si cancella da sola la stringa...
-          message[10] = (char)(48 + (chances - f));
+          message[10] = (char)(48 + (chances - f + 1));
           updateDisplayElement(0, message);
           wrong_key = false;
+          return;
         }
         f++;
       }

@@ -84,7 +84,7 @@ typedef struct {
 } elements;
 elements element[10];
 int element_counter = 0;
-int interface = 0;
+int interface = 2;
 int loaded_interface = -1;
 bool oled_updated = false;
 
@@ -107,7 +107,7 @@ bool wrong_key = false;
 #define button_confirm D6
 #define button_down D7
 #define scrolling_time 100
-#define bouncing_time 2
+#define bouncing_time 0
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons{
