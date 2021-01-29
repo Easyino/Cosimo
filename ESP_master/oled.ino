@@ -8,13 +8,13 @@ void newDisplayElement(int alignment, int x, int y, String data) {
   element[element_counter].y = y;
   element[element_counter].data = data;
   element_counter++;
-  loadDisplay();
+  oled_updated = true;
 }
 
 void updateDisplayElement(int number, String new_data) {
   if (element[number].data != new_data) {
     element[number].data = new_data;
-    loadDisplay();
+    oled_updated = true;
   }
 }
 
@@ -39,37 +39,45 @@ void loadDisplay() {
 void interfaceSelector() {
   switch (interface) {
     case 0: {
-        pin();
+        pin(false);
         break;
       }
     case 1: {
+        pin(true);
+        break;
+      }
+    case 2: {
         timeTrack();
         break;
       }
-      case 2:{
+    case 3: {
         logInterface();
         break;
       }
+  }
+  if (oled_updated) {
+    oled_updated = false;
+    loadDisplay();
   }
 }
 
 
 String temporaneous_pin;
-void pin() {
+void pin(bool first_configuration) {
   String message;
   if (interface != loaded_interface) {
     loaded_interface = interface;
     element_counter = 0;
     temporaneous_pin = "_";
     d = 0;
-    e = -1;
-    message = "There are 5 more tryes\nbefore erasing everything";
+    e = 0;
+    message = "There are   more tryes\nbefore erasing everything";
     f = EEPROM.read(1);
-    message[10] = char(48 + (5 - f));
+    message[10] = char(48 + (chances - f));
     if (f == 0) {
       newDisplayElement(center, 64, 20, "Insert the pin");
     }
-    else if (f == chances + 1){
+    else if (first_configuration) {
       newDisplayElement(center, 64, 20, "Chose your own pin");
     }
     else {
@@ -96,37 +104,34 @@ void pin() {
       Serial.print("Inserted key = ");
       Serial.println(data);
       setMasterKey(data);
-      loadSector(1);
-      if (wrong_key) {
-        wrong_key = false;
-        f++;
-        if (f > 4) {
+      if (!first_configuration) {
+        if (f > chances) {
           eepromClear();
           ESP.restart();
         }
-        else {
+        else if (f != 0) {
           EEPROM.write(1, f);
           EEPROM.commit();
           temporaneous_pin = "_";
           d = 0;
-          message = "There are 5 more tryes\nbefore erasing everything"; //??????????
-          message[10] = (char)(48 + (5 - f));
+          message = "There are   more tryes\nbefore erasing everything";// Si cancella da sola la stringa...
+          message[10] = (char)(48 + (chances - f));
           updateDisplayElement(0, message);
-          Serial.print("Message = ");
-          Serial.println(message);
+          wrong_key = false;
         }
+        f++;
       }
       else {
         EEPROM.write(1, 0);
         EEPROM.commit();
-        interface = 1;
+        interface = 2;
       }
     }
     else {
       temporaneous_pin += " _";
       d += 2;
     }
-    e = -1;
+    e = 0;
     while (debouncedButtons() == confirm);
   }
   updateDisplayElement(1, temporaneous_pin);
@@ -139,7 +144,7 @@ void timeTrack() {
     newDisplayElement(1, 1, String (millis() / 1000));
     newDisplayElement(right, 128, 52, wifi_IP);
   }
-  if (ota_initialised){
+  if (ota_initialised) {
     updateDisplayElement(1, "OTA " + wifi_IP);
   }
   updateDisplayElement(0, String (millis() / 1000));
@@ -156,8 +161,8 @@ void logInterface() {
 
 }
 
-void Dlog(String logtext){
-  interface=2;
+void Dlog(String logtext) {
+  interface = 2;
   interfaceSelector();
- updateDisplayElement(0, logtext);
+  updateDisplayElement(0, logtext);
 }

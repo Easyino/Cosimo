@@ -47,8 +47,8 @@ void setup() {
       hkdfSalt[i] = memory_map[0][i];
     }
   }
-//  HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
-//  hkdfInstance.produce(derivedKey, sizeof derivedKey);
+  HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
+  hkdfInstance.produce(derivedKey, sizeof derivedKey);
 //  Serial.println("hdfsalt:");
 //  for (i = 0; i < 16; i++) {
 //    Serial.print(hkdfSalt[i]);
@@ -56,11 +56,6 @@ void setup() {
 //  }
 //  Serial.println("");
 
-
-  while(interface == 0){
-    interfaceSelector();
-    ESP.wdtFeed(); // Diamo un pò da mangiare al cane sennò rompe le palle
-  }
   
   if (EEPROM.read(0)) { //check the state of the network, saved in the first byte of EEPROM
     tryConnect();
@@ -87,7 +82,7 @@ void setup() {
 }
 
 void loop() {
-  Dlog("this is a log message");
+  //Dlog("this is a log message");
   server.handleClient();
 
   if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {
