@@ -101,7 +101,6 @@ uint8_t hkdfSalt[16] { 0 };
 bool wrong_key = false;
 #define chances 5
 
-
 //Buttons
 #define button_up D5
 #define button_confirm D6
@@ -119,16 +118,12 @@ enum buttons{
 
 
 
-
-
 //Variables declaration
 struct section {
   String title;
 };
 int n_section = 3;
 struct section section[10];
-
-
 
 
 

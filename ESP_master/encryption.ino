@@ -42,6 +42,7 @@ retry:
   Serial.println("Decryption failed");
   wrong_key = true;
   interface = 0;
+  oled_updated = true;// This is an exceptional declaration to make the pin interface work better
   while (wrong_key) {
     interfaceSelector();
     ESP.wdtFeed();

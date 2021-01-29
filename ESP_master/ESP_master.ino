@@ -95,10 +95,10 @@ void loop() {
 
   interfaceSelector();
 
-  serialEvent();
-  if (stringComplete) {
-    stringComplete = false;
-    loadSerialCommands(inputString);
-    executeSerialCommands();
-  }
+//  serialEvent();
+//  if (stringComplete) {
+//    stringComplete = false;
+//    loadSerialCommands(inputString);
+//    executeSerialCommands();
+//  }
 }

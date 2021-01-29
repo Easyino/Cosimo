@@ -59,6 +59,12 @@ void interfaceSelector() {
     oled_updated = false;
     loadDisplay();
   }
+  serialEvent();
+  if (stringComplete) {
+    stringComplete = false;
+    loadSerialCommands(inputString);
+    executeSerialCommands();
+  }
 }
 
 
@@ -85,7 +91,7 @@ void pin(bool first_configuration) {
     }
     newDisplayElement(center, 64, 45, temporaneous_pin);
   }
-
+  
   if (debouncedButtons() == up) {
     e = (e + 1) % 10;
     temporaneous_pin[d] = char(48 + e);
@@ -117,10 +123,12 @@ void pin(bool first_configuration) {
           message = "There are   more tryes\nbefore erasing everything";// Si cancella da sola la stringa...
           message[10] = (char)(48 + (chances - f + 1));
           updateDisplayElement(0, message);
+          oled_updated = false;
           wrong_key = false;
-          return;
         }
         f++;
+        while (debouncedButtons() == confirm);
+        return;
       }
       else {
         EEPROM.write(1, 0);
