@@ -30,7 +30,6 @@ void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type){
   oled_updated = true;
 }
 
-
 void updateDiplsaySpecial(byte number, byte x, byte y){
   if (special_element[number].x != x || special_element[number].y != y) {
     special_element[number].x = x;
@@ -95,7 +94,6 @@ void loadDisplay() {
   display.display();
 }
 
-
 void interfaceSelector() {
   if (interface != loaded_interface) {
     previous_interface = loaded_interface;
@@ -127,13 +125,23 @@ void interfaceSelector() {
         commandSelection();
         break;
       }
+      case settingsInter: {
+        settings();
+      }
+      case menuInter: {
+        menu();
+        break;
+      }
+      case wifiCreateInter: {
+        wifiCreateDisplay();
+        break;
+      }
   }
   if (oled_updated) {
     oled_updated = false;
     loadDisplay();
   }
 }
-
 
 String temporaneous_pin;
 void pin() {
@@ -265,9 +273,9 @@ void createList(byte offset, bool selector) {
   }
 }
 
-void updateList(int address) {
+void updateList(int adress) {
   for (d = 0; d < n_rows; d++) {
-    updateDisplayElement(d, elements_list[address + d]);
+    updateDisplayElement(d, elements_list[adress + d]);
   }
 }
 
@@ -323,3 +331,21 @@ void commandSelection() {
 //    newDisplayElement();
 //  }
 //}
+
+void menu() {
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    createList(20,1);
+  }
+if(elementListSelector()!=-1){Serial.print("selected element n.: ");Serial.println(element_selected);}
+
+}
+void settings(){}
+
+void wifiCreateDisplay(){
+   if (interface != loaded_interface) {
+    loaded_interface = interface;
+    newDisplayElement(left, 1, 1, "Connect your device to:");
+        newDisplayElement(left, 1, 15, "Easyino Cosimo");
+    newDisplayElement(left, 1, 52, "go to: 10.10.10.1");
+}}

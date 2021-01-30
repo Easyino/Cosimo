@@ -86,7 +86,10 @@ enum interfaces{
   timeInter,
   logInter,
   questionInter,
-  commandInter
+  menuInter,
+  settingsInter,
+ commandInter,
+ wifiCreateInter
 };
 typedef struct {
   bool title = false;
@@ -116,11 +119,11 @@ enum special_element_types{
 
 int element_counter = 0;
 int special_element_counter = 0;
-int interface = timeInter;
+int interface = menuInter;
 int loaded_interface = commandInter;
 int previous_interface;
 bool oled_updated = false;
-String elements_list[20];
+String elements_list[20]={"testo-1","testo-2","testo-3","testo-4","testo-5","testo-6","testo-7","testo-8"};
 int dialog_interface;
 
 //Encryption
