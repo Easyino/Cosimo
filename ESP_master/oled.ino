@@ -234,8 +234,8 @@ int elementListSelector() {
   if (debouncedButtons() == up) {
     if (element_selected != 0) {
       element_selected--;
-      if (element_selected % n_rows == 0) {
-        updateList();
+      if (element_selected % n_rows == n_rows - 1) {
+        updateList(element_selected - n_rows + 1);
       }
       updateDiplsaySpecial(0, 4, element[(element_selected) % n_rows].y + 6);
     }
@@ -244,7 +244,7 @@ int elementListSelector() {
     if (elements_list[element_selected + 1] != "") {
       element_selected++;
       if (element_selected % n_rows == 0) {
-        updateList();
+        updateList(element_selected);
       }
       updateDiplsaySpecial(0, 4, element[(element_selected) % n_rows].y + 6);
     }
@@ -265,9 +265,9 @@ void createList(byte offset, bool selector) {
   }
 }
 
-void updateList() {
+void updateList(int address) {
   for (d = 0; d < n_rows; d++) {
-    updateDisplayElement(d, elements_list[element_selected / n_rows + d]);
+    updateDisplayElement(d, elements_list[address + d]);
   }
 }
 
@@ -291,7 +291,7 @@ void oledReport(String data) {
       elements_list[i + 1] = elements_list[i];
     }
     elements_list[0] = data;
-    updateList();
+    updateList(0);
   }
 }
 
