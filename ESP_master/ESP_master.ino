@@ -39,6 +39,7 @@ void setup() {
     updateCommand(0, buffer, text);
     updateEEPROM();
     EEPROM.write(1, chances + 1);
+    EEPROM.commit();
   }
   else {
     loadSector(0);
@@ -67,9 +68,7 @@ void setup() {
 }
 
 void loop() {
-  if (millis() % 1000 == 0){
-    oledReport("Log message n° " + String(millis() / 1000));
-  }
+
   server.handleClient();
 
   if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {

@@ -18,6 +18,11 @@ SSD1306Wire display(0x3c, D2, D1);//D3, D5
 //Memory
 #define EEPROM_length 4096
 #define EEPROM_offset 2
+/*number of spaces in eeprom reserved:
+ * Bit 0: state of network(1=connect | 0=create)
+ * Bit 1: number of attempts already done of the pin
+ */
+
 #define usable_address_bits 7
 int max_value_address = 0;
 
