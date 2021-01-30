@@ -86,7 +86,8 @@ enum interfaces{
   pinInter,
   timeInter,
   logInter,
-  questionInter
+  questionInter,
+  commandInter
 };
 typedef struct {
   byte aligned = left;
@@ -107,7 +108,7 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
 uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
-char masterKey[] = "0       ";
+char masterKey[] = "        ";
 uint8_t resultingNonce[12] { 0 };
 uint8_t resultingTag[16] { 0 };
 static uint32_t encryptionCounter = 5;

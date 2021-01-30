@@ -62,6 +62,10 @@ void interfaceSelector() {
         //question();
         break;
       }
+    case commandInter: {
+        commandSelection();
+        break;
+      }
   }
   if (oled_updated) {
     oled_updated = false;
@@ -197,6 +201,12 @@ void updateList() {
   }
 }
 
+void clearList() {
+  for (d = 0; elements_list[d] != ""; d++) {
+    elements_list[d] = "";
+  }
+}
+
 void logInterface() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
@@ -211,6 +221,20 @@ void oledReport(String data) {
     }
     elements_list[0] = data;
     updateList();
+  }
+}
+
+void commandSelection() {
+  int com;
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    loadTitles();// Not working for now
+    createList();
+  }
+  com = elementListSelector();
+  if (com != -1){
+    loadSector(com);
   }
 }
 

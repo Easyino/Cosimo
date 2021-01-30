@@ -13,6 +13,22 @@ void loadCheckpoints() {
   reportEnding();
 }
 
+void loadTitles() {
+  reportStarting("Loading titles");
+  int r = checkpoint_memory[0] + addressBytes(checkpoint_memory[0]) + addressBytes(checkpoint_memory[1]) + EEPROM_offset;
+  int length;
+  for (c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
+    Serial.print("r = ");
+    Serial.println(r);
+    length = calculatelength(r);
+    for (d = 0; d < length; d++) {
+      elements_list[c] += char(EEPROM.read(r));
+    }
+    Serial.println(elements_list[c]);
+  }
+  reportEnding();
+}
+
 void loadCommandlengths(int sector) {
   int address = calculateCheckpointAddress(sector);
   int address_bytes = addressBytes(checkpoint_memory[sector]);
