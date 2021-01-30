@@ -138,7 +138,7 @@ void pin(bool first_configuration) {
       else {
         EEPROM.write(1, 0);
         EEPROM.commit();
-        interface = previous_interface;
+        interface = 2;
       }
     }
     else {
@@ -210,6 +210,7 @@ void clearList() {
 void logInterface() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
+    clearList();
     createList();
   }
 }
@@ -240,7 +241,7 @@ void commandSelection() {
 
 /////////////////////////////////////////////////////////// Cooming soon
 //const char* dialogText[] PROGMEM = {
-//  "Someone wants to connect to connect. Do you want it?",
+//  "Someone wants to connect. Do you want it?",
 //  "Do you want to erase everything?"
 //};
 //

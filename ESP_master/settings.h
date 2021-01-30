@@ -98,7 +98,7 @@ typedef struct {
 elements element[10];
 int element_counter = 0;
 int interface = logInter;
-int loaded_interface = -1;
+int loaded_interface = timeInter;
 int previous_interface;
 bool oled_updated = false;
 String elements_list[20];

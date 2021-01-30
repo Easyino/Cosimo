@@ -164,6 +164,10 @@ void executeSerialCommands() {
   else if (serialString[0].equalsIgnoreCase("interface")){
     interface = serialString[1].toInt();
   }
+  else if (serialString[0].equalsIgnoreCase("demo")){
+    interface = commandInter;
+    demoSectors();
+  }
 
   else {
     Serial.println("Command not recongnised");

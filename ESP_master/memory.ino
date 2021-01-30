@@ -257,3 +257,13 @@ int addressBytes(int length) {
   }
   return n;
 }
+
+void demoSectors() {
+  for (e = 0; e < 6; e++) {
+    loadSector(i + 2);
+    updateCommand(0, "Titolo settore", text); //14 + 1
+    updateCommand(1, "Resto dei comandi", text); //17 + 1   ---> 33 + 1
+    updateEEPROM();
+    ESP.wdtFeed();
+  }
+}

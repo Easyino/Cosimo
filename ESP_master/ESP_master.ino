@@ -49,8 +49,6 @@ void setup() {
   }
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
-  
-
   if (EEPROM.read(0)) { //check the state of the network, saved in the first byte of EEPROM
     tryConnect();
   }
