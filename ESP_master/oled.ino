@@ -84,7 +84,7 @@ void pin(bool first_configuration) {
     e = 0;
     message = "There are   more tryes\nbefore erasing everything";
     f = EEPROM.read(1);
-    message[10] = char(48 + (chances - f + 1));
+    message[10] = char(48 + (chances - f));
     if (f == 0) {
       newDisplayElement(center, 64, 20, "Insert the pin");
     }
@@ -116,17 +116,17 @@ void pin(bool first_configuration) {
       Serial.println(data);
       setMasterKey(data);
       if (!first_configuration) {
-        if (f > chances) {
+        if (f >= chances) {
           eepromClear();
           ESP.restart();
         }
-        else if (f != 0) {
+        else {
           EEPROM.write(1, f);
           EEPROM.commit();
           temporaneous_pin = "_";
           d = 0;
           message = "There are   more tryes\nbefore erasing everything";// Si cancella da sola la stringa...
-          message[10] = (char)(48 + (chances - f + 1));
+          message[10] = (char)(48 + (chances - f));
           updateDisplayElement(0, message);
           oled_updated = false;
           wrong_key = false;
