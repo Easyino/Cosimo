@@ -1,19 +1,40 @@
-void newDisplayElement(int x, int y, String data) {
-  newDisplayElement(left, x, y, data);
+void newDisplayElement(byte alignment, byte x, byte y, String data) {
+  newDisplayElement(alignment, x, y, 0, data);
 }
 
-void newDisplayElement(int alignment, int x, int y, String data) {
+void newDisplayElement(byte alignment, byte x, byte y, byte limit, String data) {
+  element[element_counter].limit = limit;
   element[element_counter].aligned = alignment;
   element[element_counter].x = x;
   element[element_counter].y = y;
   element[element_counter].data = data;
+  element[element_counter].title = false;
   element_counter++;
   oled_updated = true;
 }
 
-void updateDisplayElement(int number, String new_data) {
+void updateDisplayElement(byte number, String new_data) {
   if (element[number].data != new_data) {
     element[number].data = new_data;
+    oled_updated = true;
+  }
+}
+
+void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type){
+  special_element[special_element_counter].x = x;
+  special_element[special_element_counter].y = y;
+  special_element[special_element_counter].width = width;
+  special_element[special_element_counter].height = height;
+  special_element[special_element_counter].type = type;
+  special_element_counter++;
+  oled_updated = true;
+}
+
+
+void updateDiplsaySpecial(byte number, byte x, byte y){
+  if (special_element[number].x != x || special_element[number].y != y) {
+    special_element[number].x = x;
+    special_element[number].y = y;
     oled_updated = true;
   }
 }
@@ -21,16 +42,55 @@ void updateDisplayElement(int number, String new_data) {
 void loadDisplay() {
   display.clear();
   for (int i = 0; i < element_counter; i++) {
-    if (element[i].aligned == left) {
-      display.setTextAlignment(TEXT_ALIGN_LEFT);
+    if (element[i].aligned != element[i - 1].aligned || i == 0) {
+      if (element[i].aligned == left) {
+        display.setTextAlignment(TEXT_ALIGN_LEFT);
+      }
+      else if (element[i].aligned == right) {
+        display.setTextAlignment(TEXT_ALIGN_RIGHT);
+      }
+      else if (element[i].aligned == center) {
+        display.setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
+      }
     }
-    else if (element[i].aligned == right) {
-      display.setTextAlignment(TEXT_ALIGN_RIGHT);
+    if (element[i].title != element[i - 1].title || i == 0){
+      if (element[i].title){
+        display.setFont(ArialMT_Plain_16);
+      }
+      else{
+        display.setFont(ArialMT_Plain_10);
+      }
     }
-    else if (element[i].aligned == center) {
-      display.setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
+    if (element[i].limit == 0) {
+      display.drawString(element[i].x, element[i].y, element[i].data);
     }
-    display.drawString(element[i].x, element[i].y, element[i].data);
+    else {
+      display.drawStringMaxWidth(element[i].x, element[i].y, element[i].limit, element[i].data);
+    }
+  }
+  for(i = 0; i < special_element_counter; i++){
+    switch (special_element[i].type){
+      case rect:{
+        display.drawLine(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
+        break;
+      }
+      case circle:{
+        display.drawCircle(special_element[i].x, special_element[i].y, special_element[i].width);
+        break;
+      }
+      case filledCircle:{
+        display.fillCircle(special_element[i].x, special_element[i].y, special_element[i].width);
+        break;
+      }
+      case rectangle:{
+        display.drawRect(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
+        break;
+      }
+      case filledRectangle:{
+        display.fillRect(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
+        break;
+      }
+    }
   }
   display.display();
 }
@@ -40,14 +100,15 @@ void interfaceSelector() {
   if (interface != loaded_interface) {
     previous_interface = loaded_interface;
     element_counter = 0;
+    special_element_counter = 0;
   }
   switch (interface) {
     case pinInter: {
-        pin(false);
+        pin();
         break;
       }
-    case firstPinInter: {
-        pin(true);
+    case firstConfigInter: {
+        firstConfiguration();
         break;
       }
     case timeInter: {
@@ -75,26 +136,27 @@ void interfaceSelector() {
 
 
 String temporaneous_pin;
-void pin(bool first_configuration) {
+void pin() {
   String message;
   if (interface != loaded_interface) {
     loaded_interface = interface;
     temporaneous_pin = "_";
     d = 0;
     e = 0;
-    message = "There are   more tryes\nbefore erasing everything";
+    message = "There are   more tryes before erasing everything";
     f = EEPROM.read(1);
     message[10] = char(48 + (chances - f));
     if (f == 0) {
-      newDisplayElement(center, 64, 20, "Insert the pin");
+      newDisplayElement(center, 64, 15, 128, "Insert the pin");
     }
-    else if (first_configuration) {
-      newDisplayElement(center, 64, 20, "Chose your own pin");
+    else if (dialog_interface) {
+      newDisplayElement(center, 64, 15, 128, "Chose your own pin and press twice to confirm");
     }
     else {
-      newDisplayElement(center, 64, 20, message);
+      newDisplayElement(center, 64, 15, 128, message);
     }
     newDisplayElement(center, 64, 45, temporaneous_pin);
+    element[element_counter - 1].title = true;
   }
 
   if (debouncedButtons() == up) {
@@ -106,16 +168,16 @@ void pin(bool first_configuration) {
     temporaneous_pin[d] = char(48 + e);
   }
   else if (debouncedButtons() == confirm) {
-    if (temporaneous_pin[d] == '_' || d == 16) {
+    if (temporaneous_pin[d] == '_' || d == 14) {
       String data;
-      for (q = 0; temporaneous_pin[q] != '_'; q += 2) {
+      for (q = 0; q < d; q += 2) {
         data += temporaneous_pin[q];
       }
       data += '\0';
       Serial.print("Inserted key = ");
       Serial.println(data);
       setMasterKey(data);
-      if (!first_configuration) {
+      if (!dialog_interface) {
         if (f >= chances) {
           eepromClear();
           ESP.restart();
@@ -125,7 +187,7 @@ void pin(bool first_configuration) {
           EEPROM.commit();
           temporaneous_pin = "_";
           d = 0;
-          message = "There are   more tryes\nbefore erasing everything";// Si cancella da sola la stringa...
+          message = "There are   more tryes before erasing everything";// Si cancella da sola la stringa...
           message[10] = (char)(48 + (chances - f));
           updateDisplayElement(0, message);
           oled_updated = false;
@@ -151,10 +213,13 @@ void pin(bool first_configuration) {
   updateDisplayElement(1, temporaneous_pin);
 }
 
+void firstConfiguration() {
+}
+
 void timeTrack() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
-    newDisplayElement(1, 1, String (millis() / 1000));
+    newDisplayElement(left, 1, 1, String (millis() / 1000));
     newDisplayElement(right, 128, 52, wifi_IP);
   }
   if (ota_initialised) {
@@ -172,6 +237,7 @@ int elementListSelector() {
       if (element_selected % n_rows == 0) {
         updateList();
       }
+      updateDiplsaySpecial(0, 4, element[(element_selected) % n_rows].y + 6);
     }
   }
   else if (debouncedButtons() == down) {
@@ -180,6 +246,7 @@ int elementListSelector() {
       if (element_selected % n_rows == 0) {
         updateList();
       }
+      updateDiplsaySpecial(0, 4, element[(element_selected) % n_rows].y + 6);
     }
   }
   else if (debouncedButtons() == confirm) {
@@ -188,10 +255,13 @@ int elementListSelector() {
   return -1;
 }
 
-void createList() {
+void createList(byte offset, bool selector) {
   element_selected = 0;
   for (d = 0; d < n_rows; d++) {
-    newDisplayElement(1, d * (64 / n_rows) + 1, elements_list[d]);
+    newDisplayElement(left, offset, d * (64 / n_rows) + 1, elements_list[d]);
+  }
+  if (selector){
+    newDisplaySpecial(4, element[0].y + 6, 3, 0, circle);
   }
 }
 
@@ -211,7 +281,7 @@ void logInterface() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
     clearList();
-    createList();
+    createList(1, false);
   }
 }
 
@@ -230,11 +300,11 @@ void commandSelection() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
     clearList();
-    loadTitles();// Not working for now
-    createList();
+    loadTitles();
+    createList(10, true);
   }
   com = elementListSelector();
-  if (com != -1){
+  if (com != -1) {
     loadSector(com);
   }
 }

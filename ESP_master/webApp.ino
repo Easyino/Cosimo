@@ -15,6 +15,7 @@ void handle_confNetInfo() {
   //  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
   server.send(200, "text/html", "ORA MI RIAVVIO");
   EEPROM.write(0, 1); //set netmode to "try connect"
+  demoSectors();//To remove
   EEPROM.commit();
   ESP.restart();
 }
@@ -47,6 +48,7 @@ void tryConnect() {
 
   while (WiFi.status() != WL_CONNECTED) {
     display.clear();
+    display.setFont(ArialMT_Plain_10);
     display.setTextAlignment(TEXT_ALIGN_RIGHT);
     display.drawString(128, 52, "Connecting...");
     display.display();

@@ -2,8 +2,9 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 String encryptString(String data) {
   if (EEPROM.read(1) == chances + 1) {
-    interface = firstPinInter;
-    while (interface == firstPinInter) {
+    interface = pinInter;
+    dialog_interface = 1;
+    while (interface == pinInter) {
       interfaceSelector();
       ESP.wdtFeed();
     }
@@ -41,6 +42,7 @@ retry:
   Serial.println("Decryption failed");
   wrong_key = true;
   interface = pinInter;
+  dialog_interface = 0;
   oled_updated = true;// This is an exceptional declaration to make the pin interface work better
   while (wrong_key) {
     interfaceSelector();

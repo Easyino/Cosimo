@@ -15,14 +15,16 @@ void loadCheckpoints() {
 
 void loadTitles() {
   reportStarting("Loading titles");
-  int r = checkpoint_memory[0] + addressBytes(checkpoint_memory[0]) + addressBytes(checkpoint_memory[1]) + EEPROM_offset;
+  int r = calculateCheckpointAddress(2);
+  r += addressBytes(a);
   int length;
-  for (c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
+  for (c = 0; EEPROM.read(r) != 0; r += checkpoint_memory[c + 2], c++) {
+    length = calculatelength(r);
+    r += addressBytes(a);
     Serial.print("r = ");
     Serial.println(r);
-    length = calculatelength(r);
     for (d = 0; d < length; d++) {
-      elements_list[c] += char(EEPROM.read(r));
+      elements_list[c] += char(EEPROM.read(r + d));
     }
     Serial.println(elements_list[c]);
   }
@@ -151,7 +153,7 @@ void updateEEPROM() {
   Serial.print("Jump = ");
   Serial.println(checkpoint_jump);
 
-  shiftEEPROM(address + checkpoint_memory[sector_loaded] - checkpoint_jump, checkpoint_jump);
+  //shiftEEPROM(address + checkpoint_memory[sector_loaded] - checkpoint_jump, checkpoint_jump);
   address -= checkpoint_memory[sector_loaded] / max_value_address;
   for (i = 0; data[i] != '\0'; i++) {
     EEPROM.write(address + i, data[i]);
@@ -259,8 +261,8 @@ int addressBytes(int length) {
 }
 
 void demoSectors() {
-  for (e = 0; e < 6; e++) {
-    loadSector(i + 2);
+  for (e = 0; e < 3; e++) {
+    loadSector(e + 2);
     updateCommand(0, "Titolo settore", text); //14 + 1
     updateCommand(1, "Resto dei comandi", text); //17 + 1   ---> 33 + 1
     updateEEPROM();

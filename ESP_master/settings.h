@@ -46,7 +46,6 @@ int dataTypes(String type) {
   }
   return -1;
 }
-int settings[50];
 
 int checkpoint_memory[20];
 int checkpoint_jump;
@@ -82,26 +81,47 @@ enum alignment {
   center
 };
 enum interfaces{
-  firstPinInter,
   pinInter,
+  firstConfigInter,
   timeInter,
   logInter,
   questionInter,
   commandInter
 };
 typedef struct {
-  byte aligned = left;
+  bool title = false;
+  byte limit;
+  byte aligned;
   byte x;
   byte y;
   String data;
 } elements;
 elements element[10];
+typedef struct {
+  byte type;
+  byte x;
+  byte y;
+  byte height;
+  byte width;
+} special_elements;
+special_elements special_element[10];
+
+enum special_element_types{
+  rect,
+  circle,
+  filledCircle,
+  rectangle,
+  filledRectangle
+};
+
 int element_counter = 0;
-int interface = logInter;
-int loaded_interface = timeInter;
+int special_element_counter = 0;
+int interface = timeInter;
+int loaded_interface = commandInter;
 int previous_interface;
 bool oled_updated = false;
 String elements_list[20];
+int dialog_interface;
 
 //Encryption
 namespace TypeCast = experimental::TypeConversion;
@@ -131,16 +151,12 @@ enum buttons{
 };
 
 
-
-
 //Variables declaration
 struct section {
   String title;
 };
 int n_section = 3;
 struct section section[10];
-
-
 
 
 //SSID and PSWD of external wifi network

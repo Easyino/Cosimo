@@ -8,11 +8,6 @@ void executeSerialCommands() {
       Serial.print(", ");
     }
 
-    Serial.println("\n\nSettings:");
-    for (i = 0; i < 10; i++) {
-      Serial.print(settings[i]);
-      Serial.print(", ");
-    }
     Serial.println("\n\nSector loaded:");
     Serial.print(sector_loaded);
 
@@ -55,7 +50,7 @@ void executeSerialCommands() {
     Serial.print("Command updated: ");
     Serial.print(memory_map[serialString[1].toInt()]);
     Serial.print(" --> ");
-    updateCommand(serialString[1].toInt(), serialString[3], dataTypes(serialString[2]));
+    updateCommand(serialString[1].toInt(), serialString[3], dataTypes(serialString[2]));// command number, data type, data
     Serial.println(memory_map[serialString[1].toInt()]);
   }
 
