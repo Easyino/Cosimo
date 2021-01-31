@@ -117,7 +117,7 @@ void loadDisplay() {
 }
 
 /**
- * @brief It seletionate the interface corresponding on (int)interface
+ * @brief It select the interface corresponding on (int)interface
  * 
  */
 void interfaceSelector() {
@@ -221,7 +221,7 @@ void pin() {
           EEPROM.commit();
           temporaneous_pin = "_";
           d = 0;
-          message = "There are   more tryes before erasing everything";// Si cancella da sola la stringa...
+          message = "There are   more tryes before erasing everything";
           message[10] = (char)(48 + (chances - f));
           updateDisplayElement(0, message);
           oled_updated = false;
@@ -276,7 +276,7 @@ int elementListSelector() {
       if (element_selected % n_rows == n_rows - 1) {
         updateList();
       }
-      updateDiplsaySpecial(0, element[element_selected].x - 10, element[(element_selected) % n_rows].y + 6);
+      updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
     }
   }
   else if (debouncedButtons() == down) {
@@ -285,7 +285,7 @@ int elementListSelector() {
       if (element_selected % n_rows == 0) {
         updateList();
       }
-      updateDiplsaySpecial(0, element[element_selected].x - 10, element[(element_selected) % n_rows].y + 6);
+      updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
     }
   }
   else if (debouncedButtons() == confirm) {
@@ -299,7 +299,7 @@ int elementListSelector() {
 void createList(byte offset_x, byte offset_y, bool selector) {
   element_selected = 0;
   if (selector) {
-    newDisplaySpecial(offset_x + 4, 6 + offset_y, 3, 0, circle);
+    newDisplaySpecial(offset_x + 4, offset_y + 6, 3, 0, circle);
     offset_x += 10;
   }
   for (d = 0; d < n_rows; d++) {
