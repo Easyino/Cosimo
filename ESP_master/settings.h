@@ -19,9 +19,9 @@ SSD1306Wire display(0x3c, D2, D1);//D3, D5
 #define EEPROM_length 4096
 #define EEPROM_offset 2
 /*number of spaces in eeprom reserved:
- * Bit 0: state of network(1=connect | 0=create)
- * Bit 1: number of attempts already done of the pin
- */
+   Bit 0: state of network(1=connect | 0=create)
+   Bit 1: number of attempts already done of the pin
+*/
 
 #define usable_address_bits 7
 int max_value_address = 0;
@@ -80,7 +80,7 @@ enum alignment {
   right,
   center
 };
-enum interfaces{
+enum interfaces {
   pinInter,
   firstConfigInter,
   timeInter,
@@ -88,8 +88,8 @@ enum interfaces{
   questionInter,
   menuInter,
   settingsInter,
- commandInter,
- wifiCreateInter
+  commandInter,
+  wifiCreateInter
 };
 typedef struct {
   bool title = false;
@@ -109,7 +109,7 @@ typedef struct {
 } special_elements;
 special_elements special_element[10];
 
-enum special_element_types{
+enum special_element_types {
   rect,
   circle,
   filledCircle,
@@ -123,7 +123,7 @@ int interface = menuInter;
 int loaded_interface = commandInter;
 int previous_interface;
 bool oled_updated = false;
-String elements_list[20]={"testo-1","testo-2","testo-3","testo-4","testo-5","testo-6","testo-7","testo-8"};
+String elements_list[20] = {"testo-1", "testo-2", "testo-3", "testo-4", "testo-5", "testo-6", "testo-7", "testo-8"};
 int dialog_interface;
 
 //Encryption
@@ -147,7 +147,7 @@ bool wrong_key = false;
 #define bouncing_time 0
 unsigned long int last_millis;
 unsigned long int millis_gap;
-enum buttons{
+enum buttons {
   up,
   confirm,
   down

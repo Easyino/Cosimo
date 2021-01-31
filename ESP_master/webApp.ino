@@ -34,7 +34,7 @@ void createNetwork() {
   server.begin();
   netStat = 1;
   Serial.print("Fatto");
-  interface=wifiCreateInter;
+  interface = wifiCreateInter;
 }
 
 void tryConnect() {
@@ -62,7 +62,6 @@ void tryConnect() {
       display.setTextAlignment(TEXT_ALIGN_RIGHT);
       display.drawString(128, 52, "Failed!");
       display.display();
-
 
       Serial.println("FAILED!");
       EEPROM.write(0, 0); //set netmode to "create a wifi"

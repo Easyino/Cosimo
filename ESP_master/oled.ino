@@ -20,7 +20,7 @@ void updateDisplayElement(byte number, String new_data) {
   }
 }
 
-void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type){
+void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type) {
   special_element[special_element_counter].x = x;
   special_element[special_element_counter].y = y;
   special_element[special_element_counter].width = width;
@@ -30,7 +30,7 @@ void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type){
   oled_updated = true;
 }
 
-void updateDiplsaySpecial(byte number, byte x, byte y){
+void updateDiplsaySpecial(byte number, byte x, byte y) {
   if (special_element[number].x != x || special_element[number].y != y) {
     special_element[number].x = x;
     special_element[number].y = y;
@@ -52,11 +52,11 @@ void loadDisplay() {
         display.setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
       }
     }
-    if (element[i].title != element[i - 1].title || i == 0){
-      if (element[i].title){
+    if (element[i].title != element[i - 1].title || i == 0) {
+      if (element[i].title) {
         display.setFont(ArialMT_Plain_16);
       }
-      else{
+      else {
         display.setFont(ArialMT_Plain_10);
       }
     }
@@ -67,28 +67,28 @@ void loadDisplay() {
       display.drawStringMaxWidth(element[i].x, element[i].y, element[i].limit, element[i].data);
     }
   }
-  for(i = 0; i < special_element_counter; i++){
-    switch (special_element[i].type){
-      case rect:{
-        display.drawLine(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
-        break;
-      }
-      case circle:{
-        display.drawCircle(special_element[i].x, special_element[i].y, special_element[i].width);
-        break;
-      }
-      case filledCircle:{
-        display.fillCircle(special_element[i].x, special_element[i].y, special_element[i].width);
-        break;
-      }
-      case rectangle:{
-        display.drawRect(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
-        break;
-      }
-      case filledRectangle:{
-        display.fillRect(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
-        break;
-      }
+  for (i = 0; i < special_element_counter; i++) {
+    switch (special_element[i].type) {
+      case rect: {
+          display.drawLine(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
+          break;
+        }
+      case circle: {
+          display.drawCircle(special_element[i].x, special_element[i].y, special_element[i].width);
+          break;
+        }
+      case filledCircle: {
+          display.fillCircle(special_element[i].x, special_element[i].y, special_element[i].width);
+          break;
+        }
+      case rectangle: {
+          display.drawRect(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
+          break;
+        }
+      case filledRectangle: {
+          display.fillRect(special_element[i].x, special_element[i].y, special_element[i].width, special_element[i].height);
+          break;
+        }
     }
   }
   display.display();
@@ -118,21 +118,21 @@ void interfaceSelector() {
         break;
       }
     case questionInter: {
-        //question();
+        question();
         break;
       }
     case commandInter: {
         commandSelection();
         break;
       }
-      case settingsInter: {
+    case settingsInter: {
         settings();
       }
-      case menuInter: {
+    case menuInter: {
         menu();
         break;
       }
-      case wifiCreateInter: {
+    case wifiCreateInter: {
         wifiCreateDisplay();
         break;
       }
@@ -243,18 +243,18 @@ int elementListSelector() {
     if (element_selected != 0) {
       element_selected--;
       if (element_selected % n_rows == n_rows - 1) {
-        updateList(element_selected - n_rows + 1);
+        updateList();
       }
-      updateDiplsaySpecial(0, 4, element[(element_selected) % n_rows].y + 6);
+      updateDiplsaySpecial(0, element[element_selected].x - 10, element[(element_selected) % n_rows].y + 6);
     }
   }
   else if (debouncedButtons() == down) {
     if (elements_list[element_selected + 1] != "") {
       element_selected++;
       if (element_selected % n_rows == 0) {
-        updateList(element_selected);
+        updateList();
       }
-      updateDiplsaySpecial(0, 4, element[(element_selected) % n_rows].y + 6);
+      updateDiplsaySpecial(0, element[element_selected].x - 10, element[(element_selected) % n_rows].y + 6);
     }
   }
   else if (debouncedButtons() == confirm) {
@@ -264,18 +264,24 @@ int elementListSelector() {
 }
 
 void createList(byte offset, bool selector) {
-  element_selected = 0;
-  for (d = 0; d < n_rows; d++) {
-    newDisplayElement(left, offset, d * (64 / n_rows) + 1, elements_list[d]);
-  }
-  if (selector){
-    newDisplaySpecial(4, element[0].y + 6, 3, 0, circle);
-  }
+  createList(offset, 0, selector);
 }
 
-void updateList(int adress) {
+void createList(byte offset_x, byte offset_y, bool selector) {
+  element_selected = 0;
+  if (selector) {
+    newDisplaySpecial(offset_x + 4, 6 + offset_y, 3, 0, circle);
+    offset_x += 10;
+  }
   for (d = 0; d < n_rows; d++) {
-    updateDisplayElement(d, elements_list[adress + d]);
+    newDisplayElement(left, offset_x, d * (64 / n_rows) + offset_y, elements_list[d]);
+  }
+  
+}
+
+void updateList() {
+  for (d = 0; d < n_rows; d++) {
+    updateDisplayElement(d, elements_list[element_selected - (element_selected % n_rows) + d]);
   }
 }
 
@@ -299,7 +305,7 @@ void oledReport(String data) {
       elements_list[i + 1] = elements_list[i];
     }
     elements_list[0] = data;
-    updateList(0);
+    updateList();
   }
 }
 
@@ -309,43 +315,53 @@ void commandSelection() {
     loaded_interface = interface;
     clearList();
     loadTitles();
-    createList(10, true);
+    createList(0, true);
   }
   com = elementListSelector();
   if (com != -1) {
-    loadSector(com);
+    loadSector(com + 2);
   }
 }
 
 /////////////////////////////////////////////////////////// Cooming soon
-//const char* dialogText[] PROGMEM = {
-//  "Someone wants to connect. Do you want it?",
-//  "Do you want to erase everything?"
-//};
-//
-//void question() {
-//  if (interface != loaded_interface) {
-//    loaded_interface = interface;
-//    newDisplayElement();
-//    newDisplayElement();
-//    newDisplayElement();
-//  }
-//}
+const char* dialogText[] PROGMEM = {
+  "Someone wants to connect. Do you want it?",
+  "Do you want to erase everything?"
+};
+
+void question() {
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    newDisplayElement(left, 1, 1, 90, dialogText[dialog_interface]);
+    clearList();
+    elements_list[0] = "No";
+    elements_list[1] = "Yes";
+    createList(100, 15, true);
+  }
+  if(elementListSelector() != -1){
+    dialog_interface = element_selected;
+    interface = previous_interface;
+  }
+}
 
 void menu() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
-    createList(20,1);
+    createList(0, true);
   }
-if(elementListSelector()!=-1){Serial.print("selected element n.: ");Serial.println(element_selected);}
+  if (elementListSelector() != -1) {
+    Serial.print("selected element n.: ");
+    Serial.println(element_selected);
+  }
 
 }
-void settings(){}
+void settings() {}
 
-void wifiCreateDisplay(){
-   if (interface != loaded_interface) {
+void wifiCreateDisplay() {
+  if (interface != loaded_interface) {
     loaded_interface = interface;
     newDisplayElement(left, 1, 1, "Connect your device to:");
-        newDisplayElement(left, 1, 15, "Easyino Cosimo");
+    newDisplayElement(left, 1, 15, "Easyino Cosimo");
     newDisplayElement(left, 1, 52, "go to: 10.10.10.1");
-}}
+  }
+}
