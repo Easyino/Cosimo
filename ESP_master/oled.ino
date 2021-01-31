@@ -1,7 +1,12 @@
-void newDisplayElement(byte alignment, byte x, byte y, String data) {
-  newDisplayElement(alignment, x, y, 0, data);
-}
-
+/**
+ * @brief It saves an element on the oled buffer
+ * 
+ * @param alignment left, right, centre
+ * @param x Coordinates
+ * @param y Coordinates
+ * @param limit The x value where the string won't passes
+ * @param data Stings
+ */
 void newDisplayElement(byte alignment, byte x, byte y, byte limit, String data) {
   element[element_counter].limit = limit;
   element[element_counter].aligned = alignment;
@@ -13,6 +18,10 @@ void newDisplayElement(byte alignment, byte x, byte y, byte limit, String data) 
   oled_updated = true;
 }
 
+void newDisplayElement(byte alignment, byte x, byte y, String data) {
+  newDisplayElement(alignment, x, y, 0, data);
+}
+
 void updateDisplayElement(byte number, String new_data) {
   if (element[number].data != new_data) {
     element[number].data = new_data;
@@ -20,6 +29,15 @@ void updateDisplayElement(byte number, String new_data) {
   }
 }
 
+/**
+ * @brief Create a geometrical element on the display
+ * 
+ * @param x Coordinates
+ * @param y Coordinates
+ * @param width Dimensions
+ * @param height Dimensions
+ * @param type rect, rectangle, filled rectangle, circle, filled circle
+ */
 void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type) {
   special_element[special_element_counter].x = x;
   special_element[special_element_counter].y = y;
@@ -38,6 +56,10 @@ void updateDiplsaySpecial(byte number, byte x, byte y) {
   }
 }
 
+/**
+ * @brief Print every elements on the screen
+ * 
+ */
 void loadDisplay() {
   display.clear();
   for (int i = 0; i < element_counter; i++) {
@@ -94,6 +116,10 @@ void loadDisplay() {
   display.display();
 }
 
+/**
+ * @brief It seletionate the interface corresponding on (int)interface
+ * 
+ */
 void interfaceSelector() {
   if (interface != loaded_interface) {
     previous_interface = loaded_interface;
@@ -137,7 +163,7 @@ void interfaceSelector() {
         break;
       }
   }
-  if (oled_updated) {
+  if (oled_updated) {// Only i fthere is something different it Will print elements on the screen
     oled_updated = false;
     loadDisplay();
   }
@@ -238,6 +264,11 @@ void timeTrack() {
 
 #define n_rows 5
 int element_selected;
+/**
+ * @brief Managmnt of commands and items on a list
+ * 
+ * @return The selected item with confirm button
+ */
 int elementListSelector() {
   if (debouncedButtons() == up) {
     if (element_selected != 0) {
@@ -263,9 +294,7 @@ int elementListSelector() {
   return -1;
 }
 
-void createList(byte offset, bool selector) {
-  createList(offset, 0, selector);
-}
+
 
 void createList(byte offset_x, byte offset_y, bool selector) {
   element_selected = 0;
@@ -276,8 +305,11 @@ void createList(byte offset_x, byte offset_y, bool selector) {
   for (d = 0; d < n_rows; d++) {
     newDisplayElement(left, offset_x, d * (64 / n_rows) + offset_y, elements_list[d]);
   }
-  
 }
+void createList(byte offset, bool selector) {
+  createList(offset, 0, selector);
+}
+
 
 void updateList() {
   for (d = 0; d < n_rows; d++) {

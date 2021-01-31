@@ -19,7 +19,7 @@ void setup() {
   inputString.reserve(200);
   max_value_address = pow(2, usable_address_bits);
 
-  if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {
+  if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {// Press the 3 buttons to erase EEPROM
     eepromClear();
     while (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down));
   }
@@ -28,7 +28,7 @@ void setup() {
   Serial.print("max address memory = ");
   Serial.println(max_value_address);
   loadCheckpoints();
-  if (checkpoint_memory[0] != 17) {
+  if (checkpoint_memory[0] != 17) {// Detect resetting
     eepromClear();
     loadSector(0);
     getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
@@ -36,9 +36,9 @@ void setup() {
     for (i = 0; i < 16; i++) {
       buffer += (char)hkdfSalt[i];
     }
-    updateCommand(0, buffer, text);
+    updateCommand(0, buffer, text);// Saving salt
     updateEEPROM();
-    EEPROM.write(1, chances + 1);
+    EEPROM.write(1, chances + 1);// Used when it has to be decided the key
     EEPROM.commit();
   }
   else {
@@ -49,7 +49,7 @@ void setup() {
   }
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
-  if (EEPROM.read(0)) { //check the state of the network, saved in the first byte of EEPROM
+  if (EEPROM.read(0)) { //Check the state of the network, saved in the first byte of EEPROM
     tryConnect();
   }
   else {
@@ -69,7 +69,7 @@ void loop() {
 
   server.handleClient();
 
-  if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {
+  if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {// Press the up and down to activate ota
     OTAupdate();
   }
 

@@ -44,13 +44,18 @@ retry:
   interface = pinInter;
   dialog_interface = 0;
   oled_updated = true;// This is an exceptional declaration to make the pin interface work better
-  while (wrong_key) {
+  while (wrong_key) {// Pin interface
     interfaceSelector();
     ESP.wdtFeed();
   }
   data = original_data;
-  goto retry;
+  goto retry;// Retry to decrypt
 }
+/**
+ * @brief Set the Master Key object
+ * 
+ * @param data the new key
+ */
 void setMasterKey(String data) {
   for (i = 0; i < 8; i++) {
     masterKey[i] = ' ';

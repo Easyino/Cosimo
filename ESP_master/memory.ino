@@ -4,7 +4,10 @@ void eepromClear() {
   }
   EEPROM.commit();
 }
-
+/**
+ * @brief To save checkpoints at the beginning
+ * 
+ */
 void loadCheckpoints() {
   reportStarting("Loading checkpoints");
   for (r = EEPROM_offset, c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
@@ -13,6 +16,10 @@ void loadCheckpoints() {
   reportEnding();
 }
 
+/**
+ * @brief To load titles that will be shown on the oled
+ * 
+ */
 void loadTitles() {
   reportStarting("Loading titles");
   int r = calculateCheckpointAddress(2);
@@ -46,7 +53,12 @@ void loadCommandlengths(int sector) {
   Serial.println("");
 }
 
-
+/**
+ * @brief EEPROM analiser
+ * 
+ * @param sector The sector I want to calculate
+ * @return int The address of the sector on the EEPROM
+ */
 int calculateCheckpointAddress(int sector) {
   for (i = 0, a = EEPROM_offset; i < sector; i++) {
     a += checkpoint_memory[i] + addressBytes(checkpoint_memory[i]);
@@ -69,7 +81,13 @@ int calculatelength(int address) {
   return a;
 }
 
-
+/**
+ * @brief Loading strings from eeprom
+ * 
+ * @param sector The sector i want to load
+ * 
+ * @param memory_map The strings array where everything will be stored on
+ */
 void loadSector(int sector) {
   if (sector < 0) { //injection code protection
     Serial.println("Protection triggered");
@@ -161,6 +179,12 @@ void updateEEPROM() {
   EEPROM.commit();
 }
 
+/**
+ * @brief Shift EEPROM
+ * 
+ * @param address The point where it will start shifting
+ * @param jump The difference of the previous data and the new data
+ */
 void shiftEEPROM(int address, int jump) {
   int sign_indicator = jump / abs(jump);
   for (i = 0; i != jump; i += sign_indicator) {
@@ -174,6 +198,11 @@ void shiftEEPROM(int address, int jump) {
   EEPROM.commit();
 }
 
+/**
+ * @brief Encode the sector loaded into one single string to store on the eeprom
+ * 
+ * @return Encoded data
+ */
 String rawData() {
   String data;
   data += writelength(checkpoint_memory[sector_loaded]);
@@ -199,6 +228,12 @@ String rawData() {
   return data;
 }
 
+/**
+ * @brief Encoding strings
+ * 
+ * @param length The integer length of the string
+ * @return Length encoded to be stored on the eeprom
+ */
 String writelength(int length) {
   String data;
   for (r = 0; r < length / max_value_address; r++) {
@@ -217,6 +252,13 @@ void loadNetData() {
   Serial.println("prendo password");
 }
 
+/**
+ * @brief Updateing sectors
+ * 
+ * @param com Number of the command
+ * @param data New string
+ * @param type Data type of the string
+ */
 void updateCommand(int com, String data, int type) {
   int jump;
   Serial.print(data_types[type] + "  ");
@@ -231,6 +273,13 @@ void updateCommand(int com, String data, int type) {
   memory_type[com] = type;
 }
 
+/**
+ * @brief Calculating the length of the data encoded
+ * 
+ * @param data String to analyze
+ * @param type Data type
+ * @return The total length of the data encoded
+ */
 int rawLength(String data, int type) {
   int length;
   if (data.length()) {
@@ -246,6 +295,12 @@ int rawLength(String data, int type) {
   return 0;
 }
 
+/**
+ * @brief Address bytes
+ * 
+ * @param length The length of a string
+ * @return The number of bytes used for the length 
+ */
 int addressBytes(int length) {
   int n;
   if (length != -1) {

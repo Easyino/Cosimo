@@ -1,3 +1,8 @@
+/**
+ * @brief Button input
+ * 
+ * @return The button pressed (up, down, confirm)
+ */
 int debouncedButtons(){
   if (digitalRead(button_up) && digitalRead(button_confirm) && digitalRead(button_down)){
     last_millis = millis();
