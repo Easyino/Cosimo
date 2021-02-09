@@ -1,4 +1,6 @@
 void receiveEvent(int howMany) {
+  DigiKeyboard.sendKeyPress(0);
+  DigiKeyboard.print("//ciao");
   String data = "";
   ready_byte = 0;
   for (i = 0; i < howMany; i++) {
@@ -8,7 +10,7 @@ void receiveEvent(int howMany) {
     }
     if (new_data) {
       new_data = false;
-      type = r;
+      type = r - 1;
       buffer = "";
     }
     else {
@@ -20,12 +22,16 @@ void receiveEvent(int howMany) {
   }
   data += Wire.read();
   buffer += data;
-  if (type != command){
-    keyboardExecution(data);
-  }
-  else if (new_data){
+  if (new_data){
     keyboardExecution(buffer);
   }
+  
+//  if (type != command){
+//    keyboardExecution(data);
+//  }
+//  else if (new_data){
+//    keyboardExecution(buffer);
+//  }
 }
 
 void requestEvent() {

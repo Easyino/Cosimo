@@ -6,6 +6,7 @@ unsigned int commandTable[76] =
 };
 void keyboardExecution(String data) {
   if (true) {//type == text || type == password
+    DigiKeyboard.sendKeyPress(0);
     DigiKeyboard.print(data);
   }
   else if (type == command) {

@@ -303,7 +303,7 @@ void createList(byte offset_x, byte offset_y, bool selector) {
     offset_x += 10;
   }
   for (d = 0; d < n_rows; d++) {
-    newDisplayElement(left, offset_x, d * (64 / n_rows) + offset_y, elements_list[d]);
+    newDisplayElement(left, offset_x, d * 64 / n_rows + offset_y, elements_list[d]);
   }
 }
 void createList(byte offset, bool selector) {
@@ -352,6 +352,7 @@ void commandSelection() {
   com = elementListSelector();
   if (com != -1) {
     loadSector(com + 2);
+    sendSlave(memory_map[0], memory_type[0]); /// To try i2c
   }
 }
 
