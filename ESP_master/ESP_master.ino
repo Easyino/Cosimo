@@ -9,7 +9,7 @@ void setup() {
   Serial.begin(230400);
   Serial.println("--------------------------------");
 
-  Wire.begin(D1, D2, I2C_MASTER);
+  //Wire.begin(D1, D2, I2C_MASTER);
   display.init();
   display.flipScreenVertically();
   display.setContrast(255);

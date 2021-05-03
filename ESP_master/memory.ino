@@ -4,22 +4,55 @@ void eepromClear() {
   }
   EEPROM.commit();
 }
-/**
- * @brief To save checkpoints at the beginning
- * 
- */
 void loadCheckpoints() {
   reportStarting("Loading checkpoints");
-  for (r = EEPROM_offset, c = 0; EEPROM.read(r) != 0; r += a + addressBytes(a), c++) {
-    checkpoint_memory[c] = calculatelength(r);
+  for(q = 0, a = 1, r = EEPROM_offset; a != 0; q++){
+    for (; EEPROM.read(r) != 0 || EEPROM.read(r + 1) != 0; r++) {}
+    if (EEPROM.read(r + 2) == 0){
+      a = 0;
+    }
+    r++;
+    checkpoint_memory[q] = r;
   }
   reportEnding();
 }
 
-/**
- * @brief To load titles that will be shown on the oled
- * 
- */
+void loadSector(int sector) {
+  for (i = 0; memory_map[i] != ""; i++) {
+    memory_map[i] = "";
+    memory_type[i] = -1;
+  }
+  for(i = checkpoint_memory[sector], q = 0; i < checkpoint_memory[sector + 1]; i += a, q++){
+    for(a = i + 2, memory_type[q] = EEPROM.read(i + 1); EEPROM.read(a) != 0; a++){
+      memory_map[q] += EEPROM.read(a);
+    }
+    if (memory_type[q] == password){
+      memory_map[q] = decryptString(memory_map[q]);
+    }
+  }
+}
+
+void updateCommand(int com, String data, int type) {
+  if (type == password){
+    data = encryptString(data);
+  }
+  else if (type == command){
+    data = stringToCommand(data);
+  }
+  length = memory_map[com] - data.length();
+  memory_map[com] = data;
+  memory_type[com] = type;
+  for(i = com + 1; checkpoint_memory[i] != 0; i++){
+    checkpoint_memory[i] -= length;
+  }
+  
+  /// I have to add a shifting function for the eeprom
+}
+
+void updateEEPROM() {
+
+}
+/*
 void loadTitles() {
   reportStarting("Loading titles");
   int r = calculateCheckpointAddress(2);
@@ -53,12 +86,6 @@ void loadCommandlengths(int sector) {
   Serial.println("");
 }
 
-/**
- * @brief EEPROM analiser
- * 
- * @param sector The sector I want to calculate
- * @return int The address of the sector on the EEPROM
- */
 int calculateCheckpointAddress(int sector) {
   for (i = 0, a = EEPROM_offset; i < sector; i++) {
     a += checkpoint_memory[i] + addressBytes(checkpoint_memory[i]);
@@ -81,13 +108,6 @@ int calculatelength(int address) {
   return a;
 }
 
-/**
- * @brief Loading strings from eeprom
- * 
- * @param sector The sector i want to load
- * 
- * @param memory_map The strings array where everything will be stored on
- */
 void loadSector(int sector) {
   if (sector < 0) { //injection code protection
     Serial.println("Protection triggered");
@@ -179,12 +199,6 @@ void updateEEPROM() {
   EEPROM.commit();
 }
 
-/**
- * @brief Shift EEPROM
- * 
- * @param address The point where it will start shifting
- * @param jump The difference of the previous data and the new data
- */
 void shiftEEPROM(int address, int jump) {
   int sign_indicator = jump / abs(jump);
   for (i = 0; i != jump; i += sign_indicator) {
@@ -198,11 +212,6 @@ void shiftEEPROM(int address, int jump) {
   EEPROM.commit();
 }
 
-/**
- * @brief Encode the sector loaded into one single string to store on the eeprom
- * 
- * @return Encoded data
- */
 String rawData() {
   String data;
   data += writelength(checkpoint_memory[sector_loaded]);
@@ -228,12 +237,6 @@ String rawData() {
   return data;
 }
 
-/**
- * @brief Encoding strings
- * 
- * @param length The integer length of the string
- * @return Length encoded to be stored on the eeprom
- */
 String writelength(int length) {
   String data;
   for (r = 0; r < length / max_value_address; r++) {
@@ -252,13 +255,6 @@ void loadNetData() {
   Serial.println("prendo password");
 }
 
-/**
- * @brief Updateing sectors
- * 
- * @param com Number of the command
- * @param data New string
- * @param type Data type of the string
- */
 void updateCommand(int com, String data, int type) {
   int jump;
   Serial.print(data_types[type] + "  ");
@@ -273,13 +269,6 @@ void updateCommand(int com, String data, int type) {
   memory_type[com] = type;
 }
 
-/**
- * @brief Calculating the length of the data encoded
- * 
- * @param data String to analyze
- * @param type Data type
- * @return The total length of the data encoded
- */
 int rawLength(String data, int type) {
   int length;
   if (data.length()) {
@@ -295,12 +284,6 @@ int rawLength(String data, int type) {
   return 0;
 }
 
-/**
- * @brief Address bytes
- * 
- * @param length The length of a string
- * @return The number of bytes used for the length 
- */
 int addressBytes(int length) {
   int n;
   if (length != -1) {
@@ -323,4 +306,5 @@ void demoSectors() {
     updateEEPROM();
     ESP.wdtFeed();
   }
-}
+}*/
+
