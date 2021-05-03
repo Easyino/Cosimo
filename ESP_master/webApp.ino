@@ -33,7 +33,7 @@ void createNetwork() {
   server.on("/conf", handle_confNetInfo);
   server.begin();
   netStat = 1;
-  Serial.print("Fatto");
+  Serial.println("Fatto");
   interface = wifiCreateInter;
 }
 

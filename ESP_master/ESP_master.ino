@@ -6,7 +6,7 @@ void setup() {
   pinMode(button_up, INPUT_PULLUP);
   pinMode(button_confirm, INPUT_PULLUP);
   pinMode(button_down, INPUT_PULLUP);
-  Serial.begin(230400);
+  Serial.begin(115200);
   Serial.println("--------------------------------");
 
   //Wire.begin(D1, D2, I2C_MASTER);

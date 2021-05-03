@@ -49,12 +49,13 @@ int dataTypes(String type) {
 
 int checkpoint_memory[20];
 int checkpoint_jump;
+int checkpoint_max = 0;
 
-int command_length[50];
+int length;
 //short int changes[50];
 int sector_loaded = 0;
 
-int i, a, r, c, q, d, e, f;
+unsigned int i, a, r, c, q, d, e, f;
 
 
 //Commands

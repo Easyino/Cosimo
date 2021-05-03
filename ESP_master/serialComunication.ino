@@ -8,14 +8,11 @@ void executeSerialCommands() {
       Serial.print(", ");
     }
 
+    Serial.println("\n\nMax checkpoint:");
+    Serial.print(checkpoint_max);
+
     Serial.println("\n\nSector loaded:");
     Serial.print(sector_loaded);
-
-    Serial.println("\n\nCommand lengths:");
-    for (i = 0; i < 10; i++) {
-      Serial.print(command_length[i]);
-      Serial.print(", ");
-    }
 
     Serial.println("\n\nTypes:");
     for (i = 0; i < 10; i++) {
