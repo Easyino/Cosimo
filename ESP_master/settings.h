@@ -29,9 +29,9 @@ int max_value_address = 0;
 String memory_map[50];
 int memory_type[50] = { -1};
 enum types {
-  text,
-  command,
-  password
+  text = 1,
+  command = 2,
+  password = 3
 };
 String data_types[3] {"text", "command", "password"};
 int dataTypes(String type) {
@@ -49,7 +49,7 @@ int dataTypes(String type) {
 
 int checkpoint_memory[20];
 int checkpoint_jump;
-int checkpoint_max = 0;
+int sector_max = 0;
 
 int length;
 //short int changes[50];

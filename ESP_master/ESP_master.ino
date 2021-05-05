@@ -28,7 +28,7 @@ void setup() {
   Serial.print("max address memory = ");
   Serial.println(max_value_address);
   loadCheckpoints();
-  if (checkpoint_memory[0] != 17) {// Detect resetting
+  if (checkpoint_memory[1] != 19 + EEPROM_offset) {// Detect resetting
     eepromClear();
     loadSector(0);
     getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);

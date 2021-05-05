@@ -11,10 +11,10 @@ String encryptString(String data) {
   }
   String buffer = "";
   ChaCha20Poly1305::encrypt(data.begin(), data.length(), derivedKey, &encryptionCounter, sizeof encryptionCounter, resultingNonce, resultingTag);
-  for (i = 0; i < 12; i++) {
+  for (int i = 0; i < 12; i++) {
     buffer += (char)resultingNonce[i];
   }
-  for (i = 0; i < 16; i++) {
+  for (int i = 0; i < 16; i++) {
     buffer += (char)resultingTag[i];
   }
   buffer += data;

@@ -8,11 +8,11 @@ void executeSerialCommands() {
       Serial.print(", ");
     }
 
-    Serial.println("\n\nMax checkpoint:");
-    Serial.print(checkpoint_max);
-
     Serial.println("\n\nSector loaded:");
     Serial.print(sector_loaded);
+
+    Serial.println("\n\nSector max:");
+    Serial.print(sector_max);
 
     Serial.println("\n\nTypes:");
     for (i = 0; i < 10; i++) {
@@ -106,6 +106,8 @@ void executeSerialCommands() {
       c = serialString[2].toInt();
       reportStarting("Start reading EEPROM");
       for (i = EEPROM_offset; i < c + EEPROM_offset; i++) {
+        Serial.print(i);
+        Serial.print((char)9);
         Serial.print((int)EEPROM.read(i));
         Serial.print((char)9);
         Serial.println((char)EEPROM.read(i));

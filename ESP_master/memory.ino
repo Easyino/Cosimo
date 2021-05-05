@@ -3,41 +3,43 @@ void eepromClear() {
     EEPROM.write(i, 0);
   }
   EEPROM.commit();
-  for(i = 0; checkpoint_memory[i] != 0; i++){
-    checkpoint_memory[i] = 0;
-  }
-  loadCheckpoints();
 }
 
 void loadCheckpoints() {
   reportStarting("Loading checkpoints");
   for (q = 0, a = 1, r = EEPROM_offset; a != 0; q++) {
     for (; EEPROM.read(r) != 0 || EEPROM.read(r + 1) != 0; r++) {}
+    Serial.println(r);
     if (EEPROM.read(r + 2) == 0) {
       a = 0;
     }
     r++;
     checkpoint_memory[q] = r;
   }
-  checkpoint_max = r;
+  sector_max = q - 1;
   reportEnding();
 }
 
 void loadSector(int sector) {
+  reportStarting("Loading sector");
   sector_loaded = sector;
   checkpoint_jump = 0;
   for (i = 0; memory_map[i] != ""; i++) {
     memory_map[i] = "";
     memory_type[i] = -1;
   }
-  for (i = checkpoint_memory[sector], q = 0; i < checkpoint_memory[sector + 1]; i += a, q++) {
-    for (a = i + 2, memory_type[q] = EEPROM.read(i + 1); EEPROM.read(a) != 0; a++) {
+  for (i = checkpoint_memory[sector], q = 0; i < checkpoint_memory[sector + 1] - 1; i += a, q++) {
+    Serial.println(i);
+    memory_type[q] = EEPROM.read(i + 1);
+    for (a = i + 2; EEPROM.read(a) != 0; a++) {
       memory_map[q] += (char)EEPROM.read(a);
     }
+    a--;
     if (memory_type[q] == password) {
       memory_map[q] = decryptString(memory_map[q]);
     }
   }
+  reportEnding();
 }
 
 void updateCommand(int com, String data, int type) {
@@ -47,46 +49,54 @@ void updateCommand(int com, String data, int type) {
   else if (type == command) {
     data = stringToCommand(data);
   }
-  checkpoint_jump += memory_map[com].length() - data.length();
+  checkpoint_jump += data.length() - memory_map[com].length();
   memory_map[com] = data;
   memory_type[com] = type;
 }
 
 void updateEEPROM() {
+  reportStarting("Updating eeprom");
   if (checkpoint_jump != 0) {
-    shiftEEPROM(checkpoint_memory[sector_loaded + 1], checkpoint_jump);
-    for (i = sector_loaded + 1; checkpoint_memory[i] != 0; i++) {
-      checkpoint_memory[i] -= checkpoint_jump;
+    Serial.print("Jump = ");
+    Serial.println(checkpoint_jump);
+    //shiftEEPROM (checkpoint_memory[sector_loaded + 1], checkpoint_jump);
+    if (checkpoint_memory[sector_loaded + 1] == 0){
+      checkpoint_memory[sector_loaded + 1] = sectorLength() + 1;
+      sector_max++;
     }
-    checkpoint_max += checkpoint_jump;
+    else{
+      for (i = sector_loaded + 1; checkpoint_memory[i] != 0; i++) {
+        checkpoint_memory[i] += checkpoint_jump;
+      }
+    }
   }
-  if (checkpoint_memory[sector_loaded + 1] == 0){
-    checkpoint_memory[sector_loaded + 1] = sectorLength() + 1;
-    checkpoint_max = length + 1;
-  }
-  for(i = checkpoint_memory[sector_loaded] + 2, r = 0; i < checkpoint_max; i += a + 2, r++){
+  
+  EEPROM.write(checkpoint_memory[sector_loaded] - 1, 0);
+  for (i = checkpoint_memory[sector_loaded] + 2, r = 0; i < checkpoint_memory[sector_max]; i += a + 2, r++){
     EEPROM.write(i - 2, 0);
     EEPROM.write(i - 1, memory_type[r]);
-    for(a = 0; memory_map[r][a] != 0; a++){
+    Serial.println(i - 1);
+    for (a = 0; memory_map[r][a] != 0; a++){
       EEPROM.write(i + a, memory_map[r][a]);
     }
   }
   EEPROM.commit();
+  reportEnding();
 }
 
 int sectorLength(){
   length = 0;
-  for(c = 0; memory_map[c] != ""; c++, length += 2){
+  for (c = 0; memory_map[c] != ""; c++, length += 2){
     length += memory_map[c].length();
   }
   return length;
 }
 
-void shiftEEPROM(int address, int jump) {
+void shiftEEPROM (int address, int jump) {
   if (jump > 0){
     for (i = 0; i < jump; i++) {
       c = (char)EEPROM.read(address + i);
-      for (a = address + jump + i; a < checkpoint_max; a += jump) {
+      for (a = address + jump + i; a < checkpoint_memory[sector_max]; a += jump) {
         r = (char)EEPROM.read(a);
         EEPROM.write(a, c);
         c = r;
@@ -94,7 +104,7 @@ void shiftEEPROM(int address, int jump) {
     }
   }
   else {
-    for(i = address; i < checkpoint_max; i++){
+    for (i = address; i < checkpoint_memory[sector_max]; i++){
       c = EEPROM.read(i - jump);
       EEPROM.write(i, c); 
     }
@@ -120,14 +130,17 @@ void loadNetData() {
 }
 
 void demoSectors() {
+  /*
   for (e = 0; e < 3; e++) {
     loadSector(e + 2);
     updateCommand(0, "Titolo settore", text); //14 + 1
     updateCommand(1, "Resto dei comandi", text); //17 + 1   ---> 33 + 1
     updateEEPROM();
     ESP.wdtFeed();
-  }
+  }*/
 }
+
+
 /*
   void loadTitles() {
   reportStarting("Loading titles");
