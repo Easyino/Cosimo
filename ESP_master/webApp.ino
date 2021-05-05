@@ -15,8 +15,8 @@ void handle_confNetInfo() {
   //  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
   server.send(200, "text/html", "ORA MI RIAVVIO");
   EEPROM.write(0, 1); //set netmode to "try connect"
-  //demoSectors();//To remove
   EEPROM.commit();
+  //demoSectors();//To remove
   ESP.restart();
 }
 

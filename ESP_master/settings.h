@@ -27,13 +27,14 @@ SSD1306Wire display(0x3c, D2, D1);//D3, D5
 int max_value_address = 0;
 
 String memory_map[50];
-int memory_type[50] = { -1};
+int memory_type[50];
 enum types {
-  text = 1,
-  command = 2,
-  password = 3
+  null,
+  text,
+  command,
+  password
 };
-String data_types[3] {"text", "command", "password"};
+String data_types[4] {"null", "text", "command", "password"};
 int dataTypes(String type) {
   if (type.equalsIgnoreCase("text")) {
     return text;
@@ -44,18 +45,19 @@ int dataTypes(String type) {
   else if (type.equalsIgnoreCase("password")) {
     return password;
   }
-  return -1;
+  return null;
 }
 
 int checkpoint_memory[20];
 int checkpoint_jump;
-int sector_max = 0;
+
 
 int length;
 //short int changes[50];
 int sector_loaded = 0;
+int sector_max = 0;
 
-unsigned int i, a, r, c, q, d, e, f;
+int i, a, r, c, q, d, e, f;
 
 
 //Commands
@@ -92,6 +94,7 @@ enum interfaces {
   commandInter,
   wifiCreateInter
 };
+
 typedef struct {
   bool title = false;
   byte limit;
@@ -101,6 +104,7 @@ typedef struct {
   String data;
 } elements;
 elements element[10];
+
 typedef struct {
   byte type;
   byte x;

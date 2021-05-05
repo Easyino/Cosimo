@@ -234,7 +234,7 @@ void pin() {
       else {
         EEPROM.write(1, 0);
         EEPROM.commit();
-        interface = 2;
+        interface = timeInter;
       }
     }
     else {

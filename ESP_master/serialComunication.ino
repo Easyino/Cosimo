@@ -185,7 +185,6 @@ void serialEvent() {
 
 
 void loadSerialCommands(String data) {
-  reportStarting("Loading serial command");
   String subString;
   for (c = 0; serialString[c][0] != '\0'; c++) {
     serialString[c] = "";
@@ -196,9 +195,7 @@ void loadSerialCommands(String data) {
       subString += data[i];
     }
     serialString[a] = subString;
-    Serial.println(subString);
   }
-  reportEnding();
 }
 
 
