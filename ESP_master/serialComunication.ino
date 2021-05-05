@@ -3,7 +3,7 @@ void executeSerialCommands() {
     reportStarting("Printing info");
 
     Serial.println("\n\nCheckpoints:");
-    for (i = 0; i < 10; i++) {
+    for (i = 0; checkpoint_memory[i] != 0; i++) {
       Serial.print(checkpoint_memory[i]);
       Serial.print(", ");
     }
@@ -15,10 +15,14 @@ void executeSerialCommands() {
     Serial.print(sector_max);
 
     Serial.println("\n\nTypes:");
-    for (i = 0; i < 10; i++) {
+    for (i = 0; memory_type[i] != 0; i++) {
       Serial.print(memory_type[i]);
       Serial.print(", ");
     }
+
+    Serial.println("\n\nInterface:");
+    Serial.print(interface);
+
     reportEnding();
   }
 
@@ -105,7 +109,7 @@ void executeSerialCommands() {
     else if (serialString[1].equalsIgnoreCase("print")) {
       c = serialString[2].toInt();
       reportStarting("Start reading EEPROM");
-      for (i = EEPROM_offset; i < c + EEPROM_offset; i++) {
+      for (i = 0; i < c + 1; i++) {
         Serial.print(i);
         Serial.print((char)9);
         Serial.print((int)EEPROM.read(i));
@@ -124,11 +128,9 @@ void executeSerialCommands() {
   else if (serialString[0].equalsIgnoreCase("wifi")) {
     if (serialString[1].equalsIgnoreCase("connect")) {
       tryConnect();
-
     }
     else if (serialString[1].equalsIgnoreCase("create")) {
       createNetwork();
-
     }
     else if (serialString[1].equalsIgnoreCase("stop")) {
       WiFi.softAPdisconnect (true);

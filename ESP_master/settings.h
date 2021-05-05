@@ -128,7 +128,7 @@ int interface = menuInter;
 int loaded_interface = commandInter;
 int previous_interface;
 bool oled_updated = false;
-String elements_list[20] = {"testo-1", "testo-2", "testo-3", "testo-4", "testo-5", "testo-6", "testo-7", "testo-8"};
+String elements_list[20];
 int dialog_interface;
 
 //Encryption

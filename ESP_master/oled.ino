@@ -248,6 +248,7 @@ void pin() {
 }
 
 void firstConfiguration() {
+  
 }
 
 void timeTrack() {
@@ -352,7 +353,7 @@ void commandSelection() {
   com = elementListSelector();
   if (com != -1) {
     loadSector(com + 2);
-    sendSlave(memory_map[0], memory_type[0]); /// To try i2c
+    //sendSlave(memory_map[0], memory_type[0]); /// To try i2c
   }
 }
 
@@ -371,7 +372,7 @@ void question() {
     elements_list[1] = "Yes";
     createList(100, 15, true);
   }
-  if(elementListSelector() != -1){
+  if (elementListSelector() != -1){
     dialog_interface = element_selected;
     interface = previous_interface;
   }
@@ -386,9 +387,11 @@ void menu() {
     Serial.print("selected element n.: ");
     Serial.println(element_selected);
   }
+}
+
+void settings() {
 
 }
-void settings() {}
 
 void wifiCreateDisplay() {
   if (interface != loaded_interface) {

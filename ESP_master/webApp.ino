@@ -67,7 +67,6 @@ void tryConnect() {
       EEPROM.write(0, 0); //set netmode to "create a wifi"
       EEPROM.commit();
       ESP.restart();
-
     }
   }
   Serial.println("");
@@ -83,4 +82,6 @@ void tryConnect() {
   Serial.println("I'm connected!");
   netStat = 1;
   Serial.println("SUCCESS!!!");
+  EEPROM.write(0, 1); //set netmode to "try connect"
+  EEPROM.commit();
 }
