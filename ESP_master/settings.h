@@ -124,8 +124,8 @@ enum special_element_types {
 
 int element_counter = 0;
 int special_element_counter = 0;
-int interface = menuInter;
-int loaded_interface = commandInter;
+int interface = commandInter;
+int loaded_interface = timeInter;
 int previous_interface;
 bool oled_updated = false;
 String elements_list[20];
@@ -148,8 +148,8 @@ bool wrong_key = false;
 #define button_up D5
 #define button_confirm D6
 #define button_down D7
-#define scrolling_time 100
-#define bouncing_time 0
+#define scrolling_time 200 // The unit number has to be = to 0
+#define bouncing_time 50
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons {
@@ -157,6 +157,7 @@ enum buttons {
   confirm,
   down
 };
+int buttonPressed;
 
 
 //Variables declaration

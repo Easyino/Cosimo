@@ -67,6 +67,8 @@ void setup() {
 
 void loop() {
 
+  buttonPressed = debouncedButtons();
+
   server.handleClient();
 
   if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {// Press the up and down to activate ota
@@ -85,4 +87,5 @@ void loop() {
     loadSerialCommands(inputString);
     executeSerialCommands();
   }
+
 }

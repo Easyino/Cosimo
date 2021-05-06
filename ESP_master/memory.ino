@@ -59,7 +59,7 @@ void updateEEPROM() {
   if (checkpoint_jump != 0) {
     Serial.print("Jump = ");
     Serial.println(checkpoint_jump);
-    //shiftEEPROM (checkpoint_memory[sector_loaded + 1], checkpoint_jump);
+    //shiftEEPROM (checkpoint_memory[sector_loaded + 1] - 1, checkpoint_jump);
     if (checkpoint_memory[sector_loaded + 1] == 0){
       Serial.println("New sector");
       checkpoint_memory[sector_loaded + 1] = checkpoint_memory[sector_max] + sectorLength() + 1;
@@ -116,11 +116,13 @@ void shiftEEPROM (int address, int jump) {
 }
 
 void loadTitles() {
+  reportStarting("Loading titles");
   for (c = 2; checkpoint_memory[c] != 0; c++) {
     for (d = checkpoint_memory[c] + 2; EEPROM.read(d) != 0; d++) {
-      elements_list[c] += (char)EEPROM.read(d);
+      elements_list[c - 2] += (char)EEPROM.read(d);
     }
   }
+  reportEnding();
 }
 
 void loadNetData() {
@@ -132,9 +134,12 @@ void loadNetData() {
 }
 
 void demoSectors() {
+  String txt;
   for (e = 0; e < 10; e++) {
+    txt = "Titolo settore ";
+    txt += e;
     loadSector(e + 2);
-    updateCommand(0, "Titolo settore", text); //14 + 1
+    updateCommand(0, txt, text); //14 + 1
     updateCommand(1, "Resto dei comandi", text); //17 + 1   ---> 33 + 1
     updateEEPROM();
     ESP.wdtFeed();

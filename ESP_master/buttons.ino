@@ -3,19 +3,26 @@
  * 
  * @return The button pressed (up, down, confirm)
  */
+bool confirmed = false;
 int debouncedButtons(){
   if (digitalRead(button_up) && digitalRead(button_confirm) && digitalRead(button_down)){
     last_millis = millis();
   }
   millis_gap = millis() - last_millis; // To use it in the interfaces
   if (millis_gap > bouncing_time){
-    if (!digitalRead(button_up) && millis_gap % scrolling_time == 0){
+    if (!digitalRead(button_up) && int(millis_gap / 10) % (scrolling_time / 10) == 0){
       return up;
     }
     if (!digitalRead(button_confirm)){
-      return confirm;
+      if (!confirmed) {
+        confirmed = true;
+        return confirm;
+      }
     }
-    if (!digitalRead(button_down && millis_gap % scrolling_time == 0)){
+    else if (confirmed){
+      confirmed = false;
+    }
+    if (!digitalRead(button_down) && int(millis_gap / 10) % (scrolling_time / 10) == 0){
       return down;
     }
   }

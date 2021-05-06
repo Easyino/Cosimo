@@ -23,6 +23,24 @@ void executeSerialCommands() {
     Serial.println("\n\nInterface:");
     Serial.print(interface);
 
+    Serial.println("\n\nElement counter");
+    Serial.print(element_counter);
+
+    Serial.println("\n\nInterface elements:");
+    Serial.println("Limit | Aligned | Title | x | y | Content");
+    for(i = 0; i < element_counter; i++){
+      Serial.print(element[i].limit);
+      Serial.print(" | ");
+      Serial.print(element[i].aligned);
+      Serial.print(" | ");
+      Serial.print(element[i].title);
+      Serial.print(" | ");
+      Serial.print(element[i].x);
+      Serial.print(" | ");
+      Serial.print(element[i].y);
+      Serial.print(" | ");
+      Serial.println(element[i].data);
+    }
     reportEnding();
   }
 

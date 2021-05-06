@@ -125,6 +125,8 @@ void interfaceSelector() {
     previous_interface = loaded_interface;
     element_counter = 0;
     special_element_counter = 0;
+    Serial.print("New interface: ");
+    Serial.println(interface);
   }
   switch (interface) {
     case pinInter: {
@@ -193,15 +195,15 @@ void pin() {
     element[element_counter - 1].title = true;
   }
 
-  if (debouncedButtons() == up) {
+  if (buttonPressed == up) {
     e = (e + 1) % 10;
     temporaneous_pin[d] = char(48 + e);
   }
-  else if (debouncedButtons() == down) {
+  else if (buttonPressed == down) {
     e = (e + 9) % 10;
     temporaneous_pin[d] = char(48 + e);
   }
-  else if (debouncedButtons() == confirm) {
+  else if (buttonPressed == confirm) {
     if (temporaneous_pin[d] == '_' || d == 14) {
       String data;
       for (q = 0; q < d; q += 2) {
@@ -228,7 +230,6 @@ void pin() {
           wrong_key = false;
         }
         f++;
-        while (debouncedButtons() == confirm);
         return;
       }
       else {
@@ -242,13 +243,11 @@ void pin() {
       d += 2;
     }
     e = 0;
-    while (debouncedButtons() == confirm);
   }
   updateDisplayElement(1, temporaneous_pin);
 }
 
-void firstConfiguration() {
-  
+void firstConfiguration() { 
 }
 
 void timeTrack() {
@@ -271,7 +270,7 @@ int element_selected;
  * @return The selected item with confirm button
  */
 int elementListSelector() {
-  if (debouncedButtons() == up) {
+  if (buttonPressed == up) {
     if (element_selected != 0) {
       element_selected--;
       if (element_selected % n_rows == n_rows - 1) {
@@ -280,7 +279,7 @@ int elementListSelector() {
       updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
     }
   }
-  else if (debouncedButtons() == down) {
+  else if (buttonPressed == down) {
     if (elements_list[element_selected + 1] != "") {
       element_selected++;
       if (element_selected % n_rows == 0) {
@@ -289,7 +288,7 @@ int elementListSelector() {
       updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
     }
   }
-  else if (debouncedButtons() == confirm) {
+  else if (buttonPressed == confirm) {
     return element_selected;
   }
   return -1;
