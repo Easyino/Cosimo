@@ -29,6 +29,15 @@ void updateDisplayElement(byte number, String new_data) {
   }
 }
 
+/// To do ig we want to ordinate better things
+/*
+void DEposition(){}
+void DEdata(){}
+void DEalignment(){}
+void DElimit(){}
+*/
+
+
 /**
  * @brief Create a geometrical element on the display
  * 
@@ -52,6 +61,29 @@ void updateDiplsaySpecial(byte number, byte x, byte y) {
   if (special_element[number].x != x || special_element[number].y != y) {
     special_element[number].x = x;
     special_element[number].y = y;
+    oled_updated = true;
+  }
+}
+
+void DSposition(int number, int x, int y){
+  if (special_element[number].x != x || special_element[number].y != y) {
+    special_element[number].x = x;
+    special_element[number].y = y;
+    oled_updated = true;
+  }
+}
+
+void DSshape(int number, int width, int height){
+  if(special_element[number].width != width || special_element[number].height != height){
+    special_element[number].width = width;
+    special_element[number].height = height;
+    oled_updated = true;
+  }
+}
+
+void DStype(int number, int type){
+  if(special_element[number].type != type){
+    special_element[number].type = type;
     oled_updated = true;
   }
 }
@@ -277,6 +309,7 @@ int elementListSelector() {
         updateList();
       }
       updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      DStype(0, circle);
     }
   }
   else if (triggButton == down) {
@@ -286,9 +319,11 @@ int elementListSelector() {
         updateList();
       }
       updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      DStype(0, circle);
     }
   }
   else if (triggButton == confirm) {
+    DStype(0, filledCircle);
     return element_selected;
   }
   return -1;

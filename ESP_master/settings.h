@@ -149,7 +149,7 @@ bool wrong_key = false;
 #define button_confirm D6
 #define button_down D7
 #define scrolling_time 100 // The unit number has to be = to 0
-#define bouncing_time 50
+#define bouncing_time 10
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons {
