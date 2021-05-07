@@ -195,15 +195,15 @@ void pin() {
     element[element_counter - 1].title = true;
   }
 
-  if (buttonPressed == up) {
+  if (triggButton == up) {
     e = (e + 1) % 10;
     temporaneous_pin[d] = char(48 + e);
   }
-  else if (buttonPressed == down) {
+  else if (triggButton == down) {
     e = (e + 9) % 10;
     temporaneous_pin[d] = char(48 + e);
   }
-  else if (buttonPressed == confirm) {
+  else if (triggButton == confirm) {
     if (temporaneous_pin[d] == '_' || d == 14) {
       String data;
       for (q = 0; q < d; q += 2) {
@@ -270,7 +270,7 @@ int element_selected;
  * @return The selected item with confirm button
  */
 int elementListSelector() {
-  if (buttonPressed == up) {
+  if (triggButton == up) {
     if (element_selected != 0) {
       element_selected--;
       if (element_selected % n_rows == n_rows - 1) {
@@ -279,7 +279,7 @@ int elementListSelector() {
       updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
     }
   }
-  else if (buttonPressed == down) {
+  else if (triggButton == down) {
     if (elements_list[element_selected + 1] != "") {
       element_selected++;
       if (element_selected % n_rows == 0) {
@@ -288,7 +288,7 @@ int elementListSelector() {
       updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
     }
   }
-  else if (buttonPressed == confirm) {
+  else if (triggButton == confirm) {
     return element_selected;
   }
   return -1;

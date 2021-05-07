@@ -30,7 +30,6 @@ void loadSector(int sector) {
     memory_type[i] = -1;
   }
   for (i = checkpoint_memory[sector], q = 0; i < checkpoint_memory[sector + 1] - 2; i += a, q++) {
-    Serial.println(i);
     memory_type[q] = EEPROM.read(i + 1);
     for (a = 2; EEPROM.read(a + i) != 0; a++) {
       memory_map[q] += (char)EEPROM.read(a + i);
@@ -38,6 +37,7 @@ void loadSector(int sector) {
     if (memory_type[q] == password) {
       memory_map[q] = decryptString(memory_map[q]);
     }
+    Serial.println(memory_map[q]);
   }
   reportEnding();
 }
@@ -121,6 +121,7 @@ void loadTitles() {
     for (d = checkpoint_memory[c] + 2; EEPROM.read(d) != 0; d++) {
       elements_list[c - 2] += (char)EEPROM.read(d);
     }
+    Serial.println(elements_list[c - 2]);
   }
   reportEnding();
 }

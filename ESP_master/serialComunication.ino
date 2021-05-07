@@ -227,7 +227,7 @@ void reportStarting(String comment) {
   serial_reporter = 0;
 }
 void reportEnding() {
-  Serial.print("\ndone ");
+  Serial.print("\nDone ");
   Serial.print(micros() - execution_time);
   Serial.println("\n--------------------------------\n");
 }

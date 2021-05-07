@@ -148,7 +148,7 @@ bool wrong_key = false;
 #define button_up D5
 #define button_confirm D6
 #define button_down D7
-#define scrolling_time 200 // The unit number has to be = to 0
+#define scrolling_time 100 // The unit number has to be = to 0
 #define bouncing_time 50
 unsigned long int last_millis;
 unsigned long int millis_gap;
@@ -158,6 +158,8 @@ enum buttons {
   down
 };
 int buttonPressed;
+int previousButton;
+int triggButton = -1;
 
 
 //Variables declaration

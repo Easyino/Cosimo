@@ -67,8 +67,17 @@ void setup() {
 
 void loop() {
 
+  previousButton = buttonPressed;
   buttonPressed = debouncedButtons();
+  if(previousButton != buttonPressed){
+    previousButton = buttonPressed;
+    triggButton = buttonPressed;
+  }
+  else if (triggButton != -1){
+    triggButton = -1;
+  }
 
+  
   server.handleClient();
 
   if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {// Press the up and down to activate ota
