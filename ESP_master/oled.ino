@@ -1,12 +1,12 @@
 /**
- * @brief It saves an element on the oled buffer
- * 
- * @param alignment left, right, centre
- * @param x Coordinates
- * @param y Coordinates
- * @param limit The x value where the string won't passes
- * @param data Stings
- */
+   @brief It saves an element on the oled buffer
+
+   @param alignment left, right, centre
+   @param x Coordinates
+   @param y Coordinates
+   @param limit The x value where the string won't passes
+   @param data Stings
+*/
 void newDisplayElement(byte alignment, byte x, byte y, byte limit, String data) {
   element[element_counter].limit = limit;
   element[element_counter].aligned = alignment;
@@ -21,32 +21,59 @@ void newDisplayElement(byte alignment, byte x, byte y, byte limit, String data) 
 void newDisplayElement(byte alignment, byte x, byte y, String data) {
   newDisplayElement(alignment, x, y, 0, data);
 }
-
-void updateDisplayElement(byte number, String new_data) {
+/*void updateDisplayElement(byte number, String new_data) {
   if (element[number].data != new_data) {
     element[number].data = new_data;
     oled_updated = true;
   }
-}
+  }*/
+
 
 /// To do ig we want to ordinate better things
-/*
-void DEposition(){}
-void DEdata(){}
-void DEalignment(){}
-void DElimit(){}
-*/
+
+void DEposition(byte number, byte x, byte y) {
+  if (element[number].x != x || element[number].y != y) {
+    element[number].x = x;
+    element[number].y = y;
+    oled_updated = true;
+  }
+}
+void DEdata(byte number, String data) {
+  if (element[number].data != data) {
+    element[number].data = data;
+    oled_updated = true;
+  }
+}
+void DEalignment(byte number, byte alignment) {
+  if (element[number].aligned != alignment) {
+    element[number].aligned = alignment;
+    oled_updated = true;
+  }
+}
+void DElimit(byte number, byte limit) {
+  if (element[number].limit != limit) {
+    element[number].limit = limit;
+    oled_updated = true;
+  }
+}
+void DEtitle(byte number, bool title) {
+  if (element[number].title != title) {
+    element[number].title = title;
+    oled_updated = true;
+  }
+}
+
 
 
 /**
- * @brief Create a geometrical element on the display
- * 
- * @param x Coordinates
- * @param y Coordinates
- * @param width Dimensions
- * @param height Dimensions
- * @param type rect, rectangle, filled rectangle, circle, filled circle
- */
+   @brief Create a geometrical element on the display
+
+   @param x Coordinates
+   @param y Coordinates
+   @param width Dimensions
+   @param height Dimensions
+   @param type rect, rectangle, filled rectangle, circle, filled circle
+*/
 void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type) {
   special_element[special_element_counter].x = x;
   special_element[special_element_counter].y = y;
@@ -57,7 +84,15 @@ void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type) {
   oled_updated = true;
 }
 
-void updateDiplsaySpecial(byte number, byte x, byte y) {
+/*void updateDiplsaySpecial(byte number, byte x, byte y) {
+  if (special_element[number].x != x || special_element[number].y != y) {
+    special_element[number].x = x;
+    special_element[number].y = y;
+    oled_updated = true;
+  }
+}*/
+
+void DSposition(int number, int x, int y) {
   if (special_element[number].x != x || special_element[number].y != y) {
     special_element[number].x = x;
     special_element[number].y = y;
@@ -65,34 +100,35 @@ void updateDiplsaySpecial(byte number, byte x, byte y) {
   }
 }
 
-void DSposition(int number, int x, int y){
-  if (special_element[number].x != x || special_element[number].y != y) {
-    special_element[number].x = x;
-    special_element[number].y = y;
-    oled_updated = true;
-  }
-}
-
-void DSshape(int number, int width, int height){
-  if(special_element[number].width != width || special_element[number].height != height){
+void DSshape(int number, int width, int height) {
+  if (special_element[number].width != width || special_element[number].height != height) {
     special_element[number].width = width;
     special_element[number].height = height;
     oled_updated = true;
   }
 }
 
-void DStype(int number, int type){
-  if(special_element[number].type != type){
+void DStype(int number, int type) {
+  if (special_element[number].type != type) {
     special_element[number].type = type;
     oled_updated = true;
   }
 }
 
 /**
- * @brief Print every elements on the screen
- * 
- */
+   @brief Print every elements on the screen
+
+*/
 void loadDisplay() {
+  previousButton = buttonPressed;
+  buttonPressed = debouncedButtons();
+  if (previousButton != buttonPressed) {
+    previousButton = buttonPressed;
+    triggButton = buttonPressed;
+  }
+  else if (triggButton != -1) {
+    triggButton = -1;
+  }
   display.clear();
   for (int i = 0; i < element_counter; i++) {
     if (element[i].aligned != element[i - 1].aligned || i == 0) {
@@ -149,10 +185,20 @@ void loadDisplay() {
 }
 
 /**
- * @brief It select the interface corresponding on (int)interface
- * 
- */
+   @brief It select the interface corresponding on (int)interface
+
+*/
 void interfaceSelector() {
+  previousButton = buttonPressed;
+  buttonPressed = debouncedButtons();
+  if (previousButton != buttonPressed) {
+    previousButton = buttonPressed;
+    triggButton = buttonPressed;
+  }
+  else if (triggButton != -1) {
+    triggButton = -1;
+  }
+
   if (interface != loaded_interface) {
     previous_interface = loaded_interface;
     element_counter = 0;
@@ -224,7 +270,7 @@ void pin() {
       newDisplayElement(center, 64, 15, 128, message);
     }
     newDisplayElement(center, 64, 45, temporaneous_pin);
-    element[element_counter - 1].title = true;
+    DEtitle(element_counter - 1, true);
   }
 
   if (triggButton == up) {
@@ -257,7 +303,7 @@ void pin() {
           d = 0;
           message = "There are   more tryes before erasing everything";
           message[10] = (char)(48 + (chances - f));
-          updateDisplayElement(0, message);
+          DEdata(0, message);
           oled_updated = false;
           wrong_key = false;
         }
@@ -276,10 +322,10 @@ void pin() {
     }
     e = 0;
   }
-  updateDisplayElement(1, temporaneous_pin);
+  DEdata(1, temporaneous_pin);
 }
 
-void firstConfiguration() { 
+void firstConfiguration() {
 }
 
 void timeTrack() {
@@ -289,18 +335,18 @@ void timeTrack() {
     newDisplayElement(right, 128, 52, wifi_IP);
   }
   if (ota_initialised) {
-    updateDisplayElement(1, "OTA " + wifi_IP);
+    DEdata(1, "OTA " + wifi_IP);
   }
-  updateDisplayElement(0, String (millis() / 1000));
+  DEdata(0, String (millis() / 1000));
 }
 
 #define n_rows 5
 int element_selected;
 /**
- * @brief Managmnt of commands and items on a list
- * 
- * @return The selected item with confirm button
- */
+   @brief Managmnt of commands and items on a list
+
+   @return The selected item with confirm button
+*/
 int elementListSelector() {
   if (triggButton == up) {
     if (element_selected != 0) {
@@ -308,7 +354,7 @@ int elementListSelector() {
       if (element_selected % n_rows == n_rows - 1) {
         updateList();
       }
-      updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
       DStype(0, circle);
     }
   }
@@ -318,7 +364,7 @@ int elementListSelector() {
       if (element_selected % n_rows == 0) {
         updateList();
       }
-      updateDiplsaySpecial(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
       DStype(0, circle);
     }
   }
@@ -348,7 +394,7 @@ void createList(byte offset, bool selector) {
 
 void updateList() {
   for (d = 0; d < n_rows; d++) {
-    updateDisplayElement(d, elements_list[element_selected - (element_selected % n_rows) + d]);
+    DEdata(d, elements_list[element_selected - (element_selected % n_rows) + d]);
   }
 }
 
@@ -406,7 +452,7 @@ void question() {
     elements_list[1] = "Yes";
     createList(100, 15, true);
   }
-  if (elementListSelector() != -1){
+  if (elementListSelector() != -1) {
     dialog_interface = element_selected;
     interface = previous_interface;
   }

@@ -23,22 +23,28 @@ void loadCheckpoints() {
 
 void loadSector(int sector) {
   reportStarting("Loading sector");
-  sector_loaded = sector;
-  checkpoint_jump = 0;
-  for (i = 0; memory_map[i] != ""; i++) {
-    memory_map[i] = "";
-    memory_type[i] = -1;
-  }
-  for (i = checkpoint_memory[sector], q = 0; i < checkpoint_memory[sector + 1] - 2; i += a, q++) {
-    memory_type[q] = EEPROM.read(i + 1);
-    for (a = 2; EEPROM.read(a + i) != 0; a++) {
-      memory_map[q] += (char)EEPROM.read(a + i);
+  if(sector_loaded != sector){
+    sector_loaded = sector;
+    checkpoint_jump = 0;
+    for (i = 0; memory_map[i] != ""; i++) {
+      memory_map[i] = "";
+      memory_type[i] = -1;
     }
-    if (memory_type[q] == password) {
-      memory_map[q] = decryptString(memory_map[q]);
+    for (i = checkpoint_memory[sector], q = 0; i < checkpoint_memory[sector + 1] - 2; i += a, q++) {
+      memory_type[q] = EEPROM.read(i + 1);
+      for (a = 2; EEPROM.read(a + i) != 0; a++) {
+        memory_map[q] += (char)EEPROM.read(a + i);
+      }
+      if (memory_type[q] == password) {
+        memory_map[q] = decryptString(memory_map[q]);
+      }
+      Serial.println(memory_map[q]);
     }
-    Serial.println(memory_map[q]);
   }
+  else {
+    Serial.println("Already loaded");
+  }
+  
   reportEnding();
 }
 
