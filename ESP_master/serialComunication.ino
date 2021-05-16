@@ -33,7 +33,7 @@ void executeSerialCommands() {
       Serial.print(" | ");
       Serial.print(element[i].aligned);
       Serial.print(" | ");
-      Serial.print(element[i].title);
+      Serial.print(element[i].font);
       Serial.print(" | ");
       Serial.print(element[i].x);
       Serial.print(" | ");

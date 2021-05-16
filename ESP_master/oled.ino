@@ -13,7 +13,7 @@ void newDisplayElement(byte alignment, byte x, byte y, byte limit, String data) 
   element[element_counter].x = x;
   element[element_counter].y = y;
   element[element_counter].data = data;
-  element[element_counter].title = false;
+  element[element_counter].font = 0;
   element_counter++;
   oled_updated = true;
 }
@@ -21,15 +21,6 @@ void newDisplayElement(byte alignment, byte x, byte y, byte limit, String data) 
 void newDisplayElement(byte alignment, byte x, byte y, String data) {
   newDisplayElement(alignment, x, y, 0, data);
 }
-/*void updateDisplayElement(byte number, String new_data) {
-  if (element[number].data != new_data) {
-    element[number].data = new_data;
-    oled_updated = true;
-  }
-  }*/
-
-
-/// To do ig we want to ordinate better things
 
 void DEposition(byte number, byte x, byte y) {
   if (element[number].x != x || element[number].y != y) {
@@ -56,9 +47,9 @@ void DElimit(byte number, byte limit) {
     oled_updated = true;
   }
 }
-void DEtitle(byte number, bool title) {
-  if (element[number].title != title) {
-    element[number].title = title;
+void DEfont(byte number, byte font) {
+  if (element[number].font != font) {
+    element[number].font = font;
     oled_updated = true;
   }
 }
@@ -84,13 +75,13 @@ void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type) {
   oled_updated = true;
 }
 
-/*void updateDiplsaySpecial(byte number, byte x, byte y) {
-  if (special_element[number].x != x || special_element[number].y != y) {
-    special_element[number].x = x;
-    special_element[number].y = y;
-    oled_updated = true;
-  }
-}*/
+void newDisplayIcon(byte x, byte y, byte ref){
+  icon_element[icon_element_counter].x = x;
+  icon_element[icon_element_counter].y = y;
+  icon_element[icon_element_counter].ref = ref;
+  icon_element_counter++;
+  oled_updated = true;
+}
 
 void DSposition(int number, int x, int y) {
   if (special_element[number].x != x || special_element[number].y != y) {
@@ -142,8 +133,11 @@ void loadDisplay() {
         display.setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
       }
     }
-    if (element[i].title != element[i - 1].title || i == 0) {
-      if (element[i].title) {
+    if (element[i].font != element[i - 1].font || i == 0) {
+      if (element[i].font == 2) {
+        display.setFont(ArialMT_Plain_24);
+      }
+      else if(element[i].font == 1){
         display.setFont(ArialMT_Plain_16);
       }
       else {
@@ -270,7 +264,7 @@ void pin() {
       newDisplayElement(center, 64, 15, 128, message);
     }
     newDisplayElement(center, 64, 45, temporaneous_pin);
-    DEtitle(element_counter - 1, true);
+    DEfont(element_counter - 1, 1);
   }
 
   if (triggButton == up) {
@@ -326,6 +320,7 @@ void pin() {
 }
 
 void firstConfiguration() {
+
 }
 
 void timeTrack() {
@@ -355,7 +350,12 @@ int elementListSelector() {
         updateList();
       }
       DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
-      DStype(0, circle);
+      if (element_selected == 0){
+        DStype(0, rectangle);
+      }
+      else {
+        DStype(0, circle);
+      }
     }
   }
   else if (triggButton == down) {
@@ -369,7 +369,9 @@ int elementListSelector() {
     }
   }
   else if (triggButton == confirm) {
-    DStype(0, filledCircle);
+    if (element_selected != 0){
+      DStype(0, filledCircle);
+    }
     return element_selected;
   }
   return -1;
@@ -378,13 +380,22 @@ int elementListSelector() {
 
 
 void createList(byte offset_x, byte offset_y, bool selector) {
-  element_selected = 0;
   if (selector) {
     newDisplaySpecial(offset_x + 4, offset_y + 6, 3, 0, circle);
     offset_x += 10;
   }
+
   for (d = 0; d < n_rows; d++) {
     newDisplayElement(left, offset_x, d * 64 / n_rows + offset_y, elements_list[d]);
+  }
+
+  if (title_list){
+    element_selected = 1;
+    newDisplaySpecial(0, 64 / n_rows, 128, 64 / n_rows, rect);
+    DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+  }
+  else {
+    element_selected = 0;
   }
 }
 void createList(byte offset, bool selector) {
@@ -393,12 +404,24 @@ void createList(byte offset, bool selector) {
 
 
 void updateList() {
+  if (title_list){
+    if (element_selected < n_rows){
+      DSposition(1, 0, 64 / n_rows);
+      DSshape(1, 128, 64 / n_rows);
+    }
+    else {
+      DSposition(1, 0, -1);
+      DSshape(1, 128, -1);
+    }
+  }
+  
   for (d = 0; d < n_rows; d++) {
     DEdata(d, elements_list[element_selected - (element_selected % n_rows) + d]);
   }
 }
 
 void clearList() {
+  title_list = false;
   for (d = 0; elements_list[d] != ""; d++) {
     elements_list[d] = "";
   }
@@ -427,13 +450,20 @@ void commandSelection() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
     clearList();
+    title_list = true;
+    elements_list[0] = "COMMANDS";
     loadTitles();
     createList(0, true);
   }
   com = elementListSelector();
   if (com != -1) {
-    loadSector(com + 2);
-    //sendSlave(memory_map[0], memory_type[0]); /// To try i2c
+    if (com != 0){
+      loadSector(com + 2 + title_list);
+      //sendSlave(memory_map[0], memory_type[0]); /// To try i2c
+    }
+    else {
+      interface = previous_interface;
+    }
   }
 }
 

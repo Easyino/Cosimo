@@ -125,9 +125,9 @@ void loadTitles() {
   reportStarting("Loading titles");
   for (c = 2; checkpoint_memory[c] != 0; c++) {
     for (d = checkpoint_memory[c] + 2; EEPROM.read(d) != 0; d++) {
-      elements_list[c - 2] += (char)EEPROM.read(d);
+      elements_list[c - 1] += (char)EEPROM.read(d);
     }
-    Serial.println(elements_list[c - 2]);
+    Serial.println(elements_list[c - 1]);
   }
   reportEnding();
 }

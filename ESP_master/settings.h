@@ -96,7 +96,7 @@ enum interfaces {
 };
 
 typedef struct {
-  bool title = false;
+  byte font;
   byte limit;
   byte aligned;
   byte x;
@@ -122,13 +122,25 @@ enum special_element_types {
   filledRectangle
 };
 
+typedef struct {
+  byte type;
+  byte x;
+  byte y;
+  byte ref;
+} icon_elements;
+icon_elements icon_element[10];
+
+
+
 int element_counter = 0;
 int special_element_counter = 0;
+int icon_element_counter = 0;
 int interface = commandInter;
 int loaded_interface = timeInter;
 int previous_interface;
 bool oled_updated = false;
 String elements_list[20];
+bool title_list;
 int dialog_interface;
 
 //Encryption
