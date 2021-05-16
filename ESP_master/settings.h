@@ -86,13 +86,14 @@ enum alignment {
 enum interfaces {
   pinInter,
   firstConfigInter,
+  wifiCreateInter,
   timeInter,
   logInter,
   questionInter,
   menuInter,
-  settingsInter,
   commandInter,
-  wifiCreateInter
+  wifiInter,
+  settingsInter
 };
 
 typedef struct {
@@ -135,7 +136,7 @@ icon_elements icon_element[10];
 int element_counter = 0;
 int special_element_counter = 0;
 int icon_element_counter = 0;
-int interface = commandInter;
+int interface = menuInter;
 int loaded_interface = timeInter;
 int previous_interface;
 bool oled_updated = false;
@@ -161,7 +162,7 @@ bool wrong_key = false;
 #define button_confirm D6
 #define button_down D7
 #define scrolling_time 100 // The unit number has to be = to 0
-#define bouncing_time 10
+#define bouncing_time 20
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons {
@@ -174,7 +175,7 @@ int previousButton;
 int triggButton = -1;
 
 
-//Variables declaration
+//Variables declaration    /////////////////////////////// To remove (only for Longhino)
 struct section {
   String title;
 };

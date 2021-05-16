@@ -18,7 +18,7 @@ bool OTAupdate() {
       display.clear();
       display.setFont(ArialMT_Plain_10);
       display.setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
-      display.drawString(display.getWidth() / 2, display.getHeight() / 2, "Restart");
+      display.drawString(display.getWidth() / 2, display.getHeight() / 2, "Restarting...");
       display.display();
     });
     ota_initialised = true;

@@ -75,7 +75,7 @@ void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type) {
   oled_updated = true;
 }
 
-void newDisplayIcon(byte x, byte y, byte ref){
+void newDisplayIcon(byte x, byte y, byte ref) {
   icon_element[icon_element_counter].x = x;
   icon_element[icon_element_counter].y = y;
   icon_element[icon_element_counter].ref = ref;
@@ -130,14 +130,14 @@ void loadDisplay() {
         display.setTextAlignment(TEXT_ALIGN_RIGHT);
       }
       else if (element[i].aligned == center) {
-        display.setTextAlignment(TEXT_ALIGN_CENTER_BOTH);
+        display.setTextAlignment(TEXT_ALIGN_CENTER);
       }
     }
     if (element[i].font != element[i - 1].font || i == 0) {
       if (element[i].font == 2) {
         display.setFont(ArialMT_Plain_24);
       }
-      else if(element[i].font == 1){
+      else if (element[i].font == 1) {
         display.setFont(ArialMT_Plain_16);
       }
       else {
@@ -209,6 +209,10 @@ void interfaceSelector() {
         firstConfiguration();
         break;
       }
+    case wifiCreateInter: {
+        wifiCreateDisplay();
+        break;
+      }
     case timeInter: {
         timeTrack();
         break;
@@ -221,25 +225,118 @@ void interfaceSelector() {
         question();
         break;
       }
+    case menuInter: {
+        menu();
+        break;
+      }
     case commandInter: {
         commandSelection();
+        break;
+      }
+    case wifiInter: {
+        wifi();
         break;
       }
     case settingsInter: {
         settings();
       }
-    case menuInter: {
-        menu();
-        break;
-      }
-    case wifiCreateInter: {
-        wifiCreateDisplay();
-        break;
-      }
   }
   if (oled_updated) {// Only i fthere is something different it Will print elements on the screen
     oled_updated = false;
     loadDisplay();
+  }
+}
+
+#define n_rows 5
+int element_selected;
+int sel;
+/**
+   @brief Managmnt of commands and items on a list
+
+   @return The selected item with confirm button
+*/
+int elementListSelector() {
+  if (triggButton == up) {
+    if (element_selected != 0) {
+      element_selected--;
+      if (element_selected % n_rows == n_rows - 1) {
+        updateList();
+      }
+      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      if (element_selected == 0 && title_list) {
+        DStype(0, rectangle);
+      }
+      else {
+        DStype(0, circle);
+      }
+    }
+  }
+  else if (triggButton == down) {
+    if (elements_list[element_selected + 1] != "") {
+      element_selected++;
+      if (element_selected % n_rows == 0) {
+        updateList();
+      }
+      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      DStype(0, circle);
+    }
+  }
+  else if (triggButton == confirm) {
+    if (element_selected != 0) {
+      DStype(0, filledCircle);
+    }
+    return element_selected;
+  }
+  return -1;
+}
+
+
+
+void createList(byte offset_x, byte offset_y, bool selector) {
+  if (selector) {
+    newDisplaySpecial(offset_x + 4, offset_y + 6, 3, 0, circle);
+    offset_x += 10;
+  }
+
+  for (d = 0; d < n_rows; d++) {
+    newDisplayElement(left, offset_x, d * 64 / n_rows + offset_y, elements_list[d]);
+  }
+
+  if (title_list) {
+    element_selected = 1;
+    newDisplaySpecial(0, 64 / n_rows, 128, 64 / n_rows, rect);
+    DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+  }
+  else {
+    element_selected = 0;
+  }
+}
+void createList(byte offset, bool selector) {
+  createList(offset, 0, selector);
+}
+
+
+void updateList() {
+  if (title_list) {
+    if (element_selected < n_rows) {
+      DSposition(1, 0, 64 / n_rows);
+      DSshape(1, 128, 64 / n_rows);
+    }
+    else {
+      DSposition(1, 0, -1);
+      DSshape(1, 128, -1);
+    }
+  }
+
+  for (d = 0; d < n_rows; d++) {
+    DEdata(d, elements_list[element_selected - (element_selected % n_rows) + d]);
+  }
+}
+
+void clearList() {
+  title_list = false;
+  for (d = 0; elements_list[d] != ""; d++) {
+    elements_list[d] = "";
   }
 }
 
@@ -323,6 +420,15 @@ void firstConfiguration() {
 
 }
 
+void wifiCreateDisplay() {
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    newDisplayElement(left, 1, 1, "Connect your device to:");
+    newDisplayElement(left, 1, 15, "Easyino Cosimo");
+    newDisplayElement(left, 1, 52, "go to: 10.10.10.1");
+  }
+}
+
 void timeTrack() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
@@ -335,97 +441,6 @@ void timeTrack() {
   DEdata(0, String (millis() / 1000));
 }
 
-#define n_rows 5
-int element_selected;
-/**
-   @brief Managmnt of commands and items on a list
-
-   @return The selected item with confirm button
-*/
-int elementListSelector() {
-  if (triggButton == up) {
-    if (element_selected != 0) {
-      element_selected--;
-      if (element_selected % n_rows == n_rows - 1) {
-        updateList();
-      }
-      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
-      if (element_selected == 0){
-        DStype(0, rectangle);
-      }
-      else {
-        DStype(0, circle);
-      }
-    }
-  }
-  else if (triggButton == down) {
-    if (elements_list[element_selected + 1] != "") {
-      element_selected++;
-      if (element_selected % n_rows == 0) {
-        updateList();
-      }
-      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
-      DStype(0, circle);
-    }
-  }
-  else if (triggButton == confirm) {
-    if (element_selected != 0){
-      DStype(0, filledCircle);
-    }
-    return element_selected;
-  }
-  return -1;
-}
-
-
-
-void createList(byte offset_x, byte offset_y, bool selector) {
-  if (selector) {
-    newDisplaySpecial(offset_x + 4, offset_y + 6, 3, 0, circle);
-    offset_x += 10;
-  }
-
-  for (d = 0; d < n_rows; d++) {
-    newDisplayElement(left, offset_x, d * 64 / n_rows + offset_y, elements_list[d]);
-  }
-
-  if (title_list){
-    element_selected = 1;
-    newDisplaySpecial(0, 64 / n_rows, 128, 64 / n_rows, rect);
-    DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
-  }
-  else {
-    element_selected = 0;
-  }
-}
-void createList(byte offset, bool selector) {
-  createList(offset, 0, selector);
-}
-
-
-void updateList() {
-  if (title_list){
-    if (element_selected < n_rows){
-      DSposition(1, 0, 64 / n_rows);
-      DSshape(1, 128, 64 / n_rows);
-    }
-    else {
-      DSposition(1, 0, -1);
-      DSshape(1, 128, -1);
-    }
-  }
-  
-  for (d = 0; d < n_rows; d++) {
-    DEdata(d, elements_list[element_selected - (element_selected % n_rows) + d]);
-  }
-}
-
-void clearList() {
-  title_list = false;
-  for (d = 0; elements_list[d] != ""; d++) {
-    elements_list[d] = "";
-  }
-}
 
 void logInterface() {
   if (interface != loaded_interface) {
@@ -445,34 +460,11 @@ void oledReport(String data) {
   }
 }
 
-void commandSelection() {
-  int com;
-  if (interface != loaded_interface) {
-    loaded_interface = interface;
-    clearList();
-    title_list = true;
-    elements_list[0] = "COMMANDS";
-    loadTitles();
-    createList(0, true);
-  }
-  com = elementListSelector();
-  if (com != -1) {
-    if (com != 0){
-      loadSector(com + 2 + title_list);
-      //sendSlave(memory_map[0], memory_type[0]); /// To try i2c
-    }
-    else {
-      interface = previous_interface;
-    }
-  }
-}
-
 /////////////////////////////////////////////////////////// Cooming soon
 const char* dialogText[] PROGMEM = {
   "Someone wants to connect. Do you want it?",
   "Do you want to erase everything?"
 };
-
 void question() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
@@ -491,23 +483,76 @@ void question() {
 void menu() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
+    clearList();
+    elements_list[0] = "Commands";
+    elements_list[1] = "WiFi";
+    elements_list[2] = "Settings";
     createList(0, true);
   }
   if (elementListSelector() != -1) {
-    Serial.print("selected element n.: ");
-    Serial.println(element_selected);
+    interface = element_selected + 7;
   }
 }
 
-void settings() {
-
-}
-
-void wifiCreateDisplay() {
+void commandSelection() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
-    newDisplayElement(left, 1, 1, "Connect your device to:");
-    newDisplayElement(left, 1, 15, "Easyino Cosimo");
-    newDisplayElement(left, 1, 52, "go to: 10.10.10.1");
+    clearList();
+    title_list = true;
+    elements_list[0] = "COMMANDS";
+    loadTitles();
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+      loadSector(sel + 1);
+      //sendSlave(memory_map[0], memory_type[0]); /// To try i2c
+    }
+    else {
+      interface = menuInter;
+    }
+  }
+}
+
+void wifi() {
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    title_list = true;
+    elements_list[0] = "WIFI";
+    elements_list[1] = "Add";
+    elements_list[2] = "Saved";
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+
+    }
+    else {
+      interface = menuInter;
+    }
+  }
+}
+void settings() {
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    title_list = true;
+    elements_list[0] = "SETTINGS";
+    elements_list[1] = "Password";
+    elements_list[2] = "Display";
+    elements_list[3] = "Reset";
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+
+    }
+    else {
+      interface = menuInter;
+    }
   }
 }
