@@ -84,16 +84,18 @@ enum alignment {
   center
 };
 enum interfaces {
+  back = -1,
   pinInter,
   firstConfigInter,
   wifiCreateInter,
   timeInter,
   logInter,
-  questionInter,
+  displayInter,
   menuInter,
   commandInter,
   wifiInter,
-  settingsInter
+  settingsInter,
+  questionInter
 };
 
 typedef struct {
@@ -142,6 +144,7 @@ int previous_interface;
 bool oled_updated = false;
 String elements_list[20];
 bool title_list;
+int begin_list;
 int dialog_interface;
 
 //Encryption

@@ -194,7 +194,9 @@ void interfaceSelector() {
   }
 
   if (interface != loaded_interface) {
-    previous_interface = loaded_interface;
+    if (interface != questionInter){
+      previous_interface = loaded_interface;
+    }
     element_counter = 0;
     special_element_counter = 0;
     Serial.print("New interface: ");
@@ -221,8 +223,8 @@ void interfaceSelector() {
         logInterface();
         break;
       }
-    case questionInter: {
-        question();
+    case displayInter: {
+        setDisplay();
         break;
       }
     case menuInter: {
@@ -239,7 +241,12 @@ void interfaceSelector() {
       }
     case settingsInter: {
         settings();
+        break;
       }
+    default:{
+        question();
+        break;
+    }
   }
   if (oled_updated) {// Only i fthere is something different it Will print elements on the screen
     oled_updated = false;
@@ -262,7 +269,7 @@ int elementListSelector() {
       if (element_selected % n_rows == n_rows - 1) {
         updateList();
       }
-      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
       if (element_selected == 0 && title_list) {
         DStype(0, rectangle);
       }
@@ -277,7 +284,7 @@ int elementListSelector() {
       if (element_selected % n_rows == 0) {
         updateList();
       }
-      DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+      DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
       DStype(0, circle);
     }
   }
@@ -297,7 +304,7 @@ void createList(byte offset_x, byte offset_y, bool selector) {
     newDisplaySpecial(offset_x + 4, offset_y + 6, 3, 0, circle);
     offset_x += 10;
   }
-
+  begin_list = element_counter;
   for (d = 0; d < n_rows; d++) {
     newDisplayElement(left, offset_x, d * 64 / n_rows + offset_y, elements_list[d]);
   }
@@ -305,7 +312,7 @@ void createList(byte offset_x, byte offset_y, bool selector) {
   if (title_list) {
     element_selected = 1;
     newDisplaySpecial(0, 64 / n_rows, 128, 64 / n_rows, rect);
-    DSposition(0, element[element_selected % n_rows].x - 6, element[element_selected % n_rows].y + 6);
+    DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
   }
   else {
     element_selected = 0;
@@ -329,7 +336,7 @@ void updateList() {
   }
 
   for (d = 0; d < n_rows; d++) {
-    DEdata(d, elements_list[element_selected - (element_selected % n_rows) + d]);
+    DEdata(d + begin_list, elements_list[element_selected - (element_selected % n_rows) + d]);
   }
 }
 
@@ -460,23 +467,57 @@ void oledReport(String data) {
   }
 }
 
+void setDisplay(){
+  
+}
+
 /////////////////////////////////////////////////////////// Cooming soon
 const char* dialogText[] PROGMEM = {
-  "Someone wants to connect. Do you want it?",
-  "Do you want to erase everything?"
+  "Do you want to change your password?",
+  "Do you want to erase everything?",
+  "Someone wants to connect. Do you want it?"
 };
+const int questionLink[] PROGMEM = {
+  pinInter,
+  back,
+  back,
+};
+enum select_questions {
+  Qpassword = questionInter,
+  Qreset,
+  Qconnect
+};
+
 void question() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
-    newDisplayElement(left, 1, 1, 90, dialogText[dialog_interface]);
+    newDisplayElement(left, 1, 1, 90, dialogText[interface - questionInter]);
     clearList();
     elements_list[0] = "No";
     elements_list[1] = "Yes";
     createList(100, 15, true);
   }
-  if (elementListSelector() != -1) {
-    dialog_interface = element_selected;
-    interface = previous_interface;
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel){
+      if (questionLink[interface] == back){
+        if (interface == Qreset){
+          eepromClear();
+          ESP.restart();
+        }
+        else if (interface == Qconnect){
+          /// Non so longhino come volevi fare
+          Serial.println("Ciao mona");
+        }
+        interface = previous_interface;
+      }
+      else{
+        interface = questionLink[interface - questionInter];
+      }
+    }
+    else{
+      interface = previous_interface;
+    }
   }
 }
 
@@ -549,7 +590,15 @@ void settings() {
   sel = elementListSelector();
   if (sel != -1) {
     if (sel != 0) {
-
+      if (sel == 1){
+        interface = Qpassword;
+      }
+      else if (sel == 2){
+        interface = displayInter;
+      }
+      else if (sel == 3){
+        interface = Qreset;
+      }
     }
     else {
       interface = menuInter;
