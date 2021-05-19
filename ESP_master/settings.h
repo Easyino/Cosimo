@@ -17,7 +17,7 @@ SSD1306Wire display(0x3c, D2, D1);//D3, D5
 
 //Memory
 #define EEPROM_length 4096
-#define EEPROM_offset 2
+#define EEPROM_offset 4
 /*number of spaces in eeprom reserved:
    Bit 0: state of network(1=connect | 0=create)
    Bit 1: number of attempts already done of the pin
@@ -34,6 +34,7 @@ enum types {
   command,
   password
 };
+
 String data_types[4] {"null", "text", "command", "password"};
 int dataTypes(String type) {
   if (type.equalsIgnoreCase("text")) {
@@ -53,12 +54,10 @@ int checkpoint_jump;
 
 
 int length;
-//short int changes[50];
 int sector_loaded = 0;
 int sector_max = 0;
 
 int i, a, r, c, q, d, e, f;
-
 
 //Commands
 enum credential_commands {
@@ -133,7 +132,13 @@ typedef struct {
 } icon_elements;
 icon_elements icon_element[10];
 
-
+struct parameters{
+  int address;
+  int data = -1;
+  int min;
+  int max;
+};
+parameters parameter;
 
 int element_counter = 0;
 int special_element_counter = 0;

@@ -34,7 +34,7 @@ void createNetwork() {
   server.begin();
   netStat = 1;
   Serial.println("Fatto");
-  interface = wifiCreateInter;
+  //interface = wifiCreateInter;
 }
 
 void tryConnect() {

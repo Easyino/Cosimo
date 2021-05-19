@@ -5,6 +5,7 @@ void eepromClear() {
   EEPROM.commit();
 }
 
+
 void loadCheckpoints() {
   reportStarting("Loading checkpoints");
   for (q = 0, a = 1, r = EEPROM_offset; a != 0; q++) {
@@ -120,6 +121,24 @@ void shiftEEPROM (int address, int jump) {
 
   EEPROM.commit();
 }
+
+
+void setVariables(){
+  if (EEPROM.read(0)) {
+    tryConnect();
+  }
+  else {
+    createNetwork();
+  }
+
+  display.setContrast(255 - EEPROM.read(2) * 51);
+
+  if(!EEPROM.read(3)){
+    display.flipScreenVertically();
+  }
+}
+
+
 
 void loadTitles() {
   reportStarting("Loading titles");

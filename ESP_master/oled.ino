@@ -194,7 +194,7 @@ void interfaceSelector() {
   }
 
   if (interface != loaded_interface) {
-    if (interface != questionInter){
+    if (loaded_interface < questionInter){
       previous_interface = loaded_interface;
     }
     element_counter = 0;
@@ -254,6 +254,7 @@ void interfaceSelector() {
   }
 }
 
+
 #define n_rows 5
 int element_selected;
 int sel;
@@ -262,42 +263,6 @@ int sel;
 
    @return The selected item with confirm button
 */
-int elementListSelector() {
-  if (triggButton == up) {
-    if (element_selected != 0) {
-      element_selected--;
-      if (element_selected % n_rows == n_rows - 1) {
-        updateList();
-      }
-      DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
-      if (element_selected == 0 && title_list) {
-        DStype(0, rectangle);
-      }
-      else {
-        DStype(0, circle);
-      }
-    }
-  }
-  else if (triggButton == down) {
-    if (elements_list[element_selected + 1] != "") {
-      element_selected++;
-      if (element_selected % n_rows == 0) {
-        updateList();
-      }
-      DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
-      DStype(0, circle);
-    }
-  }
-  else if (triggButton == confirm) {
-    if (element_selected != 0) {
-      DStype(0, filledCircle);
-    }
-    return element_selected;
-  }
-  return -1;
-}
-
-
 
 void createList(byte offset_x, byte offset_y, bool selector) {
   if (selector) {
@@ -310,9 +275,14 @@ void createList(byte offset_x, byte offset_y, bool selector) {
   }
 
   if (title_list) {
-    element_selected = 1;
     newDisplaySpecial(0, 64 / n_rows, 128, 64 / n_rows, rect);
-    DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
+    if (element[begin_list + 1].data != ""){
+      element_selected = 1;
+      DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
+    }
+    else {
+      DStype(0, rectangle);
+    }
   }
   else {
     element_selected = 0;
@@ -340,12 +310,82 @@ void updateList() {
   }
 }
 
+void setParameter(int address, int min, int max){
+  parameter.address = address;
+  parameter.data = EEPROM.read(address);
+  parameter.min = min;
+  parameter.max = max;
+  newDisplayElement(right, 128, element[element_selected % n_rows + begin_list].y, String(parameter.data));
+}
+
+void updateParameter(){
+  EEPROM.write(parameter.address, parameter.data);
+  EEPROM.commit();
+  parameter.data = -1;
+  element_counter--;
+}
+
 void clearList() {
   title_list = false;
   for (d = 0; elements_list[d] != ""; d++) {
     elements_list[d] = "";
   }
 }
+
+int elementListSelector() { //// Funzione del boss del poppin che gestisce praticamente tutta l'interfaccia
+  if (triggButton == up) {
+    if (parameter.data == -1){
+      if (element_selected != 0) {
+        element_selected--;
+        if (element_selected % n_rows == n_rows - 1) {
+          updateList();
+        }
+        DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
+        if (element_selected == 0 && title_list) {
+          DStype(0, rectangle);
+        }
+        else {
+          DStype(0, circle);
+        }
+      }
+    }
+    else if (parameter.data < parameter.max){
+      parameter.data++;
+      DEdata(element_counter - 1, String(parameter.data));
+    }
+
+  }
+  else if (triggButton == down) {
+    if (parameter.data == -1){
+      if (elements_list[element_selected + 1] != "") {
+        element_selected++;
+        if (element_selected % n_rows == 0) {
+          updateList();
+        }
+        DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
+        DStype(0, circle);
+      }
+    }
+    else if (parameter.data > parameter.min){
+      parameter.data--;
+      DEdata(element_counter - 1, String(parameter.data));
+    }
+  }
+  else if (triggButton == confirm) {
+    if (parameter.data == -1){
+      if (element_selected != 0) {
+        DStype(0, filledCircle);
+      }
+      return element_selected;
+    }
+    else {
+      updateParameter();
+      DStype(0, circle);
+    }
+  }
+  return -1;
+}
+
 
 String temporaneous_pin;
 void pin() {
@@ -424,9 +464,11 @@ void pin() {
 }
 
 void firstConfiguration() {
-
+ //////////
 }
 
+
+////////////////////////////////////////////////////////////////////////////////// Probably thease function will be removed in the future
 void wifiCreateDisplay() {
   if (interface != loaded_interface) {
     loaded_interface = interface;
@@ -466,12 +508,9 @@ void oledReport(String data) {
     updateList();
   }
 }
+//////////////////////////////////////////////////////////////////////////////////
 
-void setDisplay(){
-  
-}
 
-/////////////////////////////////////////////////////////// Cooming soon
 const char* dialogText[] PROGMEM = {
   "Do you want to change your password?",
   "Do you want to erase everything?",
@@ -480,7 +519,7 @@ const char* dialogText[] PROGMEM = {
 const int questionLink[] PROGMEM = {
   pinInter,
   back,
-  back,
+  back
 };
 enum select_questions {
   Qpassword = questionInter,
@@ -500,22 +539,26 @@ void question() {
   sel = elementListSelector();
   if (sel != -1) {
     if (sel){
-      if (questionLink[interface] == back){
-        if (interface == Qreset){
-          eepromClear();
-          ESP.restart();
-        }
-        else if (interface == Qconnect){
-          /// Non so longhino come volevi fare
-          Serial.println("Ciao mona");
+      if (questionLink[interface - questionInter] == back){
+        switch (interface){
+          case Qreset:{
+            eepromClear();
+            ESP.restart();
+            break;
+          }
+          case Qconnect:{
+            /// Non so longhino come volevi fare
+            Serial.println("Ciao mona");
+            break;
+          }
         }
         interface = previous_interface;
       }
-      else{
+      else {
         interface = questionLink[interface - questionInter];
       }
     }
-    else{
+    else {
       interface = previous_interface;
     }
   }
@@ -528,10 +571,10 @@ void menu() {
     elements_list[0] = "Commands";
     elements_list[1] = "WiFi";
     elements_list[2] = "Settings";
-    createList(0, true);
+    createList(0, 64 * 1.25 / n_rows, true);
   }
   if (elementListSelector() != -1) {
-    interface = element_selected + 7;
+    interface = element_selected + commandInter;
   }
 }
 
@@ -602,6 +645,32 @@ void settings() {
     }
     else {
       interface = menuInter;
+    }
+  }
+}
+
+void setDisplay(){
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    title_list = true;
+    elements_list[0] = "DISPLAY";
+    elements_list[1] = "Flip";
+    elements_list[2] = "Contrast";
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+      if (sel == 1){
+        setParameter(3, 0, 1);
+      }
+      else if (sel == 2){
+        setParameter(2, 0, 4);
+      }
+    }
+    else {
+      interface = settingsInter;
     }
   }
 }

@@ -10,13 +10,12 @@ void setup() {
   Serial.println("--------------------------------");
 
   //Wire.begin(D1, D2, I2C_MASTER);
-  display.init();
-  display.flipScreenVertically();
-  display.setContrast(255);
-  display.setFont(ArialMT_Plain_10);
-  display.setTextAlignment(TEXT_ALIGN_LEFT);
   EEPROM.begin(EEPROM_length);
   inputString.reserve(200);
+  display.init();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_LEFT);
+  
   max_value_address = pow(2, usable_address_bits);
 
   if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {// Press the 3 buttons to erase EEPROM
@@ -49,13 +48,8 @@ void setup() {
   }
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
-  if (EEPROM.read(0)) { //Check the state of the network, saved in the first byte of EEPROM
-    tryConnect();
-  }
-  else {
-    createNetwork();
-  }
 
+  setVariables();
 
   ///////////////////////////////////////////////////////Demo code to try thigns
   n_section = 4;
