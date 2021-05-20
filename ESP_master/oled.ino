@@ -255,7 +255,6 @@ void interfaceSelector() {
 }
 
 
-#define n_rows 5
 int element_selected;
 int sel;
 /**
@@ -572,7 +571,7 @@ void menu() {
     elements_list[0] = "Commands";
     elements_list[1] = "WiFi";
     elements_list[2] = "Settings";
-    createList(0, 64 * 1.25 / n_rows, true);
+    createList(0, true);
   }
   if (elementListSelector() != -1) {
     interface = element_selected + commandInter;
@@ -658,6 +657,7 @@ void setDisplay(){
     elements_list[0] = "DISPLAY";
     elements_list[1] = "Flip";
     elements_list[2] = "Contrast";
+    elements_list[3] = "Rows";
     createList(0, true);
   }
   sel = elementListSelector();
@@ -668,6 +668,9 @@ void setDisplay(){
       }
       else if (sel == 2){
         setParameter(2, 1, 5);
+      }
+      else if (sel == 3){
+        setParameter(4, 4, 7);
       }
     }
     else {

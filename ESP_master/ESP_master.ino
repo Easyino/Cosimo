@@ -17,6 +17,7 @@ void setup() {
   display.setTextAlignment(TEXT_ALIGN_LEFT);
   eepromPar(2);
   eepromPar(3);
+  eepromPar(4);
   
   max_value_address = pow(2, usable_address_bits);
 

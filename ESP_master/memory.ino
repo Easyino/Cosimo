@@ -122,7 +122,7 @@ void shiftEEPROM (int address, int jump) {
   EEPROM.commit();
 }
 
-byte defaultPar[]{0, 0, 5, 1};
+byte defaultPar[]{0, 0, 5, 1, 5};
 void setDefault(){
   for(i = 1; i < EEPROM_offset; i++){
     EEPROM.write(i, defaultPar[i]);
@@ -153,6 +153,11 @@ void eepromPar(int address){
         display.resetOrientation();
       }
       orientation = !par;
+      break;
+    }
+    case 4:{
+      n_rows = par;
+      loaded_interface = 0;
       break;
     }
   }
