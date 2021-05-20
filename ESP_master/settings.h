@@ -77,6 +77,7 @@ unsigned long int execution_time;
 int serial_reporter;
 
 //Oled
+bool orientation;
 enum alignment {
   left,
   right,

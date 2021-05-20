@@ -323,6 +323,7 @@ void updateParameter(){
   EEPROM.commit();
   parameter.data = -1;
   element_counter--;
+  eepromPar(parameter.address);
 }
 
 void clearList() {
@@ -396,7 +397,7 @@ void pin() {
     d = 0;
     e = 0;
     message = "There are   more tryes before erasing everything";
-    f = EEPROM.read(1);
+    f = EEPROM.read(0);
     message[10] = char(48 + (chances - f));
     if (f == 0) {
       newDisplayElement(center, 64, 15, 128, "Insert the pin");
@@ -435,7 +436,7 @@ void pin() {
           ESP.restart();
         }
         else {
-          EEPROM.write(1, f);
+          EEPROM.write(0, f);
           EEPROM.commit();
           temporaneous_pin = "_";
           d = 0;
@@ -666,7 +667,7 @@ void setDisplay(){
         setParameter(3, 0, 1);
       }
       else if (sel == 2){
-        setParameter(2, 0, 4);
+        setParameter(2, 1, 5);
       }
     }
     else {

@@ -1,8 +1,8 @@
 void eepromClear() {
-  for (i = 0; i < EEPROM_length; i++) {
+  for (i = EEPROM_offset; i < EEPROM_length; i++) {
     EEPROM.write(i, 0);
   }
-  EEPROM.commit();
+  setDefault();
 }
 
 
@@ -122,19 +122,39 @@ void shiftEEPROM (int address, int jump) {
   EEPROM.commit();
 }
 
-
-void setVariables(){
-  if (EEPROM.read(0)) {
-    tryConnect();
+byte defaultPar[]{0, 0, 5, 1};
+void setDefault(){
+  for(i = 1; i < EEPROM_offset; i++){
+    EEPROM.write(i, defaultPar[i]);
   }
-  else {
-    createNetwork();
-  }
-
-  display.setContrast(255 - EEPROM.read(2) * 51);
-
-  if(!EEPROM.read(3)){
-    display.flipScreenVertically();
+  EEPROM.commit();
+}
+void eepromPar(int address){
+  int par = EEPROM.read(address);
+  switch(address){
+    case 1:{
+      if (par) {
+        tryConnect();
+      }
+      else {
+        createNetwork();
+      }
+      break;
+    }
+    case 2:{
+      display.setContrast(par * 51);
+      break;
+    }
+    case 3:{
+      if(par){
+        display.flipScreenVertically();
+      }
+      else {
+        display.resetOrientation();
+      }
+      orientation = !par;
+      break;
+    }
   }
 }
 

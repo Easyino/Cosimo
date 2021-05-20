@@ -15,6 +15,8 @@ void setup() {
   display.init();
   display.setFont(ArialMT_Plain_10);
   display.setTextAlignment(TEXT_ALIGN_LEFT);
+  eepromPar(2);
+  eepromPar(3);
   
   max_value_address = pow(2, usable_address_bits);
 
@@ -37,7 +39,7 @@ void setup() {
     }
     updateCommand(0, buffer, text);// Saving salt
     updateEEPROM();
-    EEPROM.write(1, chances + 1);// Used when it has to be decided the key
+    EEPROM.write(0, chances + 1);// Used when it has to be decided the key
     EEPROM.commit();
   }
   else {
@@ -48,8 +50,7 @@ void setup() {
   }
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
-
-  setVariables();
+  eepromPar(1);
 
   ///////////////////////////////////////////////////////Demo code to try thigns
   n_section = 4;

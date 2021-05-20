@@ -10,13 +10,13 @@ int debouncedButtons(){
   millis_gap = millis() - last_millis; // To use it in the interfaces
   if (millis_gap > bouncing_time){
     if (!digitalRead(button_up) && int(millis_gap / 10) % (scrolling_time / 10) == 0){
-      return up;
+      return up + 2 * orientation;
     }
     if (!digitalRead(button_confirm)){
       return confirm;
     }
     if (!digitalRead(button_down) && int(millis_gap / 10) % (scrolling_time / 10) == 0){
-      return down;
+      return down - 2 * orientation;
     }
   }
   return -1;

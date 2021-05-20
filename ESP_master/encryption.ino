@@ -1,7 +1,7 @@
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 String encryptString(String data) {
-  if (EEPROM.read(1) == chances + 1) {
+  if (EEPROM.read(0) == chances + 1) {
     interface = pinInter;
     dialog_interface = 1;
     while (interface == pinInter) {
@@ -34,7 +34,7 @@ retry:
   if (decryptionSucceeded) {
     if (interface == pinInter) {
       interface = previous_interface;
-      EEPROM.write(1, 0);
+      EEPROM.write(0, 0);
       EEPROM.commit();
     }
     return data;

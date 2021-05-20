@@ -14,7 +14,7 @@ void handle_confNetInfo() {
   Serial.print(memory_map[addrExtPassword]);
   //  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
   server.send(200, "text/html", "ORA MI RIAVVIO");
-  EEPROM.write(0, 1); //set netmode to "try connect"
+  EEPROM.write(1, 1); //set netmode to "try connect"
   EEPROM.commit();
   //demoSectors();//To remove
   ESP.restart();
@@ -64,7 +64,7 @@ void tryConnect() {
       display.display();
 
       Serial.println("FAILED!");
-      EEPROM.write(0, 0); //set netmode to "create a wifi"
+      EEPROM.write(1, 0); //set netmode to "create a wifi"
       EEPROM.commit();
       ESP.restart();
     }
@@ -82,6 +82,6 @@ void tryConnect() {
   Serial.println("I'm connected!");
   netStat = 1;
   Serial.println("SUCCESS!!!");
-  EEPROM.write(0, 1); //set netmode to "try connect"
+  EEPROM.write(1, 1); //set netmode to "try connect"
   EEPROM.commit();
 }
