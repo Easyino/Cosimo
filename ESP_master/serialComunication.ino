@@ -155,11 +155,34 @@ void executeSerialCommands() {
       Serial.println("WIFI access point has been stopped");
     }
 
-    if (serialString[1].equalsIgnoreCase("mode")) {
+    else if (serialString[1].equalsIgnoreCase("mode")) {
       EEPROM.write(0, serialString[2].toInt());
       EEPROM.commit();
       Serial.print("setting wifi mode to ");
       Serial.println(serialString[2].toInt());
+    }
+    else if(serialString[1].equalsIgnoreCase("debug")){
+      #define DO(x...) Serial.println(F( #x )); x; break
+      switch (serialString[2][0]) {
+        case 'F': DO(WiFiOff());
+        case 'N': DO(WiFiOn());
+        case '1': DO(WiFi.mode(WIFI_AP));
+        case '2': DO(WiFi.mode(WIFI_AP_STA));
+        case '3': DO(WiFi.mode(WIFI_STA));
+        case 'R': DO(if (((GPI >> 16) & 0xf) == 1) ESP.reset() /* else must hard reset */);
+        case 'd': DO(WiFi.disconnect());
+        case 'b': DO(WiFi.begin());
+        case 'B': DO(WiFi.begin(ext_ssid, ext_password));
+        case 'r': DO(WiFi.reconnect());
+        case 'c': DO(wifi_station_connect());
+        case 'a': DO(WiFi.setAutoReconnect(false));
+        case 'A': DO(WiFi.setAutoReconnect(true));
+        case 'n': DO(WiFi.setSleepMode(WIFI_NONE_SLEEP));
+        case 'l': DO(WiFi.setSleepMode(WIFI_LIGHT_SLEEP));
+        case 'm': DO(WiFi.setSleepMode(WIFI_MODEM_SLEEP));
+        case 'S': DO(WiFi.config(local_ip, gateway, subnet)); // use static address
+        case 's': DO(WiFi.config(0u, 0u, 0u));                // back to dhcp client
+      }
     }
   }
 

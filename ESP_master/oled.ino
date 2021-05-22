@@ -474,7 +474,7 @@ void wifiCreateDisplay() {
     loaded_interface = interface;
     newDisplayElement(left, 1, 1, "Connect your device to:");
     newDisplayElement(left, 1, 15, "Easyino Cosimo");
-    newDisplayElement(left, 1, 52, "go to: 10.10.10.1");
+    newDisplayElement(left, 1, 52, "go to: 192.168.4.1");
   }
 }
 

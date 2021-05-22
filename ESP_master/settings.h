@@ -1,6 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include "user_interface.h"
 
 #include <ArduinoOTA.h>
 
@@ -200,14 +201,16 @@ bool netMode = 0;
 bool ota_initialised = false;
 /*da togliere!!!!*/int ret = 20; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
 //SSID and PSWD of Cosimo's Network
+ESP8266WebServer server(80);
 const char* personal_ssid = "Easyino Cosimo";//you can change your cosimo's SSID here
 const char* personal_password = "12345678"; //you can change your cosimo's password here
 String ext_ssid;
 String ext_password;
 String wifi_IP = "Not connected";
+/*
 IPAddress local_ip(10, 10, 10, 1);
 IPAddress gateway(10, 10, 10, 1);
-IPAddress subnet(255, 0, 0, 0);
-ESP8266WebServer server(80);
+IPAddress subnet(255, 255, 255, 0);
+*/
 
 #define addrNetMode 0 //0 for creating a webpage; 1 for connecting to an existing one
