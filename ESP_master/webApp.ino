@@ -5,14 +5,11 @@ void handle_getNetInfo() {
 void handle_confNetInfo() {
   Serial.println("Qualcuno mi ha fatto una richiesta.../n");
   loadSector(1);
-  updateCommand(addrExtSSID, server.arg("SSID"), text);
-  updateCommand(addrExtPassword, server.arg("Password"), password);
+  for(i = 0; memory_map[i] != ""; i += 2){}
+  i--;
+  updateCommand(i, server.arg("SSID"), text);
+  updateCommand(i + 1, server.arg("Password"), password);
   updateEEPROM();
-  Serial.print("SSID:");
-  Serial.print(memory_map[addrExtSSID]);
-  Serial.print("Password:");
-  Serial.print(memory_map[addrExtPassword]);
-  //  server.send(200, "text/html", "ORA MI RIAVVIO<meta http-equiv='refresh' content='1; URL=/' >");
   server.send(200, "text/html", "ORA MI RIAVVIO");
   EEPROM.write(1, 1); //set netmode to "try connect"
   EEPROM.commit();

@@ -60,11 +60,6 @@ int sector_max = 0;
 
 int i, a, r, c, q, d, e, f;
 
-//Commands
-enum credential_commands {
-  addrExtSSID,
-  addrExtPassword
-};
 
 //I2C
 const int16_t I2C_MASTER = 0x42;

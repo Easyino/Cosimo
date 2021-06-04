@@ -178,9 +178,9 @@ void loadTitles() {
 
 void loadNetData() {
   loadSector(1);
-  ext_ssid = memory_map[addrExtSSID];
+  ext_ssid = memory_map[0];
   Serial.println("prendo SSID");
-  ext_password = memory_map[addrExtPassword];
+  ext_password = memory_map[1];
   Serial.println("prendo password");
 }
 

@@ -75,14 +75,6 @@ void newDisplaySpecial(byte x, byte y, byte width, byte height, byte type) {
   oled_updated = true;
 }
 
-void newDisplayIcon(byte x, byte y, byte ref) {
-  icon_element[icon_element_counter].x = x;
-  icon_element[icon_element_counter].y = y;
-  icon_element[icon_element_counter].ref = ref;
-  icon_element_counter++;
-  oled_updated = true;
-}
-
 void DSposition(int number, int x, int y) {
   if (special_element[number].x != x || special_element[number].y != y) {
     special_element[number].x = x;
@@ -102,6 +94,29 @@ void DSshape(int number, int width, int height) {
 void DStype(int number, int type) {
   if (special_element[number].type != type) {
     special_element[number].type = type;
+    oled_updated = true;
+  }
+}
+
+void newDisplayIcon(byte x, byte y, byte ref) {
+  icon_element[icon_element_counter].x = x;
+  icon_element[icon_element_counter].y = y;
+  icon_element[icon_element_counter].ref = ref;
+  icon_element_counter++;
+  oled_updated = true;
+}
+
+void DInumber(int number, int ref){
+  if (icon_element[number].ref != ref) {
+    icon_element[number].ref = ref;
+    oled_updated = true;
+  }
+}
+
+void DIposition(int number, int x, int y){
+  if (icon_element[number].x != x || icon_element[number].y != y) {
+    icon_element[number].x = x;
+    icon_element[number].y = y;
     oled_updated = true;
   }
 }
@@ -577,7 +592,7 @@ void menu() {
     elements_list[1] = "WiFi";
     elements_list[2] = "Settings";
     createList(0, true);
-    newDisplayIcon(112, 0, 1);
+    newDisplayIcon(112, 0, 3);
   }
   if (elementListSelector() != -1) {
     interface = element_selected + commandInter;
