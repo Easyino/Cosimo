@@ -175,6 +175,10 @@ void loadDisplay() {
         }
     }
   }
+
+  for(i = 0; i < icon_element_counter; i++){
+    display.drawIco16x16(icon_element[i].x, icon_element[i].y, icons[icon_element[i].ref], false);
+  }
   display.display();
 }
 
@@ -199,6 +203,7 @@ void interfaceSelector() {
     }
     element_counter = 0;
     special_element_counter = 0;
+    icon_element_counter = 0;
     Serial.print("New interface: ");
     Serial.println(interface);
   }
@@ -572,6 +577,7 @@ void menu() {
     elements_list[1] = "WiFi";
     elements_list[2] = "Settings";
     createList(0, true);
+    newDisplayIcon(112, 0, 1);
   }
   if (elementListSelector() != -1) {
     interface = element_selected + commandInter;

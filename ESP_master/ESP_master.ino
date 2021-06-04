@@ -52,7 +52,7 @@ void setup() {
   }
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
-  eepromPar(1);
+  //eepromPar(1);
 
   ///////////////////////////////////////////////////////Demo code to try thigns
   n_section = 4;
@@ -81,5 +81,4 @@ void loop() {
     loadSerialCommands(inputString);
     executeSerialCommands();
   }
-
 }

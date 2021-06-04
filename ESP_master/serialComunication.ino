@@ -161,7 +161,7 @@ void executeSerialCommands() {
       Serial.print("setting wifi mode to ");
       Serial.println(serialString[2].toInt());
     }
-    else if(serialString[1].equalsIgnoreCase("debug")){
+    /*else if(serialString[1].equalsIgnoreCase("debug")){
       #define DO(x...) Serial.println(F( #x )); x; break
       switch (serialString[2][0]) {
         case 'F': DO(WiFiOff());
@@ -169,7 +169,7 @@ void executeSerialCommands() {
         case '1': DO(WiFi.mode(WIFI_AP));
         case '2': DO(WiFi.mode(WIFI_AP_STA));
         case '3': DO(WiFi.mode(WIFI_STA));
-        case 'R': DO(if (((GPI >> 16) & 0xf) == 1) ESP.reset() /* else must hard reset */);
+        case 'R': DO(if (((GPI >> 16) & 0xf) == 1) ESP.reset());
         case 'd': DO(WiFi.disconnect());
         case 'b': DO(WiFi.begin());
         case 'B': DO(WiFi.begin(ext_ssid, ext_password));
@@ -183,7 +183,7 @@ void executeSerialCommands() {
         case 'S': DO(WiFi.config(local_ip, gateway, subnet)); // use static address
         case 's': DO(WiFi.config(0u, 0u, 0u));                // back to dhcp client
       }
-    }
+    }*/
   }
 
   else if (serialString[0].equalsIgnoreCase("reboot")) {

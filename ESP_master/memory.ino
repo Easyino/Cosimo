@@ -103,7 +103,7 @@ int sectorLength(){
 
 void shiftEEPROM (int address, int jump) {
   if (jump > 0){
-    for (i = 0; i < jump; i++) {
+    for (i = 0; i < abs(jump); i++) {
       c = (char)EEPROM.read(address + i);
       for (a = address + jump + i; a < checkpoint_memory[sector_max]; a += jump) {
         r = (char)EEPROM.read(a);

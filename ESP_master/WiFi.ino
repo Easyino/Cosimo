@@ -1,3 +1,10 @@
+void WiFiHandle(){
+  
+}
+void WiFiSetMode(int mode){
+
+}
+
 void WiFiOn() {
   wifi_fpm_do_wakeup();
   wifi_fpm_close();
@@ -45,14 +52,15 @@ void tryConnect() {
     delay(500);
     Serial.print(".");
     ret--;
-    if (ret <= 0) {
 
+    if (ret <= 0) {
       display.clear();
       display.setTextAlignment(TEXT_ALIGN_RIGHT);
       display.drawString(128, 52, "Failed!");
       display.display();
 
       Serial.println("FAILED!");
+      WiFi.softAPdisconnect(true);
       EEPROM.write(1, 0); //set netmode to "create a wifi"
       EEPROM.commit();
       ESP.restart();
