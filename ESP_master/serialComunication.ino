@@ -156,10 +156,16 @@ void executeSerialCommands() {
     }
 
     else if (serialString[1].equalsIgnoreCase("mode")) {
-      EEPROM.write(0, serialString[2].toInt());
+      /*EEPROM.write(0, serialString[2].toInt());
       EEPROM.commit();
       Serial.print("setting wifi mode to ");
-      Serial.println(serialString[2].toInt());
+      Serial.println(serialString[2].toInt());*/
+      if (WiFi.getMode() == WIFI_STA){
+        Serial.println("Station");
+      }
+      else if(WiFi.getMode() == WIFI_AP){
+        Serial.println("Access point");
+      }
     }
     /*else if(serialString[1].equalsIgnoreCase("debug")){
       #define DO(x...) Serial.println(F( #x )); x; break

@@ -1,6 +1,20 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
+#include <DNSServer.h>
+DNSServer dnsServer;
+#include <ESP8266mDNS.h>
+const byte DNS_PORT = 53;
+
+// Web server
+ESP8266WebServer server(80);
+
+/* Soft AP network parameters */
+IPAddress apIP(172, 217, 28, 1);
+IPAddress netMsk(255, 255, 255, 0);
+unsigned int status = WL_IDLE_STATUS;
+const char *myHostname = "esp8266";
+
 #include "user_interface.h"
 
 #include <ArduinoOTA.h>
@@ -143,7 +157,7 @@ int special_element_counter = 0;
 int icon_element_counter = 0;
 int interface = menuInter;
 int loaded_interface = timeInter;
-int previous_interface;
+int previous_interface = -1;
 bool oled_updated = false;
 String elements_list[20];
 bool title_list;
@@ -190,13 +204,9 @@ struct section section[10];
 
 
 //SSID and PSWD of external wifi network
-
-bool netStat = 0; //status of the network
-bool netMode = 0;
 bool ota_initialised = false;
-/*da togliere!!!!*/int ret = 20; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
+/*da togliere!!!!*/int ret; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
 //SSID and PSWD of Cosimo's Network
-ESP8266WebServer server(80);
 const char* personal_ssid = "Easyino Cosimo";//you can change your cosimo's SSID here
 const char* personal_password = "12345678"; //you can change your cosimo's password here
 String ext_ssid;

@@ -268,7 +268,7 @@ void interfaceSelector() {
         break;
     }
   }
-  if (oled_updated) {// Only i fthere is something different it Will print elements on the screen
+  if (oled_updated) {// Only if there is something different it Will print elements on the screen
     oled_updated = false;
     loadDisplay();
   }
@@ -328,7 +328,7 @@ void updateList() {
     DEdata(d + begin_list, elements_list[element_selected - (element_selected % n_rows) + d]);
   }
 }
-
+    // position on the EEPROM, minimum value, maximum value
 void setParameter(int address, int min, int max){
   parameter.address = address;
   parameter.data = EEPROM.read(address);
@@ -411,6 +411,7 @@ String temporaneous_pin;
 void pin() {
   String message;
   if (interface != loaded_interface) {
+    Serial.println("ciao");
     loaded_interface = interface;
     temporaneous_pin = "_";
     d = 0;
@@ -471,7 +472,7 @@ void pin() {
       else {
         EEPROM.write(1, 0);
         EEPROM.commit();
-        interface = timeInter;
+        interface = previous_interface;
       }
     }
     else {
@@ -592,7 +593,10 @@ void menu() {
     elements_list[1] = "WiFi";
     elements_list[2] = "Settings";
     createList(0, true);
-    newDisplayIcon(112, 0, 3);
+    newDisplayIcon(112, 0, access_point);
+    if (WiFi.getMode() == WIFI_STA){
+      DInumber(0, full_wifi);
+    }
   }
   if (elementListSelector() != -1) {
     interface = element_selected + commandInter;
@@ -626,14 +630,25 @@ void wifi() {
     clearList();
     title_list = true;
     elements_list[0] = "WIFI";
-    elements_list[1] = "Add";
-    elements_list[2] = "Saved";
+    elements_list[1] = "Access point";
+    elements_list[2] = "Connect";
+    elements_list[3] = "Saved";
     createList(0, true);
   }
   sel = elementListSelector();
   if (sel != -1) {
     if (sel != 0) {
-
+      if (sel == 1) {
+        createNetwork();
+        interface = menuInter;
+      }
+      else if (sel == 2) {
+        tryConnect();
+        interface = menuInter;
+      }
+      else if (sel == 3){
+       //inetrface = ;
+      }
     }
     else {
       interface = menuInter;

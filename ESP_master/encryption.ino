@@ -20,6 +20,8 @@ String encryptString(String data) {
   buffer += data;
   return buffer;
 }
+
+
 String decryptString(String data) {
   String original_data = data;
 retry:
@@ -41,6 +43,7 @@ retry:
   }
   Serial.println("Decryption failed");
   wrong_key = true;
+  loaded_interface = menuInter;
   interface = pinInter;
   dialog_interface = 0;
   oled_updated = true;// This is an exceptional declaration to make the pin interface work better

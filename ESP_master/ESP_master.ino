@@ -52,7 +52,13 @@ void setup() {
   }
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt); // (sizeof masterKey) - 1 removes the terminating null value of the c-string
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
+
+
+  //ESP.eraseConfig();  
+  //WiFi.persistent(false);
+  wifi_set_phy_mode(PHY_MODE_11B);
   //eepromPar(1);
+  tryConnect();
 
   ///////////////////////////////////////////////////////Demo code to try thigns
   n_section = 4;
@@ -63,11 +69,29 @@ void setup() {
 }
 
 void loop() {
+  unsigned int s = WiFi.status();
+  if (status != s) { // WLAN status change
+      Serial.print("Status: ");
+      Serial.println(s);
+      status = s;
+      if (s == WL_CONNECTED) {
+        // Setup MDNS responder
+        if (!MDNS.begin(myHostname)) {
+          Serial.println("Error setting up MDNS responder!");
+        } else {
+          Serial.println("mDNS responder started");
+          // Add service to MDNS-SD
+          MDNS.addService("http", "tcp", 80);
+        }
+      } else if (s == WL_NO_SSID_AVAIL) {
+        WiFi.disconnect();
+      }
+    }
+    if (s == WL_CONNECTED) {
+      MDNS.update();
+    }
+  dnsServer.processNextRequest();
   server.handleClient();
-
-  if (!digitalRead(button_up) && !digitalRead(button_down) && digitalRead(button_confirm)) {// Press the up and down to activate ota
-    OTAupdate();
-  }
 
   if (ota_initialised) {
     ArduinoOTA.handle();
