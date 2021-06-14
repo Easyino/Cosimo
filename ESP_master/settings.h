@@ -101,12 +101,15 @@ enum interfaces {
   wifiCreateInter,
   timeInter,
   logInter,
+  savedWifiInter,
   displayInter,
+  //////////////////// Don't touch them, add interfaces only above
   menuInter,
   commandInter,
   wifiInter,
   settingsInter,
   questionInter
+  ///////////////////
 };
 
 typedef struct {

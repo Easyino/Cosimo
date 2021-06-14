@@ -3,6 +3,7 @@ void WiFiOn() {
   wifi_fpm_close();
   wifi_set_opmode(STATION_MODE);
   wifi_station_connect();
+  wifi_IP = WiFi.localIP().toString();
 }
 
 void WiFiOff() {
@@ -11,6 +12,7 @@ void WiFiOff() {
   wifi_set_sleep_type(MODEM_SLEEP_T);
   wifi_fpm_open();
   wifi_fpm_do_sleep(0xFFFFFFF);
+  wifi_IP = WiFi.localIP().toString();
 }
 
 
@@ -27,9 +29,9 @@ void createNetwork() {
   server.on("/generate_204", handle_getNetInfo);
   server.on("/fwlink", handle_getNetInfo);
   server.begin();
+  wifi_IP = WiFi.localIP().toString();
   Serial.println("Fatto");
   //interface = wifiCreateInter;
-
 }
 
 void tryConnect() {
@@ -96,7 +98,7 @@ void tryConnect() {
       display.setTextAlignment(TEXT_ALIGN_RIGHT);
       display.drawString(128, 52, "Connecting...");
       display.display();
-      delay(500);
+      delay(300);
       ret--;
 
       if (ret <= 0) {

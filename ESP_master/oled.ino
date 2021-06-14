@@ -194,6 +194,7 @@ void loadDisplay() {
   for(i = 0; i < icon_element_counter; i++){
     display.drawIco16x16(icon_element[i].x, icon_element[i].y, icons[icon_element[i].ref], false);
   }
+  
   display.display();
 }
 
@@ -243,10 +244,6 @@ void interfaceSelector() {
         logInterface();
         break;
       }
-    case displayInter: {
-        setDisplay();
-        break;
-      }
     case menuInter: {
         menu();
         break;
@@ -259,8 +256,16 @@ void interfaceSelector() {
         wifi();
         break;
       }
+      case savedWifiInter: {
+        savedWifi();
+        break;
+      }
     case settingsInter: {
         settings();
+        break;
+      }
+    case displayInter: {
+        setDisplay();
         break;
       }
     default:{
@@ -293,6 +298,7 @@ void createList(byte offset_x, byte offset_y, bool selector) {
     newDisplayElement(left, offset_x, d * 64 / n_rows + offset_y, elements_list[d]);
   }
 
+  element_selected = 0;
   if (title_list) {
     newDisplaySpecial(0, 64 / n_rows, 128, 64 / n_rows, rect);
     if (element[begin_list + 1].data != ""){
@@ -302,9 +308,6 @@ void createList(byte offset_x, byte offset_y, bool selector) {
     else {
       DStype(0, rectangle);
     }
-  }
-  else {
-    element_selected = 0;
   }
 }
 void createList(byte offset, bool selector) {
@@ -411,7 +414,6 @@ String temporaneous_pin;
 void pin() {
   String message;
   if (interface != loaded_interface) {
-    Serial.println("ciao");
     loaded_interface = interface;
     temporaneous_pin = "_";
     d = 0;
@@ -421,12 +423,15 @@ void pin() {
     message[10] = char(48 + (chances - f));
     if (f == 0) {
       newDisplayElement(center, 64, 15, 128, "Insert the pin");
+      Serial.println("No pin inserted");
     }
     else if (dialog_interface) {
       newDisplayElement(center, 64, 15, 128, "Chose your own pin and press twice to confirm");
+      Serial.println("Chose your pin");
     }
     else {
       newDisplayElement(center, 64, 15, 128, message);
+      Serial.println("Chances");
     }
     newDisplayElement(center, 64, 45, temporaneous_pin);
     DEfont(element_counter - 1, 1);
@@ -451,6 +456,7 @@ void pin() {
       Serial.println(data);
       setMasterKey(data);
       if (!dialog_interface) {
+        f++;
         if (f >= chances) {
           eepromClear();
           ESP.restart();
@@ -466,11 +472,10 @@ void pin() {
           oled_updated = false;
           wrong_key = false;
         }
-        f++;
         return;
       }
       else {
-        EEPROM.write(1, 0);
+        EEPROM.write(0, 0);
         EEPROM.commit();
         interface = previous_interface;
       }
@@ -629,7 +634,7 @@ void wifi() {
     loaded_interface = interface;
     clearList();
     title_list = true;
-    elements_list[0] = "WIFI";
+    elements_list[0] = "WIFI    " + wifi_IP;
     elements_list[1] = "Access point";
     elements_list[2] = "Connect";
     elements_list[3] = "Saved";
@@ -647,7 +652,7 @@ void wifi() {
         interface = menuInter;
       }
       else if (sel == 3){
-       //inetrface = ;
+        interface = savedWifiInter;
       }
     }
     else {
@@ -655,6 +660,29 @@ void wifi() {
     }
   }
 }
+
+void savedWifi(){
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    title_list = true;
+    elements_list[0] = "SAVED";
+    loadSector(1);
+    for (f = 0; memory_map[f] != ""; f += 2){
+      elements_list[f / 2 + 1] = memory_map[f];
+    }
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+    }
+    else {
+      interface = previous_interface;
+    }
+  }
+}
+
 void settings() {
   if (interface != loaded_interface) {
     loaded_interface = interface;

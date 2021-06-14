@@ -8,6 +8,9 @@ void executeSerialCommands() {
       Serial.print(", ");
     }
 
+    Serial.println("\n\nCheckpoint jump:");
+    Serial.print(checkpoint_jump);
+
     Serial.println("\n\nSector loaded:");
     Serial.print(sector_loaded);
 

@@ -32,6 +32,7 @@ void setup() {
   Serial.println(max_value_address);
   loadCheckpoints();
   if (checkpoint_memory[1] != 20 + EEPROM_offset) {// Detect resetting
+    Serial.println("------------First set------------");
     eepromClear();
     loadSector(0);
     getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
@@ -56,9 +57,10 @@ void setup() {
 
   //ESP.eraseConfig();  
   //WiFi.persistent(false);
-  wifi_set_phy_mode(PHY_MODE_11B);
+  //wifi_set_phy_mode(PHY_MODE_11B);
   //eepromPar(1);
-  tryConnect();
+  //tryConnect();
+  createNetwork();
 
   ///////////////////////////////////////////////////////Demo code to try thigns
   n_section = 4;

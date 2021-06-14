@@ -24,9 +24,12 @@ void loadCheckpoints() {
 
 void loadSector(int sector) {
   reportStarting("Loading sector");
-  if(sector_loaded != sector){
+  if (sector > sector_max && sector != 0){
+    sector = sector_max;
+    Serial.println("Not enough sectors saved");
+  }
+  if (sector_loaded != sector){
     sector_loaded = sector;
-    checkpoint_jump = 0;
     for (i = 0; memory_map[i] != ""; i++) {
       memory_map[i] = "";
       memory_type[i] = -1;
@@ -50,15 +53,37 @@ void loadSector(int sector) {
 }
 
 void updateCommand(int com, String data, int type) {
-  if (type == password) {
-    data = encryptString(data);
-  }
-  else if (type == command) {
+  if (type == command) {
     data = stringToCommand(data);
   }
-  checkpoint_jump += data.length() - memory_map[com].length();
+  checkpoint_jump += rowLength(data, type) - rowLength(memory_map[com], memory_type[com]);
+  
   memory_map[com] = data;
   memory_type[com] = type;
+}
+
+int rowLength(String data, int type){
+  if(data != ""){
+    length = 2;
+    if (type == password){
+      length += 28;
+      Serial.println("Inculato");
+    }
+    length += data.length();
+    return length;
+  }
+  return 0;
+}
+
+int sectorLength(){
+  int length = 0;
+  for (c = 0; memory_map[c] != ""; c++){
+    length += rowLength(memory_map[c], memory_type[c]);
+    //Serial.print(" + " + String(length));
+  }
+  Serial.print("Sector length = ");
+  Serial.println(length);
+  return length;
 }
 
 void updateEEPROM() {
@@ -66,7 +91,6 @@ void updateEEPROM() {
   if (checkpoint_jump != 0) {
     Serial.print("Jump = ");
     Serial.println(checkpoint_jump);
-    //shiftEEPROM (checkpoint_memory[sector_loaded + 1] - 1, checkpoint_jump);
     if (checkpoint_memory[sector_loaded + 1] == 0){
       Serial.println("New sector");
       checkpoint_memory[sector_loaded + 1] = checkpoint_memory[sector_max] + sectorLength() + 1;
@@ -78,42 +102,43 @@ void updateEEPROM() {
         checkpoint_memory[i] += checkpoint_jump;
       }
     }
+    shiftEEPROM (checkpoint_memory[sector_loaded + 1] - (checkpoint_jump + 1), checkpoint_jump);
   }
 
   EEPROM.write(checkpoint_memory[sector_loaded] - 1, 0);
-  for (i = checkpoint_memory[sector_loaded] + 2, r = 0; i < checkpoint_memory[sector_max]; i += a + 2, r++){
+  for (int i = checkpoint_memory[sector_loaded] + 2, r = 0; i < checkpoint_memory[sector_loaded + 1]; i += a + 2, r++){
     EEPROM.write(i - 2, 0);
     EEPROM.write(i - 1, memory_type[r]);
     Serial.println(i - 2);
-    for (a = 0; memory_map[r][a] != 0; a++){
-      EEPROM.write(i + a, memory_map[r][a]);
+    String data = memory_map[r];
+    if (memory_type[r] == password){
+      data = encryptString(data);
+    }
+    for (a = 0; data[a] != 0; a++){
+      EEPROM.write(i + a, data[a]);
     }
   }
   EEPROM.commit();
+  checkpoint_jump = 0;
   reportEnding();
-}
-
-int sectorLength(){
-  length = 0;
-  for (c = 0; memory_map[c] != ""; c++, length += 2){
-    length += memory_map[c].length();
-  }
-  return length;
 }
 
 void shiftEEPROM (int address, int jump) {
   if (jump > 0){
-    for (i = 0; i < abs(jump); i++) {
+    for (i = 0; i < jump; i++) {
       c = (char)EEPROM.read(address + i);
       for (a = address + jump + i; a < checkpoint_memory[sector_max]; a += jump) {
         r = (char)EEPROM.read(a);
         EEPROM.write(a, c);
         c = r;
+        Serial.print("a = ");
+        Serial.println(a);
       }
+      Serial.println("");
     }
   }
   else {
-    for (i = address; i < checkpoint_memory[sector_max]; i++){
+    for (i = address + jump; i < checkpoint_memory[sector_max]; i++){
       c = EEPROM.read(i - jump);
       EEPROM.write(i, c); 
     }
