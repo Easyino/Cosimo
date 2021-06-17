@@ -5,6 +5,7 @@
    @param type Data type (text, command, password)
 */
 void sendSlave(String data, int type) {
+  int i, a;
   bool new_data = true;
   for (r = 0; data[r] != '\0'; r += a) {
     Wire.beginTransmission(I2C_SLAVE);

@@ -32,7 +32,8 @@ retry:
     resultingTag[i] = data[i + 12];
   }
   data.remove(0, 28);
-  bool decryptionSucceeded = ChaCha20Poly1305::decrypt(data.begin(), data.length(), derivedKey, &encryptionCounter, sizeof encryptionCounter, resultingNonce, resultingTag);
+  bool decryptionSucceeded = false;
+  decryptionSucceeded = ChaCha20Poly1305::decrypt(data.begin(), data.length(), derivedKey, &encryptionCounter, sizeof encryptionCounter, resultingNonce, resultingTag);
   if (decryptionSucceeded) {
     if (interface == pinInter) {
       interface = previous_interface;
@@ -54,6 +55,8 @@ retry:
   data = original_data;
   goto retry;// Retry to decrypt
 }
+
+
 /**
  * @brief Set the Master Key object
  * 

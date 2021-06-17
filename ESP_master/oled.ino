@@ -126,6 +126,7 @@ void DIposition(int number, int x, int y){
 
 */
 void loadDisplay() {
+  int i;
   previousButton = buttonPressed;
   buttonPressed = debouncedButtons();
   if (previousButton != buttonPressed) {
@@ -136,7 +137,7 @@ void loadDisplay() {
     triggButton = -1;
   }
   display.clear();
-  for (int i = 0; i < element_counter; i++) {
+  for (i = 0; i < element_counter; i++) {
     if (element[i].aligned != element[i - 1].aligned || i == 0) {
       if (element[i].aligned == left) {
         display.setTextAlignment(TEXT_ALIGN_LEFT);
@@ -567,6 +568,22 @@ void question() {
     if (sel){
       if (questionLink[interface - questionInter] == back){
         switch (interface){
+          case Qpassword:{
+            String(previous_masterKey) = String(masterKey);
+            Serial.println(previous_masterKey);
+            dialog_interface = 1;
+            interface = pinInter;
+            while (interface == pinInter) {
+              interfaceSelector();
+              ESP.wdtFeed();
+            }
+            for (int i = 1; i < sector_max; i++){
+              loadSector(i);
+              updateEEPROM();
+            }
+            previous_masterKey[0] = '\0';
+            break;
+          }
           case Qreset:{
             eepromClear();
             ESP.restart();

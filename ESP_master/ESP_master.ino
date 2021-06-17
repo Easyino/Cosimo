@@ -47,7 +47,7 @@ void setup() {
   }
   else {
     loadSector(0);
-    for (i = 0; i < 16; i++) {
+    for (int i = 0; i < 16; i++) {
       hkdfSalt[i] = memory_map[0][i];
     }
   }

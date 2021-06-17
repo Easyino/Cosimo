@@ -47,7 +47,6 @@ void executeSerialCommands() {
     reportEnding();
   }
 
-
   else if (serialString[0].equalsIgnoreCase("load")) {
     if (serialString[1].equalsIgnoreCase("checkpoints")) {
       loadCheckpoints();
@@ -170,29 +169,6 @@ void executeSerialCommands() {
         Serial.println("Access point");
       }
     }
-    /*else if(serialString[1].equalsIgnoreCase("debug")){
-      #define DO(x...) Serial.println(F( #x )); x; break
-      switch (serialString[2][0]) {
-        case 'F': DO(WiFiOff());
-        case 'N': DO(WiFiOn());
-        case '1': DO(WiFi.mode(WIFI_AP));
-        case '2': DO(WiFi.mode(WIFI_AP_STA));
-        case '3': DO(WiFi.mode(WIFI_STA));
-        case 'R': DO(if (((GPI >> 16) & 0xf) == 1) ESP.reset());
-        case 'd': DO(WiFi.disconnect());
-        case 'b': DO(WiFi.begin());
-        case 'B': DO(WiFi.begin(ext_ssid, ext_password));
-        case 'r': DO(WiFi.reconnect());
-        case 'c': DO(wifi_station_connect());
-        case 'a': DO(WiFi.setAutoReconnect(false));
-        case 'A': DO(WiFi.setAutoReconnect(true));
-        case 'n': DO(WiFi.setSleepMode(WIFI_NONE_SLEEP));
-        case 'l': DO(WiFi.setSleepMode(WIFI_LIGHT_SLEEP));
-        case 'm': DO(WiFi.setSleepMode(WIFI_MODEM_SLEEP));
-        case 'S': DO(WiFi.config(local_ip, gateway, subnet)); // use static address
-        case 's': DO(WiFi.config(0u, 0u, 0u));                // back to dhcp client
-      }
-    }*/
   }
 
   else if (serialString[0].equalsIgnoreCase("reboot")) {

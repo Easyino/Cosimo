@@ -172,7 +172,8 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
 uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
-char masterKey[] = "        ";
+char previous_masterKey[9];
+char masterKey[9] = "        ";
 uint8_t resultingNonce[12] { 0 };
 uint8_t resultingTag[16] { 0 };
 static uint32_t encryptionCounter = 5;
@@ -184,8 +185,8 @@ bool wrong_key = false;
 #define button_up D5
 #define button_confirm D6
 #define button_down D7
-#define scrolling_time 100 // The unit number has to be = to 0
-#define bouncing_time 20
+#define scrolling_time 100 // The unit number has to be = to 0  --> xx0
+#define bouncing_time 40
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons {
