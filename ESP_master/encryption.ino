@@ -63,10 +63,10 @@ retry:
  * @param data the new key
  */
 void setMasterKey(String data) {
-  for (i = 0; i < 8; i++) {
+  for (int i = 0; i < 8; i++) {
     masterKey[i] = ' ';
   }
-  for (i = 0; data[i] != '\0'; i++) {
+  for (int i = 0; data[i] != '\0'; i++) {
     masterKey[i] = data[i];
   }
   HKDF hkdfInstance(FPSTR(masterKey), (sizeof masterKey) - 1, hkdfSalt, sizeof hkdfSalt);

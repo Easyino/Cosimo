@@ -88,10 +88,10 @@ String commandTable(int com) {
 
 
 String stringToCommand(String data) {
+  int a, q, r, com;
   String command_global;
   String command_single;
   bool number = false;
-  int com;
   data.trim();
   for (a = 0, q = 0; data[a] != '\0'; a += q) {
     command_single = "";
@@ -138,6 +138,7 @@ String stringToCommand(String data) {
 }
 
 String commandToString(String com) {
+  int q;
   String command_global;
   bool number = false;
   int buffer = 0;

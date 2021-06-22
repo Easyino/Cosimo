@@ -37,7 +37,7 @@ void setup() {
     loadSector(0);
     getNonceGenerator()(hkdfSalt, sizeof hkdfSalt);
     String buffer;
-    for (i = 0; i < 16; i++) {
+    for (int i = 0; i < 16; i++) {
       buffer += (char)hkdfSalt[i];
     }
     updateCommand(0, buffer, text);// Saving salt

@@ -290,6 +290,7 @@ int sel;
 */
 
 void createList(byte offset_x, byte offset_y, bool selector) {
+  int d;
   if (selector) {
     newDisplaySpecial(offset_x + 4, offset_y + 6, 3, 0, circle);
     offset_x += 10;
@@ -317,6 +318,7 @@ void createList(byte offset, bool selector) {
 
 
 void updateList() {
+  int d;
   if (title_list) {
     if (element_selected < n_rows) {
       DSposition(1, 0, 64 / n_rows);
@@ -350,6 +352,7 @@ void updateParameter(){
 }
 
 void clearList() {
+  int d;
   title_list = false;
   for (d = 0; elements_list[d] != ""; d++) {
     elements_list[d] = "";
@@ -413,6 +416,7 @@ int elementListSelector() { //// Funzione del boss del poppin che gestisce prati
 
 String temporaneous_pin;
 void pin() {
+  int d, e, q, f;
   String message;
   if (interface != loaded_interface) {
     loaded_interface = interface;
@@ -679,6 +683,7 @@ void wifi() {
 }
 
 void savedWifi(){
+  int f;
   if (interface != loaded_interface) {
     loaded_interface = interface;
     clearList();

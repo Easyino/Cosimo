@@ -35,6 +35,7 @@ void createNetwork() {
 }
 
 void tryConnect() {
+  int i, a;
   loadSector(1);
   if(memory_map[0] == ""){
     createNetwork();

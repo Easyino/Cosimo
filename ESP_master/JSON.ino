@@ -42,6 +42,7 @@ void handle_Set() {
 }
 
 String getAllJson() {
+  int i;
   Serial.print("I'm creating the complete JSON...");
   String  AJ = "[";
   for (i = 0; i < n_section; i++) {
@@ -58,6 +59,7 @@ String getAllJson() {
 }
 
 String getSingleJson(int id) {
+  int i;
   Serial.print("I'm creating the single JSON...");
   
   struct box_template {
@@ -77,7 +79,6 @@ String getSingleJson(int id) {
 
 
   String  text = "[";
-  i = 0;
   for (i = 0; i < n_box; i++) {
     text += " { \"n_seq\":";
     text += i;

@@ -1,4 +1,5 @@
 void executeSerialCommands() {
+  int i, c;
   if (serialString[0].equalsIgnoreCase("info")) {
     reportStarting("Printing info");
 
@@ -213,6 +214,7 @@ void serialEvent() {
 
 
 void loadSerialCommands(String data) {
+  int i, c, a;
   String subString;
   for (c = 0; serialString[c][0] != '\0'; c++) {
     serialString[c] = "";

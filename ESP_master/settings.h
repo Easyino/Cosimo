@@ -72,8 +72,6 @@ int length;
 int sector_loaded = 0;
 int sector_max = 0;
 
-int i, a, r, c, q, d, e, f;
-
 
 //I2C
 const int16_t I2C_MASTER = 0x42;
