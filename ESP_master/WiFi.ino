@@ -1,4 +1,5 @@
 void WiFiOn() {
+  wifi_state = AP;
   wifi_fpm_do_wakeup();
   wifi_fpm_close();
   wifi_set_opmode(STATION_MODE);
@@ -7,6 +8,7 @@ void WiFiOn() {
 }
 
 void WiFiOff() {
+  wifi_state = OFF;
   wifi_station_disconnect();
   wifi_set_opmode(NULL_MODE);
   wifi_set_sleep_type(MODEM_SLEEP_T);
@@ -17,6 +19,7 @@ void WiFiOff() {
 
 
 void createNetwork() {
+  wifi_state = AP;
   Serial.println("creo la rete...");
   WiFi.disconnect();
   WiFi.mode(WIFI_AP);
@@ -36,6 +39,7 @@ void createNetwork() {
 
 void tryConnect() {
   int i, a;
+  wifi_state = STA;
   loadSector(1);
   if(memory_map[0] == ""){
     createNetwork();

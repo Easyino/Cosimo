@@ -127,15 +127,6 @@ void DIposition(int number, int x, int y){
 */
 void loadDisplay() {
   int i;
-  previousButton = buttonPressed;
-  buttonPressed = debouncedButtons();
-  if (previousButton != buttonPressed) {
-    previousButton = buttonPressed;
-    triggButton = buttonPressed;
-  }
-  else if (triggButton != -1) {
-    triggButton = -1;
-  }
   display.clear();
   for (i = 0; i < element_counter; i++) {
     if (element[i].aligned != element[i - 1].aligned || i == 0) {
@@ -215,7 +206,7 @@ void interfaceSelector() {
   }
 
   if (interface != loaded_interface) {
-    if (loaded_interface < questionInter){
+    if (loaded_interface < questionInter && interface != pinInter){
       previous_interface = loaded_interface;
     }
     element_counter = 0;
@@ -413,16 +404,16 @@ int elementListSelector() { //// Funzione del boss del poppin che gestisce prati
   return -1;
 }
 
-
+int d, e, f;
 String temporaneous_pin;
 void pin() {
-  int d, e, q, f;
+  int q;
   String message;
   if (interface != loaded_interface) {
-    loaded_interface = interface;
-    temporaneous_pin = "_";
     d = 0;
     e = 0;
+    loaded_interface = interface;
+    temporaneous_pin = "_";
     message = "There are   more tryes before erasing everything";
     f = EEPROM.read(0);
     message[10] = char(48 + (chances - f));
@@ -620,8 +611,11 @@ void menu() {
     elements_list[2] = "Settings";
     createList(0, true);
     newDisplayIcon(112, 0, access_point);
-    if (WiFi.getMode() == WIFI_STA){
+    if (wifi_state == STA){
       DInumber(0, full_wifi);
+    }
+    else {
+      DInumber(0, access_point);
     }
   }
   if (elementListSelector() != -1) {
@@ -690,6 +684,7 @@ void savedWifi(){
     title_list = true;
     elements_list[0] = "SAVED";
     loadSector(1);
+    if (loaded_interface != savedWifiInter){return;} // In case of a PIN set
     for (f = 0; memory_map[f] != ""; f += 2){
       elements_list[f / 2 + 1] = memory_map[f];
     }
@@ -698,6 +693,8 @@ void savedWifi(){
   sel = elementListSelector();
   if (sel != -1) {
     if (sel != 0) {
+      dialog_interface = sel;
+      //interface = ...........; (da fare la domanda e poi eliminare la rete selezionata)
     }
     else {
       interface = previous_interface;

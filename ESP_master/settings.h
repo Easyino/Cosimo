@@ -184,7 +184,7 @@ bool wrong_key = false;
 #define button_confirm D6
 #define button_down D7
 #define scrolling_time 100 // The unit number has to be = to 0  --> xx0
-#define bouncing_time 40
+#define bouncing_time 60
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons {
@@ -207,13 +207,19 @@ struct section section[10];
 
 //SSID and PSWD of external wifi network
 bool ota_initialised = false;
-/*da togliere!!!!*/int ret; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
+int ret; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
 //SSID and PSWD of Cosimo's Network
 const char* personal_ssid = "Easyino Cosimo";//you can change your cosimo's SSID here
 const char* personal_password = "12345678"; //you can change your cosimo's password here
 String ext_ssid;
 String ext_password;
 String wifi_IP = "Not connected";
+enum states{
+  OFF,
+  AP,
+  STA
+};
+byte wifi_state = OFF;
 /*
 IPAddress local_ip(10, 10, 10, 1);
 IPAddress gateway(10, 10, 10, 1);
