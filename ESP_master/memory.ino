@@ -45,10 +45,18 @@ void loadSector(int sector) {
     if (memory_type[e] == password) {
       memory_map[e] = decryptString(memory_map[e]);
     }
-    Serial.println(memory_map[e]);
+
+
+    if (memory_type[e] == command){
+      Serial.println(commandToString(memory_map[e]));
+    }
+    else {
+      Serial.println(memory_map[e]);
+    }
   }
   reportEnding();
 }
+
 
 void updateCommand(int com, String data, int type) {
   if (type == command) {

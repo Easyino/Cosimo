@@ -19,6 +19,7 @@ void setup() {
   eepromPar(2);
   eepromPar(3);
   eepromPar(4);
+  history_interface[0] = menuInter;
   
   max_value_address = pow(2, usable_address_bits);
 

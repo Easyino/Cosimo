@@ -207,12 +207,13 @@ void interfaceSelector() {
 
   if (interface != loaded_interface) {
     if (loaded_interface < questionInter && interface != pinInter){
-      previous_interface = loaded_interface;
+      previous_interface = (previous_interface) % 5;
+      history_interface[previous_interface] = loaded_interface;
     }
     element_counter = 0;
     special_element_counter = 0;
     icon_element_counter = 0;
-    Serial.print("New interface: ");
+    Serial.print("Updated interface: ");
     Serial.println(interface);
   }
   switch (interface) {
@@ -269,6 +270,10 @@ void interfaceSelector() {
     oled_updated = false;
     loadDisplay();
   }
+}
+void interfaceBack(){
+  interface = history_interface[previous_interface];
+  previous_interface = (previous_interface + 4) % 5;
 }
 
 
@@ -473,7 +478,7 @@ void pin() {
       else {
         EEPROM.write(0, 0);
         EEPROM.commit();
-        interface = previous_interface;
+        interfaceBack();
       }
     }
     else {
@@ -590,14 +595,14 @@ void question() {
             break;
           }
         }
-        interface = previous_interface;
+        interfaceBack();
       }
       else {
         interface = questionLink[interface - questionInter];
       }
     }
     else {
-      interface = previous_interface;
+      interfaceBack();
     }
   }
 }
@@ -639,7 +644,7 @@ void commandSelection() {
       //sendSlave(memory_map[0], memory_type[0]); /// To try i2c
     }
     else {
-      interface = menuInter;
+      interfaceBack();
     }
   }
 }
@@ -671,7 +676,7 @@ void wifi() {
       }
     }
     else {
-      interface = menuInter;
+      interfaceBack();
     }
   }
 }
@@ -697,7 +702,7 @@ void savedWifi(){
       //interface = ...........; (da fare la domanda e poi eliminare la rete selezionata)
     }
     else {
-      interface = previous_interface;
+      interfaceBack();
     }
   }
 }
@@ -727,7 +732,7 @@ void settings() {
       }
     }
     else {
-      interface = menuInter;
+      interfaceBack();
     }
   }
 }
@@ -757,7 +762,7 @@ void setDisplay(){
       }
     }
     else {
-      interface = settingsInter;
+      interfaceBack();
     }
   }
 }

@@ -1,8 +1,80 @@
-String reverseCommandTable[77]
-{ "POWERDOWN", "WAKEUP", "SLEEP", "PLAY", "PAUSE", "RECORD", "FASTFORWARD", "REWIND", "NEXTTRACK", "PREVTRACK", "STOP", "EJECT", "MUTE", "VOLUMEINC",
-  "VOLUMEDEC", "ENTER", "ESC", "BACKSPACE", "TAB", "SPACE", "CAPSLOCK", "F1", "F2", "F3", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12",
-  "PRINTSCREEN", "SCROLLLOCK", "HOME", "PAGEUP", "PAGEDOWN", "DELETE", "END", "RIGHT", "LEFT", "DOWN", "UP", "NUMLOCK", "A", "B", "C", "D", "E", "F", "G",
-  "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "CTRL", "SHIFT", "ALT", "GUI", "DELAY"
+String reverseCommandTable[77]{ 
+  "POWERDOWN",
+  "WAKEUP",
+  "SLEEP",
+  "PLAY",
+  "PAUSE",
+  "RECORD",
+  "FASTFORWARD",
+  "REWIND",
+  "NEXTTRACK",
+  "PREVTRACK",
+  "STOP",
+  "EJECT",
+  "MUTE",
+  "VOLUMEINC"
+  "VOLUMEDEC",
+  "ENTER",
+  "ESC",
+  "BACKSPACE",
+  "TAB",
+  "SPACE",
+  "CAPSLOCK",
+  "F1",
+  "F2",
+  "F3",
+  "F4",
+  "F5",
+  "F6",
+  "F7",
+  "F8",
+  "F9",
+  "F10",
+  "F11",
+  "F12",
+  "PRINTSCREEN",
+  "SCROLLLOCK",
+  "HOME",
+  "PAGEUP",
+  "PAGEDOWN",
+  "DELETE",
+  "END",
+  "RIGHT",
+  "LEFT",
+  "DOWN",
+  "UP",
+  "NUMLOCK",
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+  "CTRL",
+  "SHIFT",
+  "ALT",
+  "GUI",
+  "DELAY"
 };
 String commandTable(int com) {
   switch (com) {
@@ -82,7 +154,7 @@ String commandTable(int com) {
     case 73: return "ALT";
     case 74: return "GUI";
     case 75: return "DELAY";
-    default: return "ERROR 404";
+    default: return "...";
   }
 }
 
@@ -92,48 +164,59 @@ String stringToCommand(String data) {
   String command_global;
   String command_single;
   bool number = false;
-  data.trim();
+  for(a = 0, q = 0; data[a] != '\0'; a++){/// To remove whitespaces
+    if (data[a + q] == ' '){
+      a--;
+      q++;
+    }
+    else if (q != 0){
+      data[a] = data[a + q];
+    }
+  }
+  Serial.println("");
+  Serial.print("Trimmed: ");
+  Serial.println(data);
   for (a = 0, q = 0; data[a] != '\0'; a += q) {
     command_single = "";
     for (q = 0; data[a + q] != '*' && data[a + q] != '+' && data[a + q] != '\0'; q++) {
       if (data[a + q] != '_') {
-        command_single += (char)data[a + q];
-        if(command_single == "DELAY"){
-          command_global += (char)(128 + 75);
+        command_single += char(data[a + q]);
+        if (command_single == "DELAY"){
+          command_global += char(128 + 75);
           command_single = "";
           number = true;
         }
       }
     }
+
     if (number) {
       r = command_single.toInt();
-      command_single = "";
-      for (; r / 128 > 0; r -= 128) {
-        command_single += (char)255;
+      if (r > 255){
+        r = 255;
       }
-      command_global += command_single + (char)(r % 128 + 127);
+      command_global += (int)r;
     }
     else {
       command_single.toUpperCase();
       for (com = 0; command_single != reverseCommandTable[com]; com++) {
         if (com > 74) {
-          return "ERROR 404";
+          return ".";
         }
       }
-      command_global += (char)(com + 128 - 1);
+      com++;
+      command_global += char(com + 128);
     }
 
     if (data[a + q] == '+') {
-      command_global += 253;
+      command_global += char(253);
       q++;
     }
     else if (data[a + q] == '*') {
-      command_global += 254;
+      command_global += char(254);
       number = true;
       q++;
     }
   }
-  Serial.println(command_global);
   return command_global;
 }
 
@@ -146,20 +229,18 @@ String commandToString(String com) {
     if (com[q] == 253) {
       command_global += " + ";
     }
-    else if (com[q] == 253) {
+    else if (com[q] == 254) {
       command_global += " * ";
       number = true;
-      for (; com[q] != '\0'; q++){
-        buffer += (int)com[q];
-      }
     }
     else {
       if (number) {
-        command_global.concat(buffer);
+        command_global += char(com[q]);
       }
       else {
-        command_global += commandTable(com[q]);
+        command_global += commandTable(com[q] - 128);
       }
     }
   }
+  return command_global;
 }
