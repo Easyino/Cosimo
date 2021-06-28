@@ -36,18 +36,19 @@ retry:
   decryptionSucceeded = ChaCha20Poly1305::decrypt(data.begin(), data.length(), derivedKey, &encryptionCounter, sizeof encryptionCounter, resultingNonce, resultingTag);
   if (decryptionSucceeded) {
     if (interface == pinInter) {
-      interface = previous_interface;
+      interfaceBack();
       EEPROM.write(0, 0);
       EEPROM.commit();
     }
     return data;
   }
+  else {
+    interface = pinInter;
+    dialog_interface = 0;
+  }
   Serial.println("Decryption failed");
   wrong_key = true;
-  loaded_interface = menuInter;
-  interface = pinInter;
-  dialog_interface = 0;
-  oled_updated = true;// This is an exceptional declaration to make the pin interface work better
+  oled_updated = true;// To make it look better I update the screen only when the pin is incorrect
   while (wrong_key) {// Pin interface
     interfaceSelector();
     ESP.wdtFeed();

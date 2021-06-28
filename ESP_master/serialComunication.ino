@@ -45,6 +45,16 @@ void executeSerialCommands() {
       Serial.print(" | ");
       Serial.println(element[i].data);
     }
+
+    Serial.println("\n\nInterface history:");
+    for(i = 0; i < 5; i++){
+      Serial.print(history_interface[i]);
+      Serial.print(", ");
+    }
+    
+    Serial.println("\n\nPrevious interface:");
+    Serial.print(previous_interface);
+
     reportEnding();
   }
 

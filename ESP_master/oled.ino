@@ -182,11 +182,9 @@ void loadDisplay() {
         }
     }
   }
-
   for(i = 0; i < icon_element_counter; i++){
     display.drawIco16x16(icon_element[i].x, icon_element[i].y, icons[icon_element[i].ref], false);
   }
-  
   display.display();
 }
 
@@ -206,9 +204,9 @@ void interfaceSelector() {
   }
 
   if (interface != loaded_interface) {
-    if (loaded_interface < questionInter && interface != pinInter){
-      previous_interface = (previous_interface) % 5;
-      history_interface[previous_interface] = loaded_interface;
+    if (history_interface[previous_interface] != interface && interface < questionInter){
+      previous_interface = (previous_interface + 1) % 5;
+      history_interface[previous_interface] = interface;
     }
     element_counter = 0;
     special_element_counter = 0;
@@ -272,8 +270,10 @@ void interfaceSelector() {
   }
 }
 void interfaceBack(){
+  if (interface < questionInter){
+    previous_interface = (previous_interface + 4) % 5;
+  }
   interface = history_interface[previous_interface];
-  previous_interface = (previous_interface + 4) % 5;
 }
 
 
@@ -470,7 +470,7 @@ void pin() {
           message = "There are   more tryes before erasing everything";
           message[10] = (char)(48 + (chances - f));
           DEdata(0, message);
-          oled_updated = false;
+          oled_updated = false; // To make it look better I update the screen only when the pin is incorrect
           wrong_key = false;
         }
         return;
@@ -685,11 +685,10 @@ void savedWifi(){
   int f;
   if (interface != loaded_interface) {
     loaded_interface = interface;
+    loadSector(1);
     clearList();
     title_list = true;
     elements_list[0] = "SAVED";
-    loadSector(1);
-    if (loaded_interface != savedWifiInter){return;} // In case of a PIN set
     for (f = 0; memory_map[f] != ""; f += 2){
       elements_list[f / 2 + 1] = memory_map[f];
     }
