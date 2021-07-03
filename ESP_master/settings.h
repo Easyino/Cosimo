@@ -13,7 +13,7 @@ ESP8266WebServer server(80);
 IPAddress apIP(172, 217, 28, 1);
 IPAddress netMsk(255, 255, 255, 0);
 unsigned int status = WL_IDLE_STATUS;
-const char *myHostname = "esp8266";
+const char *myHostname = "Cosimo";
 
 #include "user_interface.h"
 
@@ -185,7 +185,7 @@ bool wrong_key = false;
 #define button_confirm D6
 #define button_down D7
 #define scrolling_time 100 // The unit number has to be = to 0  --> xx0
-#define bouncing_time 60
+#define bouncing_time 45
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons {
@@ -198,6 +198,13 @@ int previousButton;
 int triggButton = -1;
 
 
+//Timers
+unsigned long int millis_time;
+unsigned int timer_track;
+int prescaler;
+int timer_trigg;
+bool timer_need;
+
 //Variables declaration    /////////////////////////////// To remove (only for Longhino)
 struct section {
   String title;
@@ -208,13 +215,12 @@ struct section section[10];
 
 //SSID and PSWD of external wifi network
 bool ota_initialised = false;
-int ret; //number of retrys for connceting to your local network. if you have got a slow connection we advice you to increase the number e.g=50
 //SSID and PSWD of Cosimo's Network
 const char* personal_ssid = "Easyino Cosimo";//you can change your cosimo's SSID here
 const char* personal_password = "12345678"; //you can change your cosimo's password here
 String ext_ssid;
 String ext_password;
-String wifi_IP = "Not connected";
+String wifi_IP;
 enum states{
   OFF,
   AP,

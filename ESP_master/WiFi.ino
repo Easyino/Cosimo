@@ -20,7 +20,6 @@ void WiFiOff() {
 
 void createNetwork() {
   wifi_state = AP;
-  Serial.println("creo la rete...");
   WiFi.disconnect();
   WiFi.mode(WIFI_AP);
   WiFi.softAPConfig(apIP, apIP, netMsk);
@@ -33,7 +32,6 @@ void createNetwork() {
   server.on("/fwlink", handle_getNetInfo);
   server.begin();
   wifi_IP = WiFi.localIP().toString();
-  Serial.println("Fatto");
   //interface = wifiCreateInter;
 }
 
@@ -47,7 +45,7 @@ void tryConnect() {
   }
   WiFi.disconnect();
   WiFi.mode(WIFI_STA);
-  ret = 20;
+  int ret = 20;
   bool found = false;
   display.clear();
   display.setFont(ArialMT_Plain_10);

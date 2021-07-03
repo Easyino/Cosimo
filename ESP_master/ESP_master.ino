@@ -57,7 +57,7 @@ void setup() {
 
 
   //ESP.eraseConfig();  
-  //WiFi.persistent(false);
+  WiFi.persistent(false);
   //wifi_set_phy_mode(PHY_MODE_11B);
   //eepromPar(1);
   //tryConnect();
@@ -81,12 +81,14 @@ void loop() {
         // Setup MDNS responder
         if (!MDNS.begin(myHostname)) {
           Serial.println("Error setting up MDNS responder!");
-        } else {
+        } 
+        else {
           Serial.println("mDNS responder started");
           // Add service to MDNS-SD
           MDNS.addService("http", "tcp", 80);
         }
-      } else if (s == WL_NO_SSID_AVAIL) {
+      } 
+      else if (s == WL_NO_SSID_AVAIL) {
         WiFi.disconnect();
       }
     }

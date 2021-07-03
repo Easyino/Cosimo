@@ -45,8 +45,6 @@ void loadSector(int sector) {
     if (memory_type[e] == password) {
       memory_map[e] = decryptString(memory_map[e]);
     }
-
-
     if (memory_type[e] == command){
       Serial.println(commandToString(memory_map[e]));
     }
@@ -59,13 +57,21 @@ void loadSector(int sector) {
 
 
 void updateCommand(int com, String data, int type) {
+  int i;
   if (type == command) {
     data = stringToCommand(data);
   }
   checkpoint_jump += rowLength(data, type) - rowLength(memory_map[com], memory_type[com]);
-  
-  memory_map[com] = data;
-  memory_type[com] = type;
+  if (data == ""){
+    for (i = com; memory_map[i] != ""; i++){////////// In realtà non serve neanche teoricamente
+      memory_map[i] = memory_map[i + 1];
+      memory_type[i] = memory_type[i + 1];
+    }
+  }
+  else {
+    memory_map[com] = data;
+    memory_type[com] = type;
+  }
 }
 
 int rowLength(String data, int type){
@@ -107,6 +113,12 @@ void updateEEPROM() {
       Serial.println("Shifting checkpoints");
       for (i = sector_loaded + 1; checkpoint_memory[i] != 0; i++) {
         checkpoint_memory[i] += checkpoint_jump;
+      }
+      if (memory_map[0] == ""){
+        for (i = sector_loaded; i < sector_max; i++){
+          checkpoint_memory[i] = checkpoint_memory[i + 1] - 1;
+        }
+        checkpoint_jump--;
       }
     }
     shiftEEPROM (checkpoint_memory[sector_loaded + 1] - (checkpoint_jump + 1), checkpoint_jump);

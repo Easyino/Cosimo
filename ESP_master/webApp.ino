@@ -15,14 +15,13 @@ void handle_confNetInfo() {
   server.sendHeader("Expires", "-1");
   loadSector(1);
   int pos;
-  for(pos = 0; memory_map[pos] != "" && memory_map[pos + 1] != ""; pos += 2){}
+  for (pos = 0; memory_map[pos] != "" && memory_map[pos + 1] != ""; pos += 2){}
   Serial.print("WiFi n° ");
   Serial.println(pos);
   updateCommand(pos, server.arg("SSID"), text);
   updateCommand(pos + 1, server.arg("Password"), password);
   updateEEPROM();
   Serial.println(memory_map[0]);
-  server.send(200, "text/html", "Done!");
   server.client().stop();
   tryConnect();
 }

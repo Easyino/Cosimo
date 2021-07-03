@@ -37,6 +37,7 @@ retry:
   if (decryptionSucceeded) {
     if (interface == pinInter) {
       interfaceBack();
+      element_counter = 0;//To prevent element sovrapposition when we load an encrypted sector in a interface
       EEPROM.write(0, 0);
       EEPROM.commit();
     }

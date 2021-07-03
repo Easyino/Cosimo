@@ -193,6 +193,11 @@ void loadDisplay() {
 
 */
 void interfaceSelector() {
+  millis_time = millis();
+  if (timer_need){
+    checkTimers();
+  }
+
   previousButton = buttonPressed;
   buttonPressed = debouncedButtons();
   if (previousButton != buttonPressed) {
@@ -211,6 +216,7 @@ void interfaceSelector() {
     element_counter = 0;
     special_element_counter = 0;
     icon_element_counter = 0;
+    timer_need = 0;
     Serial.print("Updated interface: ");
     Serial.println(interface);
   }
@@ -569,7 +575,7 @@ void question() {
       if (questionLink[interface - questionInter] == back){
         switch (interface){
           case Qpassword:{
-            String(previous_masterKey) = String(masterKey);
+            /*String(previous_masterKey) = String(masterKey);
             Serial.println(previous_masterKey);
             dialog_interface = 1;
             interface = pinInter;
@@ -581,7 +587,7 @@ void question() {
               loadSector(i);
               updateEEPROM();
             }
-            previous_masterKey[0] = '\0';
+            previous_masterKey[0] = '\0';*/
             break;
           }
           case Qreset:{
@@ -617,12 +623,31 @@ void menu() {
     createList(0, true);
     newDisplayIcon(112, 0, access_point);
     if (wifi_state == STA){
-      DInumber(0, full_wifi);
+      timer_need = 1;
+      goto up_icon;
     }
     else {
       DInumber(0, access_point);
     }
   }
+  if (wifi_state == STA){
+    if (!(timer_trigg % 2)){
+      up_icon:
+      int rssi = WiFi.RSSI();
+      Serial.print("rssi: ");
+      Serial.println(rssi);
+      if (rssi > -60){
+        DInumber(0, full_wifi);
+      }
+      else if (rssi > -80){
+        DInumber(0, half_wifi);
+      }
+      else {
+        DInumber(0, small_wifi);
+      }
+    }
+  }
+  
   if (elementListSelector() != -1) {
     interface = element_selected + commandInter;
   }
@@ -684,8 +709,8 @@ void wifi() {
 void savedWifi(){
   int f;
   if (interface != loaded_interface) {
-    loaded_interface = interface;
     loadSector(1);
+    loaded_interface = interface;
     clearList();
     title_list = true;
     elements_list[0] = "SAVED";
