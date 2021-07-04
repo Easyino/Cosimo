@@ -390,6 +390,8 @@ void clearList() {
   title_list = false;
   for (d = 0; elements_list[d] != ""; d++) {
     elements_list[d] = "";
+    details_elements_list[d].type = image;
+    details_elements_list[d].data = invisible;
   }
 }
 
