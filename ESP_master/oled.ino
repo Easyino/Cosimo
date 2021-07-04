@@ -275,6 +275,10 @@ void interfaceSelector() {
         setDisplay();
         break;
       }
+    case buttonsInter: {
+        setButtons();
+        break;
+      }
     default:{
         question();
         break;
@@ -593,17 +597,20 @@ void oledReport(String data) {
 
 
 const char* dialogText[] PROGMEM = {
+  "Do you want to go back to default settings?",
   "Do you want to erase everything?",
   "Someone wants to connect. Do you want it?",
-  "Do you want to delete these wifi credentials?"
+  "Do you want to delete these WiFi credentials?"
 };
 const int questionLink[] PROGMEM = {
+  back,
   back,
   back,
   back
 };
 enum select_questions {
-  Qreset = questionInter,
+  Qdefault = questionInter,
+  Qreset,
   Qconnect,
   QeraseWifi
 };
@@ -622,6 +629,13 @@ void question() {
     if (sel){
       if (questionLink[interface - questionInter] == back){
         switch (interface){
+          case Qdefault:{
+            setDefault();
+            for (int i = 1; i < EEPROM_offset; i++){
+              eepromPar(i);
+            }
+            break;
+          }
           case Qreset:{
             eepromClear();
             ESP.restart();
@@ -808,7 +822,9 @@ void settings() {
     title_list = true;
     elements_list[0] = "SETTINGS";
     elements_list[1] = "Display";
-    elements_list[2] = "Reset";
+    elements_list[2] = "Buttons";
+    elements_list[3] = "Default";
+    elements_list[4] = "Reset all";
     createList(0, true);
   }
   sel = elementListSelector();
@@ -818,6 +834,12 @@ void settings() {
         interface = displayInter;
       }
       else if (sel == 2){
+        interface = buttonsInter;
+      }
+      else if (sel == 3){
+        interface = Qdefault;
+      }
+      else if (sel == 4){
         interface = Qreset;
       }
     }
@@ -849,6 +871,33 @@ void setDisplay(){
       }
       else if (sel == 3){
         setParameter(4, 4, 7);
+      }
+    }
+    else {
+      interfaceBack();
+    }
+  }
+}
+
+
+void setButtons(){
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    title_list = true;
+    elements_list[0] = "BUTTONS";
+    elements_list[1] = "Bouncing time";
+    elements_list[2] = "Scrolling time";
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+      if (sel == 1){
+        setParameter(5, 5, 70);
+      }
+      else if (sel == 2){
+        setParameter(6, 2, 15);
       }
     }
     else {

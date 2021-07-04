@@ -171,7 +171,7 @@ void shiftEEPROM (int address, int jump) {
   EEPROM.commit();
 }
 
-byte defaultPar[]{0, 0, 5, 1, 5};
+byte defaultPar[]{0, 0, 5, 0, 5, 45, 10};
 void setDefault(){
   int i;
   for(i = 1; i < EEPROM_offset; i++){
@@ -179,15 +179,18 @@ void setDefault(){
   }
   EEPROM.commit();
 }
+
 void eepromPar(int address){
   int par = EEPROM.read(address);
   switch(address){
     case 1:{
-      if (par) {
-        tryConnect();
-      }
-      else {
-        createNetwork();
+      if (!ota_initialised){
+        if (par) {
+          tryConnect();
+        }
+        else {
+          createNetwork();
+        }
       }
       break;
     }
@@ -208,6 +211,14 @@ void eepromPar(int address){
     case 4:{
       n_rows = par;
       loaded_interface = 0;
+      break;
+    }
+    case 5:{
+      bouncing_time = par;
+      break;
+    }
+    case 6:{
+      scrolling_time = par;
       break;
     }
   }

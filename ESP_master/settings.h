@@ -32,14 +32,11 @@ SSD1306Wire display(0x3c, D2, D1);//D3, D5
 
 //Memory
 #define EEPROM_length 4096
-#define EEPROM_offset 5
+#define EEPROM_offset 7
 /*number of spaces in eeprom reserved:
    Bit 0: state of network(1=connect | 0=create)
    Bit 1: number of attempts already done of the pin
 */
-
-#define usable_address_bits 7
-int max_value_address = 0;
 
 String memory_map[50];
 int memory_type[50];
@@ -103,6 +100,7 @@ enum interfaces {
   scanWifiInter,
   savedWifiInter,
   displayInter,
+  buttonsInter,
   //////////////////// Don't touch them, add interfaces only above
   menuInter,
   commandInter,
@@ -198,8 +196,8 @@ bool wrong_key = false;
 #define button_up D5
 #define button_confirm D6
 #define button_down D7
-#define scrolling_time 100 // The unit number has to be = to 0  --> xx0
-#define bouncing_time 45
+byte scrolling_time = 10;
+byte bouncing_time = 45;
 unsigned long int last_millis;
 unsigned long int millis_gap;
 enum buttons {

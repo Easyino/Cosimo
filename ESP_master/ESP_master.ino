@@ -19,18 +19,15 @@ void setup() {
   eepromPar(2);
   eepromPar(3);
   eepromPar(4);
+  eepromPar(5);
+  eepromPar(6);
   history_interface[0] = menuInter;
-  
-  max_value_address = pow(2, usable_address_bits);
 
   if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {// Press the 3 buttons to erase EEPROM
     eepromClear();
     while (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down));
   }
 
-
-  Serial.print("max address memory = ");
-  Serial.println(max_value_address);
   loadCheckpoints();
   if (checkpoint_memory[1] != 20 + EEPROM_offset) {// Detect resetting
     Serial.println("------------First set------------");
@@ -57,7 +54,7 @@ void setup() {
 
 
   //ESP.eraseConfig();
-  WiFi.persistent(false);
+  //WiFi.persistent(false);
   //wifi_set_phy_mode(PHY_MODE_11B);
   eepromPar(1);
 
