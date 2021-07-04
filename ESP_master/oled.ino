@@ -128,6 +128,12 @@ void DIposition(int number, int x, int y){
 void loadDisplay() {
   int i;
   display.clear();
+
+  for(i = icon_element_counter - 1; i >= 0 ; i--){
+    if (icon_element[i].ref != invisible){
+      display.drawIco16x16(icon_element[i].x, icon_element[i].y, icons[icon_element[i].ref], false);
+    }
+  }
   for (i = 0; i < element_counter; i++) {
     if (element[i].aligned != element[i - 1].aligned || i == 0) {
       if (element[i].aligned == left) {
@@ -182,9 +188,7 @@ void loadDisplay() {
         }
     }
   }
-  for(i = 0; i < icon_element_counter; i++){
-    display.drawIco16x16(icon_element[i].x, icon_element[i].y, icons[icon_element[i].ref], false);
-  }
+  
   display.display();
 }
 
@@ -213,10 +217,12 @@ void interfaceSelector() {
       previous_interface = (previous_interface + 1) % 5;
       history_interface[previous_interface] = interface;
     }
+    //Clearing flags and counters
     element_counter = 0;
     special_element_counter = 0;
     icon_element_counter = 0;
     timer_need = 0;
+    details_list = 0;
     Serial.print("Updated interface: ");
     Serial.println(interface);
   }
@@ -253,7 +259,11 @@ void interfaceSelector() {
         wifi();
         break;
       }
-      case savedWifiInter: {
+    case scanWifiInter: {
+        scanWifi();
+        break;
+      }
+    case savedWifiInter: {
         savedWifi();
         break;
       }
@@ -301,10 +311,23 @@ void createList(byte offset_x, byte offset_y, bool selector) {
   for (d = 0; d < n_rows; d++) {
     newDisplayElement(left, offset_x, d * 64 / n_rows + offset_y, elements_list[d]);
   }
-
+  if (details_list){
+    for (d = 0; d < n_rows; d++){
+      if (details_elements_list[d].type == txt){
+        newDisplayElement(right, 128, d * 64 / n_rows + offset_y, String(details_elements_list[d].data));
+      }
+      else {
+        newDisplayIcon(128 - 16, d * 64 / n_rows + offset_y - 5, details_elements_list[d].data);
+      }
+    }
+    
+  }
   element_selected = 0;
   if (title_list) {
     newDisplaySpecial(0, 64 / n_rows, 128, 64 / n_rows, rect);
+    if (details_list){
+      details_elements_list[0].type = invisible;
+    }
     if (element[begin_list + 1].data != ""){
       element_selected = 1;
       DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
@@ -334,9 +357,18 @@ void updateList() {
 
   for (d = 0; d < n_rows; d++) {
     DEdata(d + begin_list, elements_list[element_selected - (element_selected % n_rows) + d]);
+    if (details_list){
+      if (details_elements_list[d].type == txt){
+        DEdata(d + begin_list + n_rows, String(details_elements_list[element_selected - (element_selected % n_rows) + d].data));
+      }
+      else {
+        DInumber(d, details_elements_list[element_selected - (element_selected % n_rows) + d].data);/// to add icon specific begin_list
+      }
+    }
   }
 }
-    // position on the EEPROM, minimum value, maximum value
+
+// position on the EEPROM, minimum value, maximum value
 void setParameter(int address, int min, int max){
   parameter.address = address;
   parameter.data = EEPROM.read(address);
@@ -370,7 +402,7 @@ int elementListSelector() { //// Funzione del boss del poppin che gestisce prati
           updateList();
         }
         DSposition(0, element[element_selected % n_rows + begin_list].x - 6, element[element_selected % n_rows + begin_list].y + 6);
-        if (element_selected == 0 && title_list) {
+        if (!element_selected && title_list) {
           DStype(0, rectangle);
         }
         else {
@@ -382,7 +414,6 @@ int elementListSelector() { //// Funzione del boss del poppin che gestisce prati
       parameter.data++;
       DEdata(element_counter - 1, String(parameter.data));
     }
-
   }
   else if (triggButton == down) {
     if (parameter.data == -1){
@@ -545,18 +576,15 @@ void oledReport(String data) {
 
 
 const char* dialogText[] PROGMEM = {
-  "Do you want to change your password?",
   "Do you want to erase everything?",
   "Someone wants to connect. Do you want it?"
 };
 const int questionLink[] PROGMEM = {
-  pinInter,
   back,
   back
 };
 enum select_questions {
-  Qpassword = questionInter,
-  Qreset,
+  Qreset = questionInter,
   Qconnect
 };
 
@@ -574,22 +602,6 @@ void question() {
     if (sel){
       if (questionLink[interface - questionInter] == back){
         switch (interface){
-          case Qpassword:{
-            /*String(previous_masterKey) = String(masterKey);
-            Serial.println(previous_masterKey);
-            dialog_interface = 1;
-            interface = pinInter;
-            while (interface == pinInter) {
-              interfaceSelector();
-              ESP.wdtFeed();
-            }
-            for (int i = 1; i < sector_max; i++){
-              loadSector(i);
-              updateEEPROM();
-            }
-            previous_masterKey[0] = '\0';*/
-            break;
-          }
           case Qreset:{
             eepromClear();
             ESP.restart();
@@ -682,7 +694,8 @@ void wifi() {
     elements_list[0] = "WIFI    " + wifi_IP;
     elements_list[1] = "Access point";
     elements_list[2] = "Connect";
-    elements_list[3] = "Saved";
+    elements_list[3] = "Scan";
+    elements_list[4] = "Saved";
     createList(0, true);
   }
   sel = elementListSelector();
@@ -697,8 +710,32 @@ void wifi() {
         interface = menuInter;
       }
       else if (sel == 3){
+        interface = scanWifiInter;
+      }
+      else if (sel == 4){
         interface = savedWifiInter;
       }
+    }
+    else {
+      interfaceBack();
+    }
+  }
+}
+
+void scanWifi(){
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    title_list = true;
+    elements_list[0] = "SCAN";
+    details_list = true;
+    loadScannedWifi();
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+
     }
     else {
       interfaceBack();
@@ -737,21 +774,17 @@ void settings() {
     clearList();
     title_list = true;
     elements_list[0] = "SETTINGS";
-    elements_list[1] = "Password";
-    elements_list[2] = "Display";
-    elements_list[3] = "Reset";
+    elements_list[1] = "Display";
+    elements_list[2] = "Reset";
     createList(0, true);
   }
   sel = elementListSelector();
   if (sel != -1) {
     if (sel != 0) {
       if (sel == 1){
-        interface = Qpassword;
-      }
-      else if (sel == 2){
         interface = displayInter;
       }
-      else if (sel == 3){
+      else if (sel == 2){
         interface = Qreset;
       }
     }

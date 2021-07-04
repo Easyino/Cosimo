@@ -6,7 +6,7 @@ void setup() {
   pinMode(button_up, INPUT_PULLUP);
   pinMode(button_confirm, INPUT_PULLUP);
   pinMode(button_down, INPUT_PULLUP);
-  Serial.begin(115200);
+  Serial.begin(2000000);
   Serial.setDebugOutput(true);
   Serial.println("--------------------------------");
 

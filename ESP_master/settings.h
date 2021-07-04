@@ -50,6 +50,7 @@ enum types {
   password
 };
 
+
 String data_types[4] {"null", "text", "command", "password"};
 int dataTypes(String type) {
   if (type.equalsIgnoreCase("text")) {
@@ -61,7 +62,7 @@ int dataTypes(String type) {
   else if (type.equalsIgnoreCase("password")) {
     return password;
   }
-  return null;
+  return 0;
 }
 
 int checkpoint_memory[20];
@@ -99,6 +100,7 @@ enum interfaces {
   wifiCreateInter,
   timeInter,
   logInter,
+  scanWifiInter,
   savedWifiInter,
   displayInter,
   //////////////////// Don't touch them, add interfaces only above
@@ -153,6 +155,19 @@ struct parameters{
 };
 parameters parameter;
 
+bool details_list = false;
+typedef struct {
+  byte type;
+  int data;
+} details_element_list;
+details_element_list details_elements_list[20];
+
+enum details_element_types{
+  empty,
+  txt,
+  image
+};
+
 int element_counter = 0;
 int special_element_counter = 0;
 int icon_element_counter = 0;
@@ -171,7 +186,6 @@ namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 uint8_t resultArray[SHA256::NATURAL_LENGTH] { 0 };
 uint8_t derivedKey[ENCRYPTION_KEY_LENGTH] { 0 };
-char previous_masterKey[9];
 char masterKey[9] = "        ";
 uint8_t resultingNonce[12] { 0 };
 uint8_t resultingTag[16] { 0 };

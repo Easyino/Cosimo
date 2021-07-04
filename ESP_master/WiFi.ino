@@ -35,6 +35,35 @@ void createNetwork() {
   //interface = wifiCreateInter;
 }
 
+void loadScannedWifi(){
+  display.clear();
+  display.setFont(ArialMT_Plain_10);
+  display.setTextAlignment(TEXT_ALIGN_RIGHT);
+  display.drawString(128, 52, "Scanning...");
+  display.display();
+  String ssid;
+  int32_t rssi;
+  uint8_t encryptionType;
+  uint8_t* bssid;
+  int32_t channel;
+  bool hidden;
+  int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
+  for (int i = 0; i < scanResult; i++){
+    WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel, hidden);
+    elements_list[i + 1] = ssid;
+    details_elements_list[i + 1].type = image;
+    if (rssi > -60){
+        details_elements_list[i + 1].data = full_wifi;
+      }
+      else if (rssi > -80){
+        details_elements_list[i + 1].data = half_wifi;
+      }
+      else {
+        details_elements_list[i + 1].data = small_wifi;
+      }
+  }
+}
+
 void tryConnect() {
   int i, a;
   wifi_state = STA;
