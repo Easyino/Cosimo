@@ -6,7 +6,7 @@ void setup() {
   pinMode(button_up, INPUT_PULLUP);
   pinMode(button_confirm, INPUT_PULLUP);
   pinMode(button_down, INPUT_PULLUP);
-  Serial.begin(2000000);
+  Serial.begin(1000000);
   Serial.setDebugOutput(true);
   Serial.println("--------------------------------");
 
@@ -56,12 +56,10 @@ void setup() {
   hkdfInstance.produce(derivedKey, sizeof derivedKey);
 
 
-  //ESP.eraseConfig();  
+  //ESP.eraseConfig();
   WiFi.persistent(false);
   //wifi_set_phy_mode(PHY_MODE_11B);
-  //eepromPar(1);
-  //tryConnect();
-  createNetwork();
+  eepromPar(1);
 
   ///////////////////////////////////////////////////////Demo code to try thigns
   n_section = 4;

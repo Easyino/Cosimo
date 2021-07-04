@@ -374,7 +374,12 @@ void setParameter(int address, int min, int max){
   parameter.data = EEPROM.read(address);
   parameter.min = min;
   parameter.max = max;
-  newDisplayElement(right, 128, element[element_selected % n_rows + begin_list].y, String(parameter.data));
+  if (max == 1){
+    newDisplayElement(right, 128, element[element_selected % n_rows + begin_list].y, parameter.data ? "ON" : "OFF");
+  }
+  else {
+    newDisplayElement(right, 128, element[element_selected % n_rows + begin_list].y, String(parameter.data));
+  }
 }
 
 void updateParameter(){
@@ -414,7 +419,12 @@ int elementListSelector() { //// Funzione del boss del poppin che gestisce prati
     }
     else if (parameter.data < parameter.max){
       parameter.data++;
-      DEdata(element_counter - 1, String(parameter.data));
+      if (parameter.max == 1){
+        DEdata(element_counter - 1, parameter.data ? "ON" : "OFF");
+      }
+      else {
+        DEdata(element_counter - 1, String(parameter.data));
+      }
     }
   }
   else if (triggButton == down) {
@@ -430,7 +440,12 @@ int elementListSelector() { //// Funzione del boss del poppin che gestisce prati
     }
     else if (parameter.data > parameter.min){
       parameter.data--;
-      DEdata(element_counter - 1, String(parameter.data));
+      if (parameter.max == 1){
+        DEdata(element_counter - 1, parameter.data ? "ON" : "OFF");
+      }
+      else {
+        DEdata(element_counter - 1, String(parameter.data));
+      }
     }
   }
   else if (triggButton == confirm) {
@@ -579,15 +594,18 @@ void oledReport(String data) {
 
 const char* dialogText[] PROGMEM = {
   "Do you want to erase everything?",
-  "Someone wants to connect. Do you want it?"
+  "Someone wants to connect. Do you want it?",
+  "Do you want to delete these wifi credentials?"
 };
 const int questionLink[] PROGMEM = {
+  back,
   back,
   back
 };
 enum select_questions {
   Qreset = questionInter,
-  Qconnect
+  Qconnect,
+  QeraseWifi
 };
 
 void question() {
@@ -612,6 +630,13 @@ void question() {
           case Qconnect:{
             /// Non so longhino come volevi fare
             Serial.println("Ciao mona");
+            break;
+          }
+          case QeraseWifi:{
+            loadSector(1);
+            updateCommand(dialog_interface, "", text);
+            updateCommand(dialog_interface, "", text);// dialog_interface is not incremented by 1 because the function shift automatically the empty elements
+            updateEEPROM();
             break;
           }
         }
@@ -698,6 +723,7 @@ void wifi() {
     elements_list[2] = "Connect";
     elements_list[3] = "Scan";
     elements_list[4] = "Saved";
+    elements_list[5] = "Connect on start";
     createList(0, true);
   }
   sel = elementListSelector();
@@ -716,6 +742,9 @@ void wifi() {
       }
       else if (sel == 4){
         interface = savedWifiInter;
+      }
+      else if (sel == 5){
+        setParameter(1, 0, 1);
       }
     }
     else {
@@ -761,8 +790,10 @@ void savedWifi(){
   sel = elementListSelector();
   if (sel != -1) {
     if (sel != 0) {
-      dialog_interface = sel;
-      //interface = ...........; (da fare la domanda e poi eliminare la rete selezionata)
+      if (memory_map[2] != ""){
+        dialog_interface = (sel - 1) * 2;
+        interface = QeraseWifi;
+      }
     }
     else {
       interfaceBack();

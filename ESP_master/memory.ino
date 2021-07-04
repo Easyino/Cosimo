@@ -196,13 +196,13 @@ void eepromPar(int address){
       break;
     }
     case 3:{
-      if(par){
+      if(!par){
         display.flipScreenVertically();
       }
       else {
         display.resetOrientation();
       }
-      orientation = !par;
+      orientation = par;
       break;
     }
     case 4:{

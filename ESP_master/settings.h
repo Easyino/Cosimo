@@ -95,10 +95,10 @@ enum alignment {
 };
 enum interfaces {
   back = -1,
+  timeInter,
   pinInter,
   firstConfigInter,
   wifiCreateInter,
-  timeInter,
   logInter,
   scanWifiInter,
   savedWifiInter,
