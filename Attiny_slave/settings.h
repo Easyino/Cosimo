@@ -1,12 +1,15 @@
+#define LAYOUT_ITALIAN
 #include "DigiKeyboard.h"
 #include <Wire.h>
 String buffer;
-int type;
+String memory_map[5];
+byte memory_type[5];
 bool new_data = true;
-int i, a, c, r;
-byte ready_byte = 1;
+int recived = -1;
 enum types {
+  zero,
   text,
   command,
-  password
+  password,
+  comunication
 };

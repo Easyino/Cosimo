@@ -108,12 +108,7 @@ void executeSerialCommands() {
       Serial.print(data_types[memory_type[serialString[2].toInt()]]);
       Serial.print((char)9);
       Serial.println(memory_map[serialString[2].toInt()]);
-      sendSlave(memory_map[serialString[2].toInt()], memory_type[serialString[2].toInt()]);
-      reportEnding();
-    }
-    else if (serialString[1].equalsIgnoreCase("request")){
-      reportStarting("Requesting to slave");
-      Serial.println(checkReady());
+      sendSlave(memory_type[serialString[2].toInt()], memory_map[serialString[2].toInt()]);
       reportEnding();
     }
   }

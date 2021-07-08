@@ -1,10 +1,10 @@
 #include "settings.h"
 void setup() {
+  pinMode(1, OUTPUT);
   Wire.begin(8);
   Wire.onReceive(receiveEvent);
-  Wire.onRequest(requestEvent);
+  DigiKeyboard.enableLEDFeedback();
   DigiKeyboard.sendKeyPress(0);
-  DigiKeyboard.print('.' + char(8));
 }
 
 void loop() {

@@ -719,7 +719,7 @@ void commandSelection() {
   if (sel != -1) {
     if (sel != 0) {
       loadSector(sel + 1);
-      //sendSlave(memory_map[0], memory_type[0]); /// To try i2c
+      sendSector();
     }
     else {
       interfaceBack();

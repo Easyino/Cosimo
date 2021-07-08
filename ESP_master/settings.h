@@ -44,7 +44,8 @@ enum types {
   null,
   text,
   command,
-  password
+  password,
+  comunication
 };
 
 

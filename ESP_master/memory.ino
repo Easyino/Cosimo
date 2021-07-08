@@ -245,11 +245,11 @@ void loadNetData() {
   Serial.println("prendo password");
 }
 
-void demoSectors() {
+void demoSectors(){
   int e;
   String txt;
   for (e = 0; e < 10; e++) {
-    txt = "Titolo settore ";
+    txt = "Titolo ";
     txt += e;
     loadSector(e + 2);
     updateCommand(0, txt, text); //14 + 1

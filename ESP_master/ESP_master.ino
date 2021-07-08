@@ -6,11 +6,12 @@ void setup() {
   pinMode(button_up, INPUT_PULLUP);
   pinMode(button_confirm, INPUT_PULLUP);
   pinMode(button_down, INPUT_PULLUP);
+  pinMode(D3, INPUT);
   Serial.begin(1000000);
   Serial.setDebugOutput(true);
   Serial.println("--------------------------------");
 
-  //Wire.begin(D1, D2, I2C_MASTER);
+  Wire.begin(D1, D2, I2C_MASTER);
   EEPROM.begin(EEPROM_length);
   inputString.reserve(200);
   display.init();
@@ -25,6 +26,10 @@ void setup() {
 
   if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {// Press the 3 buttons to erase EEPROM
     eepromClear();
+    /*setDefault();
+    for (int i = 1; i < EEPROM_offset; i++){
+      eepromPar(i);
+    }*/
     while (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down));
   }
 
@@ -104,5 +109,9 @@ void loop() {
     stringComplete = false;
     loadSerialCommands(inputString);
     executeSerialCommands();
+  }
+
+  if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {
+    demoSectors();
   }
 }

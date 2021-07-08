@@ -35,7 +35,7 @@ void createNetwork() {
   //interface = wifiCreateInter;
 }
 
-void loadScannedWifi(){
+void loadScannedWifi() {
   display.clear();
   display.setFont(ArialMT_Plain_10);
   display.setTextAlignment(TEXT_ALIGN_RIGHT);
@@ -48,19 +48,19 @@ void loadScannedWifi(){
   int32_t channel;
   bool hidden;
   int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
-  for (int i = 0; i < scanResult; i++){
+  for (int i = 0; i < scanResult; i++) {
     WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel, hidden);
     elements_list[i + 1] = ssid;
     details_elements_list[i + 1].type = image;
-    if (rssi > -60){
-        details_elements_list[i + 1].data = full_wifi;
-      }
-      else if (rssi > -80){
-        details_elements_list[i + 1].data = half_wifi;
-      }
-      else {
-        details_elements_list[i + 1].data = small_wifi;
-      }
+    if (rssi > -60) {
+      details_elements_list[i + 1].data = full_wifi;
+    }
+    else if (rssi > -80) {
+      details_elements_list[i + 1].data = half_wifi;
+    }
+    else {
+      details_elements_list[i + 1].data = small_wifi;
+    }
   }
 }
 
@@ -68,7 +68,7 @@ void tryConnect() {
   int i, a;
   wifi_state = STA;
   loadSector(1);
-  if(memory_map[0] == ""){
+  if (memory_map[0] == "") {
     createNetwork();
     return;
   }
@@ -76,18 +76,23 @@ void tryConnect() {
   WiFi.mode(WIFI_STA);
   int ret = 20;
   bool found = false;
+  struct best_wifi_ {
+    int32_t rssi = -120;
+    byte saved_position;
+  };
+  best_wifi_ best_wifi;
   display.clear();
   display.setFont(ArialMT_Plain_10);
   display.setTextAlignment(TEXT_ALIGN_RIGHT);
   display.drawString(128, 52, "Scanning...");
   display.display();
-  retry:
+retry:
   int scanResult = WiFi.scanNetworks(/*async=*/false, /*hidden=*/true);
   Serial.print("Scan = ");
   Serial.println(scanResult);
   if (scanResult == 0) {
     ret--;
-    if (!ret){
+    if (!ret) {
       createNetwork();
       return;
     }
@@ -100,7 +105,7 @@ void tryConnect() {
     uint8_t* bssid;
     int32_t channel;
     bool hidden;
-    for (i = 0; i < scanResult && !found; i++){
+    for (i = 0; i < scanResult; i++) {
       WiFi.getNetworkInfo(i, ssid, encryptionType, rssi, bssid, channel, hidden);
       Serial.printf(PSTR("  %02d: [CH %02d] [%02X:%02X:%02X:%02X:%02X:%02X] %ddBm %c %c %s\n"),
                     i,
@@ -111,17 +116,20 @@ void tryConnect() {
                     (encryptionType == ENC_TYPE_NONE) ? ' ' : '*',
                     hidden ? 'H' : 'V',
                     ssid.c_str());
-      for(a = 0; memory_map[a] != "" && !found; a += 2){
-        if (ssid == memory_map[a]){
+      for (a = 0; memory_map[a] != "" && !found; a += 2) {
+        if (ssid == memory_map[a]) {
+          if (rssi > best_wifi.rssi) {
+            best_wifi.rssi = rssi;
+            best_wifi.saved_position = a;
+          }
           found = true;
         }
       }
     }
   }
-  a -= 2;
-  if (found){
-    ext_ssid = memory_map[a];
-    ext_password = memory_map[a + 1];
+  if (found) {
+    ext_ssid = memory_map[best_wifi.saved_position];
+    ext_password = memory_map[best_wifi.saved_position + 1];
     WiFi.begin(ext_ssid, ext_password);
     ret = 20;
     while (WiFi.status() != WL_CONNECTED) {

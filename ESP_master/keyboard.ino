@@ -182,7 +182,7 @@ String stringToCommand(String data) {
       if (data[a + q] != '_') {
         command_single += char(data[a + q]);
         if (command_single == "DELAY"){
-          command_global += char(128 + 75);
+          command_global += char(75);
           command_single = "";
           number = true;
         }
@@ -191,8 +191,8 @@ String stringToCommand(String data) {
 
     if (number) {
       r = command_single.toInt();
-      if (r > 255){
-        r = 255;
+      if (r > 124){
+        r = 124;
       }
       command_global += (int)r;
     }
@@ -204,15 +204,15 @@ String stringToCommand(String data) {
         }
       }
       com++;
-      command_global += char(com + 128);
+      command_global += char(com);
     }
 
     if (data[a + q] == '+') {
-      command_global += char(253);
+      command_global += char(123);
       q++;
     }
     else if (data[a + q] == '*') {
-      command_global += char(254);
+      command_global += char(124);
       number = true;
       q++;
     }
@@ -226,10 +226,10 @@ String commandToString(String com) {
   bool number = false;
   int buffer = 0;
   for (q = 0; com[q] != '\0'; q++) {
-    if (com[q] == 253) {
+    if (com[q] == 123) {
       command_global += " + ";
     }
-    else if (com[q] == 254) {
+    else if (com[q] == 124) {
       command_global += " * ";
       number = true;
     }
@@ -238,7 +238,7 @@ String commandToString(String com) {
         command_global += char(com[q]);
       }
       else {
-        command_global += commandTable(com[q] - 128);
+        command_global += commandTable(com[q]);
       }
     }
   }

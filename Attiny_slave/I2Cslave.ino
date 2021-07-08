@@ -1,40 +1,29 @@
 void receiveEvent(int howMany) {
-  DigiKeyboard.sendKeyPress(0);
-  DigiKeyboard.print("//ciao");
-  String data = "";
-  ready_byte = 0;
-  for (i = 0; i < howMany; i++) {
+  int r, i;
+  while (1 < Wire.available()) {
+    last:
     r = Wire.read();
-    if (r >= 128) {
-      r -= 128;
-    }
     if (new_data) {
       new_data = false;
-      type = r - 1;
-      buffer = "";
+      recived++;
+      memory_type[recived] = r;
     }
     else {
-      data += (char)r;
-      if (r == '\0') {
+      if (r == 125) {
         new_data = true;
+      }
+      else if (r == 126) {
+        keyboardExecution();
+        recived = -1;
+//        for (i = 0; memory_map[i] != ""; i++) {
+//          memory_type[i] = 0;
+//          memory_map[i] = "";
+//        }
+      }
+      else {
+        memory_map[recived] += char(r);
       }
     }
   }
-  data += Wire.read();
-  buffer += data;
-  if (new_data){
-    keyboardExecution(buffer);
-  }
-  
-//  if (type != command){
-//    keyboardExecution(data);
-//  }
-//  else if (new_data){
-//    keyboardExecution(buffer);
-//  }
-}
-
-void requestEvent() {
-  Wire.write((byte)ready_byte);
-  DigiKeyboard.print("/*am I ready?*/");
+  goto last;
 }
