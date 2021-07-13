@@ -4,7 +4,7 @@
    @param data The string or the command to send
    @param type Data type (text, command, password)
 */
-void endSlaveBuffering(){
+void endSlaveBuffering() {
   Wire.beginTransmission(I2C_SLAVE);
   Wire.write(254);
   Wire.endTransmission();
@@ -15,19 +15,21 @@ void sendSlave(byte type, String data) {
   data = char(125) + char(type) + data;
   for (r = 0; data[r] != '\0'; r += a) {
     Wire.beginTransmission(I2C_SLAVE);
-    Serial.println("Sending to slave:");
     for (a = 0; data[r + a] != '\0' && a < 14; a++) {
       Wire.write(data[r + a]);
       Serial.print(data[r + a]);
+    }
+    for (; a < 14; a++) {
+      Wire.write(0);
     }
     Wire.endTransmission();
   }
 }
 
-void sendSector(){
+void sendSector() {
   int i;
-  for (i = 0; memory_map[i] != ""; i++){
+  Serial.println("Sending to slave:");
+  for (i = 0; memory_map[i] != ""; i++) {
     sendSlave(memory_type[i], (memory_map[i + 1] == "") ? (memory_map[i] + char(126)) : memory_map[i]);
-    delay(100);
   }
 }

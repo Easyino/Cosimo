@@ -1,4 +1,5 @@
 #include "settings.h"
+#define DEBUG
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 
@@ -27,9 +28,9 @@ void setup() {
   if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {// Press the 3 buttons to erase EEPROM
     eepromClear();
     /*setDefault();
-    for (int i = 1; i < EEPROM_offset; i++){
+      for (int i = 1; i < EEPROM_offset; i++){
       eepromPar(i);
-    }*/
+      }*/
     while (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down));
   }
 
@@ -74,27 +75,27 @@ void setup() {
 void loop() {
   unsigned int s = WiFi.status();
   if (status != s) { // WLAN status change
-      Serial.print("Status: ");
-      Serial.println(s);
-      status = s;
-      if (s == WL_CONNECTED) {
-        // Setup MDNS responder
-        if (!MDNS.begin(myHostname)) {
-          Serial.println("Error setting up MDNS responder!");
-        } 
-        else {
-          Serial.println("mDNS responder started");
-          // Add service to MDNS-SD
-          MDNS.addService("http", "tcp", 80);
-        }
-      } 
-      else if (s == WL_NO_SSID_AVAIL) {
-        WiFi.disconnect();
+    Serial.print("Status: ");
+    Serial.println(s);
+    status = s;
+    if (s == WL_CONNECTED) {
+      // Setup MDNS responder
+      if (!MDNS.begin(myHostname)) {
+        Serial.println("Error setting up MDNS responder!");
+      }
+      else {
+        Serial.println("mDNS responder started");
+        // Add service to MDNS-SD
+        MDNS.addService("http", "tcp", 80);
       }
     }
-    if (s == WL_CONNECTED) {
-      MDNS.update();
+    else if (s == WL_NO_SSID_AVAIL) {
+      WiFi.disconnect();
     }
+  }
+  if (s == WL_CONNECTED) {
+    MDNS.update();
+  }
   dnsServer.processNextRequest();
   server.handleClient();
 
@@ -104,12 +105,14 @@ void loop() {
 
   interfaceSelector();
 
+#ifdef DEBUG
   serialEvent();
   if (stringComplete) {
     stringComplete = false;
     loadSerialCommands(inputString);
     executeSerialCommands();
   }
+#endif
 
   if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {
     demoSectors();

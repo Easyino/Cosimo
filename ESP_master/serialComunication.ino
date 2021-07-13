@@ -32,7 +32,7 @@ void executeSerialCommands() {
 
     Serial.println("\n\nInterface elements:");
     Serial.println("Limit | Aligned | Title | x | y | Content");
-    for(i = 0; i < element_counter; i++){
+    for (i = 0; i < element_counter; i++) {
       Serial.print(element[i].limit);
       Serial.print(" | ");
       Serial.print(element[i].aligned);
@@ -47,11 +47,11 @@ void executeSerialCommands() {
     }
 
     Serial.println("\n\nInterface history:");
-    for(i = 0; i < 5; i++){
+    for (i = 0; i < 5; i++) {
       Serial.print(history_interface[i]);
       Serial.print(", ");
     }
-    
+
     Serial.println("\n\nPrevious interface:");
     Serial.print(previous_interface);
 
@@ -149,7 +149,7 @@ void executeSerialCommands() {
       Serial.println("EEPROM cleaned");
     }
   }
-  
+
 
   else if (serialString[0].equalsIgnoreCase("wifi")) {
     if (serialString[1].equalsIgnoreCase("connect")) {
@@ -164,14 +164,10 @@ void executeSerialCommands() {
     }
 
     else if (serialString[1].equalsIgnoreCase("mode")) {
-      /*EEPROM.write(0, serialString[2].toInt());
-      EEPROM.commit();
-      Serial.print("setting wifi mode to ");
-      Serial.println(serialString[2].toInt());*/
-      if (WiFi.getMode() == WIFI_STA){
+      if (WiFi.getMode() == WIFI_STA) {
         Serial.println("Station");
       }
-      else if(WiFi.getMode() == WIFI_AP){
+      else if (WiFi.getMode() == WIFI_AP) {
         Serial.println("Access point");
       }
     }
@@ -189,10 +185,10 @@ void executeSerialCommands() {
       Serial.println("Failed");
     }
   }
-  else if (serialString[0].equalsIgnoreCase("interface")){
+  else if (serialString[0].equalsIgnoreCase("interface")) {
     interface = serialString[1].toInt();
   }
-  else if (serialString[0].equalsIgnoreCase("demo")){
+  else if (serialString[0].equalsIgnoreCase("demo")) {
     interface = commandInter;
     demoSectors();
   }
@@ -236,18 +232,24 @@ void loadSerialCommands(String data) {
 
 
 void reportStarting(String comment) {
+#ifdef DEBUG
   Serial.println("--------------------------------");
   Serial.print(comment + "...\n");
   execution_time = micros();
   serial_reporter = 0;
+#endif
 }
 void reportEnding() {
+#ifdef DEBUG
   Serial.print("\nDone ");
   Serial.print(micros() - execution_time);
   Serial.println("\n--------------------------------\n");
+#endif
 }
 void reportStep() {
+#ifdef DEBUG
   Serial.print(serial_reporter);
   Serial.print(", ");
   serial_reporter++;
+#endif
 }

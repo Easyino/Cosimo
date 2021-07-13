@@ -1,5 +1,6 @@
 void receiveEvent(int howMany) {
   int r, i;
+  bool missing = true;
   while (1 < Wire.available()) {
     last:
     r = Wire.read();
@@ -14,16 +15,20 @@ void receiveEvent(int howMany) {
       }
       else if (r == 126) {
         keyboardExecution();
+        for (i = 0; i <= recived; i++) {
+          memory_type[i] = 0;
+          memory_map[i] = "";
+        }
         recived = -1;
-//        for (i = 0; memory_map[i] != ""; i++) {
-//          memory_type[i] = 0;
-//          memory_map[i] = "";
-//        }
       }
       else {
         memory_map[recived] += char(r);
       }
     }
+    if (!missing){
+      return;
+    }
   }
+  missing = false;
   goto last;
 }
