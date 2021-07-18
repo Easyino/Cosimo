@@ -75,6 +75,7 @@ int sector_max = 0;
 //I2C
 const int16_t I2C_MASTER = 0x42;
 const int16_t I2C_SLAVE = 0x08;
+#define READY D3
 
 //Serial comunication
 bool stringComplete = false;
