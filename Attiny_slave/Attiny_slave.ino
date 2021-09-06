@@ -10,4 +10,18 @@ void setup() {
 
 void loop() {
   DigiKeyboard.delay(1);
+  if (execute){
+    execute = 0;
+    keyboardExecution();
+    for (int i = 0; i <= recived; i++) {
+      memory_type[i] = 0;
+      memory_map[i] = "";
+    }
+    recived = -1;
+  }
+  if (millis() - last_millis > 1000 && recived == -1){
+    last_millis = millis();
+    led_state = !led_state;
+    digitalWrite(READY, led_state);
+  }
 }

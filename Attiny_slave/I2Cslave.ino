@@ -1,7 +1,7 @@
 void receiveEvent(int howMany) {
   int r, i;
   bool missing = true;
-  digitalWrite(READY, 1);
+  //digitalWrite(READY, 1);
   while (1 < Wire.available()) {
     last:
     r = Wire.read();
@@ -15,19 +15,14 @@ void receiveEvent(int howMany) {
         new_data = true;
       }
       else if (r == 126) {
-        keyboardExecution();
-        for (i = 0; i <= recived; i++) {
-          memory_type[i] = 0;
-          memory_map[i] = "";
-        }
-        recived = -1;
+        execute = 1;
       }
       else {
         memory_map[recived] += char(r);
       }
     }
     if (!missing){
-      digitalWrite(READY, 0);
+      //digitalWrite(READY, 0);
       return;
     }
   }
