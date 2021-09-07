@@ -6,13 +6,13 @@ void receiveEvent(int howMany) {
     last:
     r = Wire.read();
     if (new_data) {
-      new_data = false;
+      new_data = 0;
       recived++;
       memory_type[recived] = r;
     }
     else {
       if (r == 125) {
-        new_data = true;
+        new_data = 1;
       }
       else if (r == 126) {
         execute = 1;

@@ -18,8 +18,9 @@ void loop() {
       memory_map[i] = "";
     }
     recived = -1;
+    new_data = 1;
   }
-  if (millis() - last_millis > 1000 && recived == -1){
+  if (millis() - last_millis > 1000){
     last_millis = millis();
     led_state = !led_state;
     digitalWrite(READY, led_state);

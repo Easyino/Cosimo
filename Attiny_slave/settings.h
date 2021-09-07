@@ -5,7 +5,7 @@
 String buffer;
 String memory_map[5];
 byte memory_type[5];
-bool new_data = true;
+bool new_data = 1;
 bool execute;
 int recived = -1;
 enum types {
