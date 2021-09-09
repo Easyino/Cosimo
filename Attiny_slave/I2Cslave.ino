@@ -5,21 +5,19 @@ void receiveEvent(int howMany) {
   while (1 < Wire.available()) {
     last:
     r = Wire.read();
-    if (new_data) {
-      new_data = 0;
+    if (r == 125) {
       recived++;
+      new_data = 1;
+    }
+    else if (r == 126) {
+      execute = 1;
+    }
+    else if (new_data){
+      new_data = 0;
       memory_type[recived] = r;
     }
     else {
-      if (r == 125) {
-        new_data = 1;
-      }
-      else if (r == 126) {
-        execute = 1;
-      }
-      else {
-        memory_map[recived] += char(r);
-      }
+      memory_map[recived] += char(r);
     }
     if (!missing){
       //digitalWrite(READY, 0);

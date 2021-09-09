@@ -17,8 +17,7 @@ void loop() {
       memory_type[i] = 0;
       memory_map[i] = "";
     }
-    recived = -1;
-    new_data = 1;
+    recived = 0;
   }
   if (millis() - last_millis > 1000){
     last_millis = millis();

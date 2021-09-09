@@ -7,9 +7,9 @@ unsigned int commandTable[76] {
 void keyboardExecution() {
   int i, c, a;
   for (a = 0; a <= recived; a++) {
-    if (true) { /*memory_type[a] == text || memory_type[a] == password*/
+    if (true) { /*memory_type[a] == text || memory_type[a] == password*/1110
       DigiKeyboard.sendKeyPress(0);
-      DigiKeyboard.print(memory_map[a]);
+      DigiKeyboard.print(String(memory_type[a]));
     }
     else if (memory_type[a] == command) {
       bool number = false;

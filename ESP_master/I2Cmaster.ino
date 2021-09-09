@@ -12,16 +12,12 @@ void endSlaveBuffering() {
 
 void sendSlave(byte type, String data) {
   int i, a, r;
-  data = char(125) + char(type) + data;
+  data = char(type) + data + char(125);
   for (r = 0; data[r] != '\0'; r += a) {
-    //while(digitalRead(READY)) ESP.wdtFeed();
     Wire.beginTransmission(I2C_SLAVE);
     for (a = 0; data[r + a] != '\0' && a < 14; a++) {
       Wire.write(data[r + a]);
       Serial.print(data[r + a]);
-    }
-    for (; a < 14; a++) {
-      Wire.write(0);
     }
     Wire.endTransmission();
   }

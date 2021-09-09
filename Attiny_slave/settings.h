@@ -6,10 +6,11 @@ String buffer;
 String memory_map[5];
 byte memory_type[5];
 bool new_data = 1;
+unsigned int characters;
 bool execute;
-int recived = -1;
+int recived;
 enum types {
-  zero,
+  null,
   text,
   command,
   password,
