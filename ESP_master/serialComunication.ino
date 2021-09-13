@@ -1,3 +1,5 @@
+#define DEBUG 1
+
 void executeSerialCommands() {
   int i, c;
   if (serialString[0].equalsIgnoreCase("info")) {
@@ -232,7 +234,7 @@ void loadSerialCommands(String data) {
 
 
 void reportStarting(String comment) {
-#ifdef DEBUG
+#if DEBUG
   Serial.println("--------------------------------");
   Serial.print(comment + "...\n");
   execution_time = micros();
@@ -240,14 +242,14 @@ void reportStarting(String comment) {
 #endif
 }
 void reportEnding() {
-#ifdef DEBUG
+#if DEBUG
   Serial.print("\nDone ");
   Serial.print(micros() - execution_time);
   Serial.println("\n--------------------------------\n");
 #endif
 }
 void reportStep() {
-#ifdef DEBUG
+#if DEBUG
   Serial.print(serial_reporter);
   Serial.print(", ");
   serial_reporter++;

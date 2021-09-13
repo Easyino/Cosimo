@@ -4,11 +4,10 @@
 #define READY 1
 String buffer;
 String memory_map[5];
-byte memory_type[5];
+bool memory_type[5];
 bool new_data = 1;
-unsigned int characters;
 bool execute;
-int recived;
+byte recived;
 enum types {
   null,
   text,
@@ -16,7 +15,4 @@ enum types {
   password,
   comunication
 };
-
-
-unsigned long int last_millis;
 bool led_state;

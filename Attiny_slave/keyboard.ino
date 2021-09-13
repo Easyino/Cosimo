@@ -6,12 +6,11 @@ unsigned int commandTable[76] {
 };
 void keyboardExecution() {
   int i, c, a;
-  for (a = 0; a <= recived; a++) {
-    if (true) { /*memory_type[a] == text || memory_type[a] == password*/1110
-      DigiKeyboard.sendKeyPress(0);
-      DigiKeyboard.print(String(memory_type[a]));
+  for (a = 0; a < recived; a++) {
+    if (true) {
+      DigiKeyboard.print(memory_map[a]);
     }
-    else if (memory_type[a] == command) {
+    else if (memory_type[a] == command){
       bool number = false;
       for (i = 0, c = 0; memory_map[i] != '\0'; i++) {
         if (number == true) {
