@@ -7,7 +7,6 @@ void setup() {
   //DigiKeyboard.enableLEDFeedback();
   DigiKeyboard.sendKeyPress(0);
 }
-
 void loop() {
   DigiKeyboard.delay(1);
   if (execute){
