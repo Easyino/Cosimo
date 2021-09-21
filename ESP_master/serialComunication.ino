@@ -1,5 +1,3 @@
-#define DEBUG 1
-
 void executeSerialCommands() {
   int i, c;
   if (serialString[0].equalsIgnoreCase("info")) {

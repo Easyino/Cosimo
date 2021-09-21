@@ -1,5 +1,5 @@
 #include "settings.h"
-#define DEBUG
+#define DEBUG 1
 namespace TypeCast = experimental::TypeConversion;
 using namespace experimental::crypto;
 
@@ -18,11 +18,11 @@ void setup() {
   display.init();
   display.setFont(ArialMT_Plain_10);
   display.setTextAlignment(TEXT_ALIGN_LEFT);
-  eepromPar(2);
   eepromPar(3);
   eepromPar(4);
   eepromPar(5);
   eepromPar(6);
+  eepromPar(7);
   history_interface[0] = menuInter;
 
   if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {// Press the 3 buttons to erase EEPROM
@@ -50,6 +50,7 @@ void setup() {
     EEPROM.commit();
   }
   else {
+    eepromPar(1);
     loadSector(0);
     for (int i = 0; i < 16; i++) {
       hkdfSalt[i] = memory_map[0][i];
@@ -62,7 +63,7 @@ void setup() {
   //ESP.eraseConfig();
   //WiFi.persistent(false);
   //wifi_set_phy_mode(PHY_MODE_11B);
-  eepromPar(1);
+  eepromPar(2);
 
   ///////////////////////////////////////////////////////Demo code to try thigns
   n_section = 4;

@@ -631,7 +631,7 @@ void question() {
         switch (interface){
           case Qdefault:{
             setDefault();
-            for (int i = 1; i < EEPROM_offset; i++){
+            for (int i = 2; i < EEPROM_offset; i++){
               eepromPar(i);
             }
             break;

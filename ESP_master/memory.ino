@@ -171,7 +171,7 @@ void shiftEEPROM (int address, int jump) {
   EEPROM.commit();
 }
 
-byte defaultPar[]{0, 0, 5, 0, 5, 45, 10};
+byte defaultPar[]{0, EEPROM_offset, 0, 5, 0, 5, 45, 10};
 void setDefault(){
   int i;
   for(i = 1; i < EEPROM_offset; i++){
@@ -184,6 +184,14 @@ void eepromPar(int address){
   int par = EEPROM.read(address);
   switch(address){
     case 1:{
+      if (par != EEPROM_offset){
+        shiftEEPROM(par, EEPROM_offset);
+      }
+      EEPROM.write(address, EEPROM_offset);
+      EEPROM.commit();
+      break;
+    }
+    case 2:{
       if (!ota_initialised){
         if (par) {
           tryConnect();
@@ -194,11 +202,11 @@ void eepromPar(int address){
       }
       break;
     }
-    case 2:{
+    case 3:{
       display.setContrast(par * 51);
       break;
     }
-    case 3:{
+    case 4:{
       if(!par){
         display.flipScreenVertically();
       }
@@ -208,16 +216,16 @@ void eepromPar(int address){
       orientation = par;
       break;
     }
-    case 4:{
+    case 5:{
       n_rows = par;
       loaded_interface = 0;
       break;
     }
-    case 5:{
+    case 6:{
       bouncing_time = par;
       break;
     }
-    case 6:{
+    case 7:{
       scrolling_time = par;
       break;
     }
