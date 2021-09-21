@@ -101,6 +101,18 @@ int sectorLength(){
 void updateEEPROM() {
   int a, i, r;
   reportStarting("Updating eeprom");
+  if (auto_login){
+    bool detected;
+    for (i = 1; memory_type[i] != 0; i++){
+      if (memory_type[i] == password){
+        detected = 1;
+      }
+    }
+    if (detected){
+      updateCommand(i, memory_map[i - 1] + '\n', memory_type[i - 1]);
+      updateCommand(i - 1, "tab", command);
+    }
+  }
   if (checkpoint_jump != 0) {
     Serial.print("Jump = ");
     Serial.println(checkpoint_jump);
@@ -171,7 +183,7 @@ void shiftEEPROM (int address, int jump) {
   EEPROM.commit();
 }
 
-byte defaultPar[]{0, EEPROM_offset, 0, 5, 0, 5, 45, 10};
+byte defaultPar[]{0, EEPROM_offset, 0, 5, 0, 5, 45, 10, 0};
 void setDefault(){
   int i;
   for(i = 1; i < EEPROM_offset; i++){
@@ -227,6 +239,10 @@ void eepromPar(int address){
     }
     case 7:{
       scrolling_time = par;
+      break;
+    }
+    case 8:{
+      auto_login = par;
       break;
     }
   }

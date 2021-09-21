@@ -32,6 +32,7 @@ void setup() {
       eepromPar(i);
       }*/
     while (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down));
+    ESP.restart();
   }
 
   loadCheckpoints();

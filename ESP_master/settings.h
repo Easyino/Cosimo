@@ -97,6 +97,7 @@ enum interfaces {
   logInter,
   scanWifiInter,
   savedWifiInter,
+  commSettingsInter,
   displayInter,
   buttonsInter,
   //////////////////// Don't touch them, add interfaces only above
@@ -244,3 +245,6 @@ IPAddress subnet(255, 255, 255, 0);
 */
 
 #define addrNetMode 0 //0 for creating a webpage; 1 for connecting to an existing one
+
+// Various flags
+bool auto_login;

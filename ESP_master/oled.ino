@@ -228,60 +228,64 @@ void interfaceSelector() {
   }
   switch (interface) {
     case pinInter: {
-        pin();
-        break;
-      }
+      pin();
+      break;
+    }
     case firstConfigInter: {
-        firstConfiguration();
-        break;
-      }
+      firstConfiguration();
+      break;
+    }
     case wifiCreateInter: {
-        wifiCreateDisplay();
-        break;
-      }
+      wifiCreateDisplay();
+      break;
+    }
     case timeInter: {
-        timeTrack();
-        break;
-      }
+      timeTrack();
+      break;
+    }
     case logInter: {
-        logInterface();
-        break;
-      }
+      logInterface();
+      break;
+    }
     case menuInter: {
-        menu();
-        break;
-      }
+      menu();
+      break;
+    }
     case commandInter: {
-        commandSelection();
-        break;
-      }
+      commandSelection();
+      break;
+    }
     case wifiInter: {
-        wifi();
-        break;
-      }
+      wifi();
+      break;
+    }
     case scanWifiInter: {
-        scanWifi();
-        break;
-      }
+      scanWifi();
+      break;
+    }
     case savedWifiInter: {
-        savedWifi();
-        break;
-      }
+      savedWifi();
+      break;
+    }
     case settingsInter: {
-        settings();
-        break;
-      }
+      settings();
+      break;
+    }
+    case commSettingsInter: {
+      setCommand();
+      break;
+    }
     case displayInter: {
-        setDisplay();
-        break;
-      }
+      setDisplay();
+      break;
+    }
     case buttonsInter: {
-        setButtons();
-        break;
-      }
+      setButtons();
+      break;
+    }
     default:{
-        question();
-        break;
+      question();
+      break;
     }
   }
   if (oled_updated) {// Only if there is something different it Will print elements on the screen
@@ -758,7 +762,7 @@ void wifi() {
         interface = savedWifiInter;
       }
       else if (sel == 5){
-        setParameter(1, 0, 1);
+        setParameter(2, 0, 1);
       }
     }
     else {
@@ -821,26 +825,52 @@ void settings() {
     clearList();
     title_list = true;
     elements_list[0] = "SETTINGS";
-    elements_list[1] = "Display";
-    elements_list[2] = "Buttons";
-    elements_list[3] = "Default";
-    elements_list[4] = "Reset all";
+    elements_list[1] = "Commands";
+    elements_list[2] = "Display";
+    elements_list[3] = "Buttons";
+    elements_list[4] = "Default";
+    elements_list[5] = "Reset all";
     createList(0, true);
   }
   sel = elementListSelector();
   if (sel != -1) {
     if (sel != 0) {
       if (sel == 1){
-        interface = displayInter;
+        interface = commSettingsInter;
       }
       else if (sel == 2){
-        interface = buttonsInter;
+        interface = displayInter;
       }
       else if (sel == 3){
-        interface = Qdefault;
+        interface = buttonsInter;
       }
       else if (sel == 4){
+        interface = Qdefault;
+      }
+      else if (sel == 5){
         interface = Qreset;
+      }
+    }
+    else {
+      interfaceBack();
+    }
+  }
+}
+
+void setCommand(){
+  if (interface != loaded_interface) {
+    loaded_interface = interface;
+    clearList();
+    title_list = true;
+    elements_list[0] = "COMMANDS";
+    elements_list[1] = "Auto login";
+    createList(0, true);
+  }
+  sel = elementListSelector();
+  if (sel != -1) {
+    if (sel != 0) {
+      if (sel == 1){
+        setParameter(8, 0, 1);
       }
     }
     else {
@@ -864,13 +894,13 @@ void setDisplay(){
   if (sel != -1) {
     if (sel != 0) {
       if (sel == 1){
-        setParameter(3, 0, 1);
+        setParameter(4, 0, 1);
       }
       else if (sel == 2){
-        setParameter(2, 1, 5);
+        setParameter(3, 1, 5);
       }
       else if (sel == 3){
-        setParameter(4, 4, 7);
+        setParameter(5, 4, 7);
       }
     }
     else {
@@ -894,10 +924,10 @@ void setButtons(){
   if (sel != -1) {
     if (sel != 0) {
       if (sel == 1){
-        setParameter(5, 5, 70);
+        setParameter(6, 5, 70);
       }
       else if (sel == 2){
-        setParameter(6, 2, 15);
+        setParameter(7, 2, 15);
       }
     }
     else {

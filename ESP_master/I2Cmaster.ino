@@ -26,7 +26,7 @@ void sendSlave(byte type, String data) {
 void sendSector() {
   int i;
   Serial.println("Sending to slave:");
-  for (i = 0; memory_map[i] != ""; i++) {
+  for (i = 1; memory_map[i] != ""; i++) {
     sendSlave(memory_type[i], (memory_map[i + 1] == "") ? (memory_map[i] + char(126)) : memory_map[i]);
   }
 }
