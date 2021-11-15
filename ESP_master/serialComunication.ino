@@ -222,13 +222,18 @@ void loadSerialCommands(String data) {
   }
   for (a = 0, i = 0; data[i] != '\0'; a++, i++) {
     subString = "";
-    for (; (data[i] != ' ' || a == 3) && data[i] != '\0'; i++) {
-      subString += data[i];
+    for (; (data[i] != ' ' || a == 3) && data[i] != '\0' && data[i] != '\n'; i++) {
+      if (data[i] == 92){
+        //subString += '\n';
+        //i++;
+      }
+      else {
+        subString += data[i];
+      }
     }
     serialString[a] = subString;
   }
 }
-
 
 
 void reportStarting(String comment) {

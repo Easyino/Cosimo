@@ -101,7 +101,7 @@ int sectorLength(){
 void updateEEPROM() {
   int a, i, r;
   reportStarting("Updating eeprom");
-  if (auto_login){
+  if (auto_login && sector_loaded != 1){
     bool detected;
     for (i = 1; memory_type[i] != 0; i++){
       if (memory_type[i] == password){

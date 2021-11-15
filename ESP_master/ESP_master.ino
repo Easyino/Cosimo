@@ -117,6 +117,7 @@ void loop() {
 #endif
 
   if (!digitalRead(button_up) && !digitalRead(button_confirm) && !digitalRead(button_down)) {
-    demoSectors();
+    //demoSectors();
+    updateEEPROM();
   }
 }
